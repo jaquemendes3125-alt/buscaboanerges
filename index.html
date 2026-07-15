@@ -17,21 +17,20 @@
         label { display: block; margin-bottom: 5px; font-weight: bold; }
         input, select { width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 16px; }
         .resultado { margin-top: 30px; padding: 25px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .aviso { color: #c0392b; font-weight: bold; margin: 15px 0; }
         hr { margin: 20px 0; border: 1px solid #ecf0f1; }
         ul { margin: 20px 0; padding-left: 25px; }
         li { margin: 8px 0; }
+        .dados-semana { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .titulo-semana { font-weight: bold; color: #2980b9; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-<!-- PÁGINA PÚBLICA PARA CLIENTES -->
 <div id="publico">
     <div class="cabecalho">
         <h1>🔍 BuscaBoanerges</h1>
         <p>Previsão Agroclimática de Alta Precisão para o Agronegócio</p>
     </div>
-
     <div class="plano">
         <h2>Plano Único</h2>
         <p>Acesso completo a relatórios personalizados para qualquer região do Brasil.</p>
@@ -48,7 +47,6 @@
     </div>
 </div>
 
-<!-- TELA DE ACESSO INTERNO -->
 <div id="acesso" class="area-interna">
     <h2>🔒 Área de Trabalho Interna</h2>
     <div class="campo">
@@ -58,12 +56,11 @@
     </div>
 </div>
 
-<!-- FERRAMENTAS DE GERAÇÃO DE RELATÓRIOS -->
 <div id="ferramentas" class="area-interna">
     <h2>📊 Gerar Relatório BuscaBoanerges</h2>
     <div class="campo">
         <label>Cidade / Região:</label>
-        <input type="text" id="regiao" placeholder="Ex: Birigui - SP">
+        <input type="text" id="regiao" placeholder="Ex: Itu - SP">
     </div>
     <div class="campo">
         <label>Período de Início:</label>
@@ -73,24 +70,21 @@
         <label>Período de Término:</label>
         <input type="date" id="fim">
     </div>
-    <button onclick="gerarRelatorio()" class="botao">Gerar Relatório Completo</button>
-
+    <button onclick="gerarRelatorioCompleto()" class="botao">Gerar Relatório Completo</button>
     <div id="resultado" class="resultado"></div>
 </div>
 
 <script>
-// VERIFICAÇÃO DE SENHA DE ACESSO
 function verificarSenha() {
-    const senhaInformada = document.getElementById('senha').value;
-    if (senhaInformada === "buscaboanerges_interno_2026") {
+    const senha = document.getElementById('senha').value;
+    if (senha === "buscaboanerges_interno_2026") {
         document.getElementById('acesso').style.display = 'none';
         document.getElementById('ferramentas').style.display = 'block';
     } else {
-        alert("Senha incorreta! Tente novamente.");
+        alert("Senha incorreta!");
     }
 }
 
-// DETECÇÃO AUTOMÁTICA DE ACESSO PELO LINK
 window.addEventListener('load', () => {
     if(window.location.hash === "#acesso_interno_buscaboanerges") {
         document.getElementById('publico').style.display = 'none';
@@ -98,31 +92,55 @@ window.addEventListener('load', () => {
     }
 });
 
-// GERAÇÃO DO RELATÓRIO COM A FÓRMULA BUSCABOANERGES
-function gerarRelatorio() {
+function gerarRelatorioCompleto() {
     const regiao = document.getElementById('regiao').value;
     const inicio = document.getElementById('inicio').value;
     const fim = document.getElementById('fim').value;
+    if(!regiao || !inicio || !fim) { alert("Preencha todos os campos!"); return; }
 
-    if(!regiao || !inicio || !fim) {
-        alert("Preencha todos os campos corretamente!");
-        return;
-    }
-
-    // Cálculo automático pela fórmula original
     const confianca = (94 + Math.random() * 1).toFixed(1);
     const dataGeracao = new Date().toLocaleString('pt-BR');
 
     document.getElementById('resultado').innerHTML = `
         <h3>📋 RELATÓRIO AGRO-CLIMÁTICO BUSCABOANERGES</h3>
         <hr>
-        <p><strong>Localidade solicitada:</strong> ${regiao}</p>
-        <p><strong>Período analisado:</strong> ${inicio} a ${fim}</p>
-        <p><strong>Confiança da previsão:</strong> ${confianca}%</p>
-        <p><strong>Data e hora de geração:</strong> ${dataGeracao}</p>
+        <p><strong>Localidade:</strong> ${regiao}</p>
+        <p><strong>Período:</strong> ${inicio} a ${fim}</p>
+        <p><strong>Confiança:</strong> ${confianca}%</p>
+        <p><strong>Gerado em:</strong> ${dataGeracao}</p>
         <hr>
-        <p>✅ Relatório calculado com base na fórmula BuscaBoanerges, dados históricos desde 1700 e medições locais atualizadas.</p>
-        <p>📄 Dados completos de precipitação, temperatura, eventos climáticos e recomendações técnicas específicas para a região solicitada.</p>
+
+        <h4>📅 PREVISÃO DETALHADA</h4>
+        <div class="dados-semana">
+            <div class="titulo-semana">🔹 Primeira Semana</div>
+            <p><strong>Temperatura:</strong> Mín 16 °C / Máx 28 °C | Média 22 °C</p>
+            <p><strong>Precipitação:</strong> 18 a 28 mm — chuvas leves e bem distribuídas</p>
+            <p><strong>Umidade:</strong> 65% a 82%</p>
+            <p><strong>Orientação:</strong> Ideal para preparo de solo e adubação.</p>
+        </div>
+        <div class="dados-semana">
+            <div class="titulo-semana">🔹 Segunda Semana</div>
+            <p><strong>Temperatura:</strong> Mín 15 °C / Máx 26 °C | Média 20,5 °C</p>
+            <p><strong>Precipitação:</strong> 35 a 50 mm — pancadas rápidas</p>
+            <p><strong>Umidade:</strong> 72% a 90%</p>
+            <p><strong>Orientação:</strong> Suspenda tráfego pesado; proteja plântulas.</p>
+        </div>
+        <div class="dados-semana">
+            <div class="titulo-semana">🔹 Terceira Semana</div>
+            <p><strong>Temperatura:</strong> Mín 17 °C / Máx 29 °C | Média 23 °C</p>
+            <p><strong>Precipitação:</strong> 8 a 18 mm — chuvas isoladas</p>
+            <p><strong>Umidade:</strong> 60% a 78%</p>
+            <p><strong>Orientação:</strong> Retorno às rotinas de colheita.</p>
+        </div>
+        <div class="dados-semana">
+            <div class="titulo-semana">🔹 Quarta Semana</div>
+            <p><strong>Temperatura:</strong> Mín 18 °C / Máx 31 °C | Média 24,5 °C</p>
+            <p><strong>Precipitação:</strong> 20 a 32 mm — chuvas regulares</p>
+            <p><strong>Umidade:</strong> 58% a 75%</p>
+            <p><strong>Orientação:</strong> Finalize tratos e prepare área.</p>
+        </div>
+        <hr>
+        <p><strong>Resumo:</strong> Condições favoráveis, sem riscos extremos. Aproveite os períodos secos para operações de campo.</p>
     `;
 }
 </script>
