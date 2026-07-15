@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges | Previsão Agroclimática — Versão Oficial</title>
+    <title>BuscaBoanerges | Previsão Agroclimática</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { max-width: 950px; margin: 0 auto; padding: 30px 25px; background-color: #f0f5f9; color: #2c3e50; }
         .cabecalho { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #2980b9; padding-bottom: 20px; }
-        .plano { background: white; padding: 35px; border-radius: 10px; box-shadow: 0 3px 12px rgba(0,0,0,0.1); margin-bottom: 35px; }
+        .plano { background: white; padding: 35px; border-radius: 10px; box-shadow: 0 3px 12px rgba(0,0,0,0.1); margin-bottom: 25px; }
         .valor { font-size: 30px; font-weight: bold; color: #27ae60; margin: 18px 0; }
         .botao { display: inline-block; padding: 16px 32px; background: #2980b9; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 22px; border: none; cursor: pointer; font-size: 17px; }
         .botao:hover { background: #1a5276; }
@@ -25,12 +25,13 @@
         .favoravel { color: #27ae60; font-weight: 500; }
         .prejudicial { color: #e74c3c; font-weight: 600; }
         .alerta { color: #f39c12; font-weight: 600; margin-top: 8px; }
-        .identidade { color: #2c3e50; font-weight: bold; margin-bottom: 15px; text-align: center; }
+        .botao-sair { padding: 10px 20px; background: transparent; color: #2980b9; border: 1px solid #2980b9; font-size: 14px; margin-top: 15px; }
+        .botao-sair:hover { background: #eaf4fc; }
     </style>
 </head>
 <body>
 
-<!-- PÁGINA PÚBLICA -->
+<!-- ==================== PÁGINA PÚBLICA — SEM NENHUM ACESSO VISÍVEL ==================== -->
 <div id="publico">
     <div class="cabecalho">
         <h1>🔍 BuscaBoanerges</h1>
@@ -53,7 +54,7 @@
     <p class="aviso-seguranca">© 2026 BuscaBoanerges — Sistema próprio, desenvolvido para segurança e clareza.</p>
 </div>
 
-<!-- TELA DE ACESSO -->
+<!-- ==================== ÁREA INTERNA — ACESSO SECRETO ==================== -->
 <div id="acesso" class="area-interna">
     <h2>🔒 Área Interna BuscaBoanerges</h2>
     <div class="campo">
@@ -63,7 +64,6 @@
     </div>
 </div>
 
-<!-- FERRAMENTAS -->
 <div id="ferramentas" class="area-interna">
     <h2>📊 Gerar Relatório de Previsão</h2>
     <div class="campo">
@@ -80,19 +80,48 @@
     </div>
     <button onclick="gerarRelatorioCompleto()" class="botao">Gerar Relatório</button>
     <div id="resultado" class="resultado"></div>
+    <br>
+    <button onclick="sairSistema()" class="botao botao-sair">← Sair e voltar à página inicial</button>
 </div>
 
 <script>
 // ==================================================
+// COMO VOCÊ ACESSA:
+// Adicione no final do endereço do site: #acesso_buscaboanerges_secreto
+// Exemplo: buscaboanerges.com.br/#acesso_buscaboanerges_secreto
+// ==================================================
+
+window.addEventListener('load', () => {
+    // Apenas se tiver o código secreto no endereço, mostra a tela de acesso
+    if(window.location.hash === "#acesso_buscaboanerges_secreto") {
+        document.getElementById('publico').style.display = 'none';
+        document.getElementById('acesso').style.display = 'block';
+    }
+});
+
+function verificarAcesso() {
+    const senha = document.getElementById('senha').value;
+    if (senha === "buscaboanerges_seguro_2026") {
+        document.getElementById('acesso').style.display = 'none';
+        document.getElementById('ferramentas').style.display = 'block';
+    } else { alert("Senha inválida — acesso restrito apenas ao responsável."); }
+}
+
+function sairSistema() {
+    // Limpa o código secreto e volta à página pública
+    window.location.hash = "";
+    document.getElementById('ferramentas').style.display = 'none';
+    document.getElementById('acesso').style.display = 'none';
+    document.getElementById('publico').style.display = 'block';
+}
+
+// ==================================================
 // BASE PRÓPRIA — BUSCABOANERGES
-// Autor: Cláudio Nepomuceno | Versão Oficial 15/07/2026
-// Identidade preservada: previsão segura baseada em dados de pesquisa
 // ==================================================
 const BASE_BUSCABOANERGES = {
     formula: "Confiança = ((DadosHistóricos × 64) ÷ OrdemPrecisão) ÷ ResultadoComparativo × 100",
     confiancaBase: [94.5, 95.0],
 
-    // Ajustes regionais conforme dados de pesquisa
     ajustesRegiao: {
         "sorocaba_e_regiao": { tempMin: -1.2, tempMax: -0.8, umidade: -2, chuva: 0.95, riscoGeada: 1 },
         "tapirai_serra_mar": { tempMin: -2.1, tempMax: -2.6, umidade: +9, chuva: 1.07, riscoGeada: 2 },
@@ -100,7 +129,6 @@ const BASE_BUSCABOANERGES = {
         "regiao_sul_serrana": { tempMin: -2.5, tempMax: -3.0, umidade: +5, chuva: 1.15, riscoGeada: 3 }
     },
 
-    // Culturas e orientações por localidade
     orientacoesLocal: {
         "sorocaba-sp": {
             culturas: ["cana‑de‑açúcar", "milho safrinha", "uva", "hortaliças"],
@@ -114,30 +142,11 @@ const BASE_BUSCABOANERGES = {
         }
     },
 
-    // Mapeamento rápido
     mapaLocais: {
         "sorocaba": "sorocaba_e_regiao", "sorocaba-sp": "sorocaba_e_regiao",
         "tapiraí": "tapirai_serra_mar", "tapiraí-sp": "tapirai_serra_mar"
     }
 };
-
-// ==================================================
-// FUNÇÕES DE ACESSO E DETECÇÃO
-// ==================================================
-function verificarAcesso() {
-    const senha = document.getElementById('senha').value;
-    if (senha === "buscaboanerges_seguro_2026") {
-        document.getElementById('acesso').style.display = 'none';
-        document.getElementById('ferramentas').style.display = 'block';
-    } else { alert("Senha inválida — acesso restrito."); }
-}
-
-window.addEventListener('load', () => {
-    if(window.location.hash === "#acesso_exclusivo_buscaboanerges") {
-        document.getElementById('publico').style.display = 'none';
-        document.getElementById('acesso').style.display = 'block';
-    }
-});
 
 function detectarLocalidade(texto) {
     const t = texto.toLowerCase().trim();
@@ -153,9 +162,6 @@ function formatarData(dataStr) {
     return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
 }
 
-// ==================================================
-// GERAÇÃO DO RELATÓRIO — LÓGICA PRÓPRIA
-// ==================================================
 function gerarRelatorioCompleto() {
     const local = document.getElementById('regiao').value.trim();
     const inicio = document.getElementById('inicio').value;
@@ -173,7 +179,6 @@ function gerarRelatorioCompleto() {
     const ajustes = BASE_BUSCABOANERGES.ajustesRegiao[chaveReg];
     const dadosLocal = BASE_BUSCABOANERGES.orientacoesLocal[local.toLowerCase()] || {culturas: ["culturas da região"], invalidas: [], destaque: "Seguir orientações técnicas locais"};
 
-    // Divisão em períodos curtos e precisos
     const dataInicio = new Date(inicio + "T00:00:00");
     const dataFim = new Date(fim + "T00:00:00");
     const periodos = [];
@@ -196,9 +201,8 @@ function gerarRelatorioCompleto() {
         dataAtual.setDate(fimPeriodo.getDate() + 1);
     }
 
-    // Montar cabeçalho com identidade
     let html = `
-        <div class="identidade">📋 PREVISÃO AGROCLIMÁTICA — BUSCABOANERGES</div>
+        <div style="font-weight:bold; color:#2c3e50; text-align:center; margin-bottom:15px;">📋 PREVISÃO AGROCLIMÁTICA — BUSCABOANERGES</div>
         <hr>
         <p><strong>Localidade:</strong> ${local.toUpperCase()}</p>
         ${especifico ? `<p><strong>Culturas da região:</strong> ${dadosLocal.culturas.join(", ")}</p>` : ""}
@@ -210,7 +214,6 @@ function gerarRelatorioCompleto() {
         <h4>📅 INFORMAÇÕES E ORIENTAÇÕES</h4>
     `;
 
-    // Gerar cada período com lógica própria
     periodos.forEach(p => {
         html += `
             <div class="periodo">
@@ -232,18 +235,13 @@ function gerarRelatorioCompleto() {
     document.getElementById('resultado').innerHTML = html;
 }
 
-// ==================================================
-// ORIENTAÇÕES PRÓPRIAS — SEM PERDER IDENTIDADE
-// ==================================================
 function gerarOrientacao(dados, ajustes, local, ehFrio) {
     let texto = "";
     const umidadeMedia = (dados.umidadeMin + dados.umidadeMax) / 2;
 
-    // Avisos climáticos
     if(dados.tempMin <= 12) texto += `<div class="alerta">⚠️ Temperaturas amenas: favorece secagem natural e tratos sem irrigação excessiva.</div>`;
     if(dados.tempMin <= 8 && ajustes.riscoGeada >= 1) texto += `<div class="prejudicial">🚨 Atenção: possibilidade de geada leve em áreas baixas — proteja mudas jovens.</div>`;
 
-    // Umidade e riscos
     if(umidadeMedia < 55) {
         texto += `<div class="alerta">⚠️ Baixa umidade: redobre cuidados com incêndios em áreas de pastagem e canaviais.</div>`;
         texto += `<div class="favoravel">✅ Janela favorável para colheitas e tratos que exigem solo seco.</div>`;
@@ -253,7 +251,6 @@ function gerarOrientacao(dados, ajustes, local, ehFrio) {
         texto += `<div class="favoravel">✅ Condições equilibradas: baixo risco de problemas sanitários.</div>`;
     }
 
-    // Operações com máquinas
     if(dados.chuvaTotal > 30) {
         texto += `<div class="prejudicial">🚧 Solo úmido/saturado: evite tráfego pesado para não compactar ou atolar.</div>`;
     } else if(dados.chuvaTotal < 15) {
@@ -262,7 +259,6 @@ function gerarOrientacao(dados, ajustes, local, ehFrio) {
         texto += `<div class="dado-clima">ℹ️ Condições moderadas: avalie o local antes de iniciar operações.</div>`;
     }
 
-    // Validação por época
     if(ehFrio && local.invalidas.length > 0) {
         texto += `<div class="prejudicial">❌ Não recomendado neste período: ${local.invalidas.join(", ")} — respeite o calendário oficial.</div>`;
     }
