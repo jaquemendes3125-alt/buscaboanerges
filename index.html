@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges v2.0 | Super Bomba Bombadão SPEED</title>
+    <title>🔒 BuscaBoanerges — Área de Trabalho</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body {
@@ -14,8 +14,8 @@
             color: #2c3e50;
         }
         .cabecalho { text-align: center; margin-bottom: 30px; }
-        h1 { color: #1B5E20; font-size: 30px; }
-        .subtitulo { color: #2E7D32; font-size: 14px; margin-top: 5px; }
+        h1 { color: #1B5E20; font-size: 28px; }
+        .aviso { background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
         .campo { margin: 15px 0; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #2E7D32; }
         input {
@@ -67,8 +67,8 @@
 <body>
 
 <div class="cabecalho">
-    <h1>🔍 SUPER BUSCABOANERGES v2.0</h1>
-    <p class="subtitulo">Fórmula Original + FCA + Solo + Temperatura — Sistema Auto-Regulado</p>
+    <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
+    <p class="aviso">⚡ Acesso exclusivo para geração de relatórios. Não compartilhar.</p>
 </div>
 
 <div style="background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #c8e6c9;">
@@ -91,17 +91,16 @@
 
 <script>
 // ==================================================
-// 📐 FÓRMULAS OFICIAIS DO BUSCABOANERGES
+// 📐 FÓRMULAS OFICIAIS — ACESSO EXCLUSIVO
 // ==================================================
 
-// 🔹 DADOS POR ESTADO E MUNICÍPIO
 const BASE_DADOS = {
     "SP": {
         nome: "São Paulo",
-        vazioSoja: [6,7,8,9], // Jun a Set — PROIBIDO
-        janelaMilho: [10,11,12,1,2,3], // Out a Mar
-        fatorSolo: 1.1, // Latossolo Vermelho Argiloso
-        chuvaHistorica: { 8: 35 }, // Agosto: 35mm/mês
+        vazioSoja: [6,7,8,9],
+        janelaMilho: [10,11,12,1,2,3],
+        fatorSolo: 1.1,
+        chuvaHistorica: { 8: 35 },
         temperatura: { min:15, max:29 }
     },
     "MT": {
@@ -122,7 +121,6 @@ const BASE_DADOS = {
     }
 };
 
-// 🔹 EXIGÊNCIA HÍDRICA POR CULTURA
 const CULTURAS = [
     { nome: "Soja", chuvaMinSemanal: 28, exigeZarc: true },
     { nome: "Milho Verão", chuvaMinSemanal: 24, exigeZarc: true },
@@ -130,23 +128,15 @@ const CULTURAS = [
     { nome: "Cana-de-açúcar", chuvaMinSemanal: 14, exigeZarc: false }
 ];
 
-// 🔹 CURVA DE CONFIANÇA (Semana 1 → Semana 5)
 const CONFIANCA = [94.8, 85.5, 72.0, 60.0, 52.0];
 
-// ==================================================
-// ⚙️ MOTOR — FÓRMULA FCA + TRAVAS AUTO-REGULADAS
-// ==================================================
-
 function calcularFCA(chuvaSemana, chuvaMin, confianca, fatorSolo, tempMin, tempMax) {
-    // Fator Temperatura (reduz aptidão se fora da faixa 12°C a 30°C)
     let fatorTemp = 1.0;
     if (tempMin < 12 || tempMax > 30) fatorTemp = 0.7;
     if (tempMin < 10 || tempMax > 32) fatorTemp = 0.4;
 
-    // FÓRMULA FCA COMPLETA
     const FCA = (chuvaSemana / chuvaMin) * fatorSolo * fatorTemp * (confianca / 100);
 
-    // CLASSIFICAÇÃO
     if (FCA >= 1.0) return { valor: FCA.toFixed(2), classe: "plena", texto: "✅ Aptidão PLENA" };
     if (FCA >= 0.5) return { valor: FCA.toFixed(2), classe: "moderada", texto: "⚠️ Aptidão MODERADA" };
     return { valor: FCA.toFixed(2), classe: "restrita", texto: "❌ Aptidão RESTRITA" };
@@ -168,7 +158,6 @@ function gerarRelatorioCompleto() {
         return;
     }
 
-    // 🔹 EXTRAIR DADOS
     const [cidade, uf] = cidadeInput.split('-').map(s => s.trim());
     const { mes: mesInicio } = parseData(dataInicioStr);
     const dadosEstado = BASE_DADOS[uf.toUpperCase()] || BASE_DADOS["PADRAO"];
@@ -186,18 +175,15 @@ function gerarRelatorioCompleto() {
     let tempMinBase = dadosEstado.temperatura.min;
     let tempMaxBase = dadosEstado.temperatura.max;
 
-    // 🔹 GERAR 5 SEMANAS
     for (let sem = 0; sem < 5; sem++) {
         const conf = CONFIANCA[sem];
         const chuvaSemana = Math.round((chuvaMes / 5) * (0.7 + Math.random() * 0.6));
         const tempMin = Math.round(tempMinBase - 1 + Math.random() * 2);
         const tempMax = Math.round(tempMaxBase - 2 + Math.random() * 4);
 
-        // 🔹 TRAVA VAZIO SANITÁRIO
         const estaProibidoSoja = dadosEstado.vazioSoja.includes(mesInicio);
         const estaProibidoMilho = !dadosEstado.janelaMilho.includes(mesInicio);
 
-        // 🔹 CALCULAR FCA POR CULTURA
         let linhasCulturas = "";
         CULTURAS.forEach(cult => {
             if (cult.nome === "Soja" && estaProibidoSoja) {
@@ -210,7 +196,6 @@ function gerarRelatorioCompleto() {
             }
         });
 
-        // 🔹 MONTAR CARD DA SEMANA
         htmlSemanas += `
         <div class="semana-card">
             <strong>🔹 Semana ${sem+1} | Confiança: ${conf}%</strong><br>
@@ -220,7 +205,6 @@ function gerarRelatorioCompleto() {
         </div>`;
     }
 
-    // 🔹 PARECER FINAL
     const CFI_GERAL = CONFIANCA.reduce((a,b)=>a+b,0)/5;
     htmlSemanas += `<hr>
     <h3>📊 PARECER GERAL</h3>
