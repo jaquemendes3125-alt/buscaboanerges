@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuscaBoanerges | Análise Agroclimática</title>
 
-    <!-- FIREBASE — CONFIGURAÇÃO ORIGINAL DO SEU PROJETO -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -77,18 +76,16 @@
         }
         .trava { background: #ffebee; padding: 6px 10px; border-radius: 4px; margin: 4px 0; display: inline-block; color: #C62828; font-weight: bold; }
         hr { border: none; border-top: 1px dashed #c8e6c9; margin: 18px 0; }
-        .sucesso { color: #2E7D32; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- PÁGINA PÚBLICA -->
     <div class="pagina-publica" id="tela-publica">
         <h1>🔍 BUSCABOANERGES</h1>
-        <p class="subtitulo">Análise Agroclimática com Fórmula Científica Auto-Regulada</p>
+        <p class="subtitulo">Análise Agroclimática com Fórmula Científica</p>
         <h2>📋 O que é</h2>
         <p>Sistema de análise e previsão agroclimática que combina dados climáticos, regras oficiais do ZARC/MAPA e cálculo de aptidão agrícola.</p>
-        <p>A cada consulta, renova automaticamente o Banco de Dados com as condições mais recentes.</p>
+        <p>Avalia condições de plantio, respeita janelas legais e indica períodos favoráveis com base em critérios científicos.</p>
         <h2>🎯 Abrangência</h2>
         <p>Qualquer região do Brasil. Sem limite de período de análise.</p>
         <div class="contato">
@@ -96,18 +93,17 @@
             <p class="destaque">WhatsApp: (015) 98156-5052</p>
             <p class="destaque">E-mail: buscaboanerges@gmail.com</p>
         </div>
-        <div class="rodape"><p>© 2026 BuscaBoanerges • Banco de Dados Firebase ativo e auto-renovável.</p></div>
+        <div class="rodape"><p>© 2026 BuscaBoanerges. Todos os direitos reservados.</p></div>
     </div>
 
-    <!-- ÁREA DE TRABALHO -->
     <div class="area-trabalho" id="tela-trabalho">
         <div class="cabecalho-trabalho">
             <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-            <p class="aviso">⚡ Acesso exclusivo. Fórmula FCA ativa • Banco se renova a cada consulta.</p>
+            <p class="aviso">Acesso exclusivo.</p>
         </div>
         <div class="formulario">
             <div class="campo">
-                <label>Cidade e Estado (Ex: São Roque - SP):</label>
+                <label>Cidade e Estado (Ex: Salto - SP):</label>
                 <input type="text" id="cidadeInput" placeholder="Digite a cidade e o estado">
             </div>
             <div class="campo">
@@ -124,29 +120,19 @@
     </div>
 
 <script>
-// ==============================================
-// 🔑 CONFIGURAÇÃO DO FIREBASE — SEU PROJETO ORIGINAL
-// ==============================================
 const firebaseConfig = {
     databaseURL: "https://buscaboanerges-default-rtdb.firebaseio.com",
     projectId: "buscaboanerges"
 };
 
-// INICIA O FIREBASE
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ==============================================
-// 🔒 ACESSO SECRETO — ENDEREÇO EXATO QUE VOCÊ USA
-// ==============================================
 if(window.location.hash === "#acesso_buscaboanerges_secreto"){
     document.getElementById("tela-publica").style.display = "none";
     document.getElementById("tela-trabalho").style.display = "block";
 }
 
-// ==============================================
-// 📅 LÊ DATAS — ACEITA COM BARRA, SEM BARRA, COM ESPAÇO
-// ==============================================
 function parseData(texto) {
     let limpo = texto.replace(/\D/g, "");
     if (limpo.length === 8) {
@@ -159,9 +145,6 @@ function parseData(texto) {
     return null;
 }
 
-// ==============================================
-// 📂 BANCO DE DADOS ORIGINAL — POR ESTADO
-// ==============================================
 const DADOS_ESTADO = {
     "SP": { nome: "São Paulo", fatorSolo: 1.1, chuva: 35, tMin: 15, tMax: 29 },
     "MG": { nome: "Minas Gerais", fatorSolo: 1.05, chuva: 40, tMin: 16, tMax: 30 },
@@ -179,36 +162,22 @@ const CULTURAS = [
     { nome: "Cana-de-açúcar", chuvaMin: 15, tempIdeal: [18,30], vazio: [] }
 ];
 
-// ==============================================
-// 🔄 AUTO-RENOVAÇÃO: SALVA NO FIREBASE A CADA PESQUISA
-// ==============================================
-async function salvarNoFirebase(cidade, periodo, dadosRelatorio) {
+async function salvarNoBanco(cidade, dados) {
     try {
-        const ref = db.ref("historico/" + cidade.replace(/\W/g, "_").toLowerCase() + "_" + Date.now());
-        await ref.set({
-            cidade: cidade,
-            periodo: periodo,
-            dataConsulta: new Date().toISOString(),
-            dados: dadosRelatorio,
-            origem: "Fórmula FCA — Auto-Reabastecimento"
-        });
-        return true;
+        const ref = db.ref("consultas/" + cidade.replace(/\W/g, "_").toLowerCase() + "_" + Date.now());
+        await ref.set(dados);
     } catch (e) {
-        console.log("⚠️ Firebase:", e.message);
-        return false;
+        console.log("Erro ao salvar:", e);
     }
 }
 
-// ==============================================
-// 🧮 FUNÇÃO PRINCIPAL — FÓRMULA FCA + BANCO DE DADOS
-// ==============================================
 async function gerarRelatorioCompleto() {
     const cidade = document.getElementById('cidadeInput').value.trim().toUpperCase();
     const txtInicio = document.getElementById('dataInicio').value.trim();
     const txtFim = document.getElementById('dataFim').value.trim();
     const res = document.getElementById('resultado');
 
-    res.innerHTML = "<p>🔄 Lendo Banco de Dados • Aplicando Fórmula FCA • Atualizando...</p>";
+    res.innerHTML = "<p>Aplicando Fórmula FCA...</p>";
 
     if (!cidade || !txtInicio || !txtFim) {
         alert("PREENCHA TODOS OS CAMPOS!");
@@ -220,31 +189,27 @@ async function gerarRelatorioCompleto() {
     const dFim = parseData(txtFim);
 
     if (!dInicio || !dFim) {
-        alert("DATA INVÁLIDA! Digite assim: 03/08/2026");
+        alert("DATA INVÁLIDA! Digite: dia/mês/ano");
         res.innerHTML = "";
         return;
     }
 
-    // IDENTIFICA O ESTADO
     let uf = "PADRAO";
     for (let sigla of Object.keys(DADOS_ESTADO)) {
         if (sigla !== "PADRAO" && cidade.includes(sigla)) { uf = sigla; break; }
     }
     const est = DADOS_ESTADO[uf];
 
-    // CALCULA PERÍODO
     const ini = new Date(parseInt(dInicio.ano), parseInt(dInicio.mes)-1, parseInt(dInicio.dia));
     const fim = new Date(parseInt(dFim.ano), parseInt(dFim.mes)-1, parseInt(dFim.dia));
     const qtdSemanas = Math.max(1, Math.ceil((fim - ini)/(7*86400000)));
-    const periodoTexto = `${dInicio.dia}/${dInicio.mes}/${dInicio.ano} a ${dFim.dia}/${dFim.mes}/${dFim.ano}`;
+    const periodo = `${dInicio.dia}/${dInicio.mes}/${dInicio.ano} a ${dFim.dia}/${dFim.mes}/${dFim.ano}`;
 
-    // GERA O RELATÓRIO
     let html = `<h3>📋 RELATÓRIO — ${cidade}</h3>`;
-    html += `<p>📅 Período: ${periodoTexto}</p>`;
-    html += `<p>🪨 Fator Solo: ${est.fatorSolo} | 📍 Estado: ${est.nome}</p>`;
-    html += `<p class="sucesso">✅ Fórmula FCA aplicada • Banco de Dados atualizado</p><hr>`;
+    html += `<p>Período: ${periodo}</p>`;
+    html += `<p>Fator Solo: ${est.fatorSolo} | Estado: ${est.nome}</p><hr>`;
 
-    let dadosParaSalvar = [];
+    let dadosParaSalvar = { cidade, periodo, semanas: [] };
 
     for (let s=0; s<qtdSemanas; s++) {
         const sInicio = new Date(ini); sInicio.setDate(sInicio.getDate() + s*7);
@@ -264,7 +229,7 @@ async function gerarRelatorioCompleto() {
         for (let c of CULTURAS) {
             if (c.vazio.includes(mes)) {
                 html += `<span class="trava">🚫 ${c.nome}: PROIBIDA — Vazio Sanitário</span><br>`;
-                semana.culturas.push({nome: c.nome, aptidao: "PROIBIDA"});
+                semana.culturas.push({nome: c.nome, status: "PROIBIDA"});
             } else {
                 const fChuva = Math.min(chuva / c.chuvaMin, 1.5);
                 const tMed = (tMin + tMax)/2;
@@ -278,17 +243,15 @@ async function gerarRelatorioCompleto() {
             }
         }
         html += `</div>`;
-        dadosParaSalvar.push(semana);
+        dadosParaSalvar.semanas.push(semana);
     }
 
     html += `<hr><p><strong>Confiança da previsão:</strong> 94,8%</p>`;
-    html += `<p>💧 Chuva mensal esperada: ~${est.chuva} mm</p>`;
-    html += `<p>⚖️ Vazio Sanitário: Respeitado automaticamente</p>`;
+    html += `<p>Chuva mensal esperada: ~${est.chuva} mm</p>`;
+    html += `<p>Vazio Sanitário: Respeitado automaticamente</p>`;
 
     res.innerHTML = html;
-
-    // 🔄 SALVA NO FIREBASE — AUTO-RENOVAÇÃO
-    await salvarNoFirebase(cidade, periodoTexto, dadosParaSalvar);
+    await salvarNoBanco(cidade, dadosParaSalvar);
 }
 </script>
 </body>
