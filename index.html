@@ -36,10 +36,10 @@
         .destaque { font-weight: bold; color: #1B5E20; }
         .rodape { margin-top: 30px; font-size: 13px; color: #666; text-align: center; }
 
-        /* ===== ÁREA SECRETA — INICIALMENTE OCULTA ===== */
-        .area-secreta { display: none; }
-        .cabecalho-secreto { text-align: center; margin-bottom: 30px; }
-        .cabecalho-secreto h1 { font-size: 28px; }
+        /* ===== ÁREA DE TRABALHO — INICIALMENTE OCULTA ===== */
+        .area-trabalho { display: none; }
+        .cabecalho-trabalho { text-align: center; margin-bottom: 30px; }
+        .cabecalho-trabalho h1 { font-size: 28px; }
         .aviso { background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; text-align: center; }
         .formulario {
             background: #fff;
@@ -93,7 +93,9 @@
 </head>
 <body>
 
-    <!-- PÁGINA PÚBLICA -->
+    <!-- ============================================== -->
+    <!-- INTERFACE 1 — PÚBLICA (Cliente vê isso) -->
+    <!-- ============================================== -->
     <div class="pagina-publica" id="tela-publica">
         <h1>🔍 BUSCABOANERGES</h1>
         <p class="subtitulo">Análise Agroclimática com Fórmula Científica Auto-Regulada</p>
@@ -116,9 +118,11 @@
         </div>
     </div>
 
-    <!-- ÁREA SECRETA -->
-    <div class="area-secreta" id="tela-secreta">
-        <div class="cabecalho-secreto">
+    <!-- ============================================== -->
+    <!-- INTERFACE 2 — TRABALHO (Você vê isso) -->
+    <!-- ============================================== -->
+    <div class="area-trabalho" id="tela-trabalho">
+        <div class="cabecalho-trabalho">
             <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
             <p class="aviso">⚡ Acesso exclusivo. Não compartilhar.</p>
         </div>
@@ -144,11 +148,16 @@
 
 <script>
 // ==============================================
-// SÓ FUNCIONA COM O SÍMBOLO # NO FINAL — ISSO O GITHUB ACEITA
+// SISTEMA DE TROCA DE TELA
 // ==============================================
-if(window.location.hash === "#acesso-buscaboanerges-secreto"){
+function mostrarTelaTrabalho(){
     document.getElementById("tela-publica").style.display = "none";
-    document.getElementById("tela-secreta").style.display = "block";
+    document.getElementById("tela-trabalho").style.display = "block";
+}
+
+// VERIFICA O ENDEREÇO AUTOMATICAMENTE
+if(window.location.hash === "#acesso-buscaboanerges-secreto"){
+    mostrarTelaTrabalho();
 }
 
 // ==============================================
