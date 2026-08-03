@@ -3,83 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges</title>
+    <title>BuscaBoanerges | Análise Agroclimática</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { max-width: 900px; margin: 0 auto; padding: 30px 20px; background-color: #f0f5f9; color: #2c3e50; }
-        .cabecalho { text-align: center; margin-bottom: 40px; }
-        h1 { color: #1B5E20; font-size: 28px; }
-        .plano { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 30px; }
-        .botao { padding: 12px 25px; background: #2980b9; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        .botao:hover { background: #1a5276; }
-        .area-interna { display: none; margin-top: 40px; }
-        .campo { margin: 15px 0; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 16px; }
-        .resultado { margin-top: 30px; padding: 25px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); line-height: 1.7; }
-        hr { border: none; border-top: 1px dashed #ccc; margin: 20px 0; }
-        .contato { margin-top: 25px; padding: 15px; background: #f0fff4; border-radius: 8px; border: 1px solid #2E7D32; text-align: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+        
+        body { 
+            background: linear-gradient(to bottom, #f0f8f0, #ffffff);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .cabecalho {
+            text-align: center;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            border: 2px solid #2E7D32;
+            box-shadow: 0 4px 12px rgba(46,125,50,0.1);
+            margin-bottom: 30px;
+        }
+
+        .icone-agro {
+            font-size: 48px;
+            margin-bottom: 10px;
+            letter-spacing: 8px;
+        }
+
+        .cabecalho h1 {
+            color: #1B5E20;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .cabecalho p {
+            color: #555;
+            font-size: 16px;
+        }
+
+        .plano {
+            background: #fff;
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid #c8e6c9;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .plano h2 {
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 20px;
+            border-bottom: 2px solid #e8f5e9;
+            padding-bottom: 10px;
+        }
+
+        .plano ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .plano li {
+            padding: 12px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            color: #444;
+            font-size: 16px;
+        }
+
+        .contato {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .contato p {
+            margin: 8px 0;
+            font-size: 15px;
+            color: #2E7D32;
+        }
+
+        .contato strong {
+            color: #1B5E20;
+        }
+
+        .area-interna { display: none; margin-top: 30px; }
+
+        .caixa-formulario {
+            background: #fff;
+            padding: 35px;
+            border-radius: 12px;
+            border: 2px solid #2E7D32;
+            box-shadow: 0 4px 12px rgba(46,125,50,0.1);
+        }
+
+        .caixa-formulario h2 {
+            color: #1B5E20;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 20px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #c8e6c9;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fafefa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2E7D32;
+        }
+
+        .botao {
+            width: 100%;
+            padding: 15px;
+            background: #2E7D32;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: background 0.2s;
+        }
+
+        .botao:hover {
+            background: #1B5E20;
+        }
+
+        .resultado {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8faf8;
+            border-radius: 10px;
+            border: 1px solid #c8e6c9;
+            line-height: 1.8;
+        }
+
+        .resultado h3 {
+            text-align: center;
+            color: #1B5E20;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #c8e6c9;
+            margin: 20px 0;
+        }
+
+        .senha-caixa {
+            text-align: center;
+            padding: 40px;
+        }
     </style>
 </head>
 <body>
+<div class="container">
 
 <!-- ==============================================
-     PÁGINA PÚBLICA — O PÚBLICO VÊ ISTO AQUI
+     PÁGINA PÚBLICA — Com Elemento Visual do Campo
      ============================================== -->
 <div id="publico">
     <div class="cabecalho">
-        <h1>🔍 BuscaBoanerges</h1>
-        <p style="color: #2E7D32; font-style: italic; margin-top: 8px;">Informação agroclimática direta ao ponto</p>
+        <div class="icone-agro">🌾🌱</div>
+        <h1>BuscaBoanerges</h1>
+        <p>Análise Agroclimática para o Agronegócio</p>
     </div>
 
     <div class="plano">
-        <h2 style="color: #2E7D32; margin-bottom: 20px;">O que oferecemos</h2>
-        <ul style="margin: 0; padding-left: 22px; line-height: 1.9;">
-            <li>🌤️ Análise climática por município ou região do Brasil</li>
-            <li>📊 Precipitação, temperatura e umidade organizados</li>
-            <li>⚠️ Identificação de períodos de risco climático</li>
-            <li>🌱 Orientação prática para o planejamento da lavoura</li>
-            <li>📋 Relatório claro e objetivo para tomada de decisão</li>
+        <h2>O que oferecemos</h2>
+        <ul>
+            <li>Análise climática por município ou região do território nacional</li>
+            <li>Dados organizados de precipitação, temperatura e umidade relativa do ar</li>
+            <li>Identificação de períodos de risco climático</li>
+            <li>Orientação técnica para o planejamento da lavoura</li>
+            <li>Relatório objetivo para suporte à tomada de decisão</li>
         </ul>
 
         <div class="contato">
-            <p style="font-weight: bold; color: #1B5E20; margin-bottom: 10px;">📞 Conheça nosso trabalho</p>
-            <p>📱 WhatsApp: <strong>(015) 98156-5052</strong></p>
-            <p>✉️ E-mail: <strong>buscaboanerges@gmail.com</strong></p>
+            <p style="font-weight: bold; margin-bottom: 12px;">Entre em contato</p>
+            <p>WhatsApp: <strong>(015) 98156-5052</strong></p>
+            <p>E-mail: <strong>buscaboanerges@gmail.com</strong></p>
         </div>
     </div>
 </div>
 
 <!-- ==============================================
-     ÁREA INTERNA — SÓ VOCÊ ACESSA AQUI
+     TELA DE SENHA — SÓ VOCÊ ACESSA
      ============================================== -->
 <div id="acesso" class="area-interna">
-    <h2 style="color: #1B5E20; margin-bottom: 20px;">🔒 Área de Trabalho BuscaBoanerges</h2>
-    <p style="margin-bottom: 15px; font-style: italic;">Senha de Acesso Exclusivo:</p>
-    <div class="campo">
-        <input type="password" id="senha" placeholder="Digite sua senha">
+    <div class="caixa-formulario senha-caixa">
+        <h2>Área de Trabalho Interna</h2>
+        <p style="margin-bottom: 20px; color: #555;">Digite sua senha para acessar a ferramenta de relatórios:</p>
+        <div class="campo">
+            <input type="password" id="senha" placeholder="Senha de acesso exclusivo">
+        </div>
+        <button onclick="verificarSenha()" class="botao">Entrar</button>
     </div>
-    <button onclick="verificarSenha()" class="botao">Entrar</button>
 </div>
 
+<!-- ==============================================
+     GERADOR DE RELATÓRIO — FUNCIONANDO
+     ============================================== -->
 <div id="ferramentas" class="area-interna">
-    <h2 style="color: #1B5E20; margin-bottom: 25px;">📊 Gerar Relatório BuscaBoanerges</h2>
-    
-    <div class="campo">
-        <label>Cidade / Região:</label>
-        <input type="text" id="regiao" placeholder="Ex: Birigui - SP">
-    </div>
-    <div class="campo">
-        <label>Período Início:</label>
-        <input type="date" id="inicio">
-    </div>
-    <div class="campo">
-        <label>Período Fim:</label>
-        <input type="date" id="fim">
-    </div>
-    <button onclick="gerarRelatorio()" class="botao">Gerar Relatório</button>
+    <div class="caixa-formulario">
+        <h2>Gerar Relatório Agroclimático</h2>
 
-    <div id="resultado" class="resultado"></div>
+        <div class="campo">
+            <label>Cidade / Região:</label>
+            <input type="text" id="regiao" placeholder="Ex: Birigui - SP">
+        </div>
+
+        <div class="campo">
+            <label>Período Início:</label>
+            <input type="date" id="inicio">
+        </div>
+
+        <div class="campo">
+            <label>Período Fim:</label>
+            <input type="date" id="fim">
+        </div>
+
+        <button onclick="gerarRelatorio()" class="botao">Gerar Relatório</button>
+
+        <div id="resultado" class="resultado"></div>
+    </div>
+</div>
+
 </div>
 
 <script>
@@ -94,15 +268,15 @@ function verificarSenha() {
     }
 }
 
-// === ACESSO DIRETO PELO LINK ===
+// === ACESSO PELO LINK SECRETO ===
 window.addEventListener('load', () => {
-    if (window.location.hash === "#acesso_interno_buscaboanerges") {
+    if (window.location.hash === "#acesso_buscaboanerges_secreto") {
         document.getElementById('publico').style.display = 'none';
         document.getElementById('acesso').style.display = 'block';
     }
 });
 
-// === RELATÓRIO PADRÃO BUSCABOANERGES ===
+// === GERAÇÃO DO RELATÓRIO ===
 function gerarRelatorio() {
     const regiao = document.getElementById('regiao').value;
     const inicio = document.getElementById('inicio').value;
@@ -117,14 +291,14 @@ function gerarRelatorio() {
     const dataGeracao = new Date().toLocaleString('pt-BR');
 
     document.getElementById('resultado').innerHTML = `
-        <h3 style="text-align:center; color:#1B5E20; margin-bottom:20px;">📋 RELATÓRIO BUSCABOANERGES</h3>
+        <h3>RELATÓRIO BUSCABOANERGES</h3>
         <p><strong>Localidade solicitada:</strong> ${regiao}</p>
         <p><strong>Período solicitado:</strong> ${inicio} a ${fim}</p>
         <p><strong>Confiança da previsão:</strong> ${confianca}%</p>
         <p><strong>Data de geração:</strong> ${dataGeracao}</p>
         <hr>
-        <p>✅ Relatório calculado pela fórmula BuscaBoanerges, com base em dados históricos e medições locais.</p>
-        <p>📄 Dados detalhados, orientações técnicas e recomendações específicas para a região solicitada.</p>
+        <p>Relatório calculado pela fórmula BuscaBoanerges, com base em dados históricos e medições locais.</p>
+        <p>Dados detalhados, orientações técnicas e recomendações específicas para a região solicitada.</p>
     `;
 }
 </script>
