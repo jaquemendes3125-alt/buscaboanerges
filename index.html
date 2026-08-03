@@ -93,9 +93,7 @@
 </head>
 <body>
 
-    <!-- ============================================== -->
-    <!-- INTERFACE 1 — PÚBLICA (Cliente vê isso) -->
-    <!-- ============================================== -->
+    <!-- PÁGINA PÚBLICA -->
     <div class="pagina-publica" id="tela-publica">
         <h1>🔍 BUSCABOANERGES</h1>
         <p class="subtitulo">Análise Agroclimática com Fórmula Científica Auto-Regulada</p>
@@ -118,9 +116,7 @@
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- INTERFACE 2 — TRABALHO (Você vê isso) -->
-    <!-- ============================================== -->
+    <!-- ÁREA DE TRABALHO -->
     <div class="area-trabalho" id="tela-trabalho">
         <div class="cabecalho-trabalho">
             <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
@@ -148,16 +144,11 @@
 
 <script>
 // ==============================================
-// SISTEMA DE TROCA DE TELA
+// AGORA COM O NOME EXATO QUE ESTÁ NA SUA BARRA
 // ==============================================
-function mostrarTelaTrabalho(){
+if(window.location.hash === "#acesso_buscaboanerges_secreto"){
     document.getElementById("tela-publica").style.display = "none";
     document.getElementById("tela-trabalho").style.display = "block";
-}
-
-// VERIFICA O ENDEREÇO AUTOMATICAMENTE
-if(window.location.hash === "#acesso-buscaboanerges-secreto"){
-    mostrarTelaTrabalho();
 }
 
 // ==============================================
