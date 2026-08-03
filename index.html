@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔒 BuscaBoanerges — Área de Trabalho</title>
+    <title>🔒 Área de Trabalho — BuscaBoanerges</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body {
@@ -91,34 +91,12 @@
 
 <script>
 // ==================================================
-// 📐 FÓRMULAS OFICIAIS — ACESSO EXCLUSIVO
+// 📐 FÓRMULAS OFICIAIS DO BUSCABOANERGES
 // ==================================================
-
 const BASE_DADOS = {
-    "SP": {
-        nome: "São Paulo",
-        vazioSoja: [6,7,8,9],
-        janelaMilho: [10,11,12,1,2,3],
-        fatorSolo: 1.1,
-        chuvaHistorica: { 8: 35 },
-        temperatura: { min:15, max:29 }
-    },
-    "MT": {
-        nome: "Mato Grosso",
-        vazioSoja: [6,7,8,9],
-        janelaMilho: [10,11,12,1,2,3],
-        fatorSolo: 1.0,
-        chuvaHistorica: { 8: 40 },
-        temperatura: { min:18, max:32 }
-    },
-    "PADRAO": {
-        nome: "Brasil",
-        vazioSoja: [6,7,8,9],
-        janelaMilho: [10,11,12,1,2,3],
-        fatorSolo: 1.0,
-        chuvaHistorica: { 8: 35 },
-        temperatura: { min:15, max:30 }
-    }
+    "SP": { nome: "São Paulo", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.1, chuvaHistorica: { 8: 35 }, temperatura: { min:15, max:29 } },
+    "MT": { nome: "Mato Grosso", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.0, chuvaHistorica: { 8: 40 }, temperatura: { min:18, max:32 } },
+    "PADRAO": { nome: "Brasil", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.0, chuvaHistorica: { 8: 35 }, temperatura: { min:15, max:30 } }
 };
 
 const CULTURAS = [
@@ -134,9 +112,7 @@ function calcularFCA(chuvaSemana, chuvaMin, confianca, fatorSolo, tempMin, tempM
     let fatorTemp = 1.0;
     if (tempMin < 12 || tempMax > 30) fatorTemp = 0.7;
     if (tempMin < 10 || tempMax > 32) fatorTemp = 0.4;
-
     const FCA = (chuvaSemana / chuvaMin) * fatorSolo * fatorTemp * (confianca / 100);
-
     if (FCA >= 1.0) return { valor: FCA.toFixed(2), classe: "plena", texto: "✅ Aptidão PLENA" };
     if (FCA >= 0.5) return { valor: FCA.toFixed(2), classe: "moderada", texto: "⚠️ Aptidão MODERADA" };
     return { valor: FCA.toFixed(2), classe: "restrita", texto: "❌ Aptidão RESTRITA" };
@@ -152,7 +128,6 @@ function gerarRelatorioCompleto() {
     const dataInicioStr = document.getElementById('dataInicio').value.trim();
     const dataFimStr = document.getElementById('dataFim').value.trim();
     const resDiv = document.getElementById('resultado');
-
     if (!cidadeInput.includes('-') || !dataInicioStr || !dataFimStr) {
         alert("Preencha todos os campos corretamente!");
         return;
@@ -167,8 +142,7 @@ function gerarRelatorioCompleto() {
     resDiv.innerHTML = `<h2>📋 RELATÓRIO — ${cidade} - ${uf.toUpperCase()}</h2>
         <p>📅 Período: ${dataInicioStr} a ${dataFimStr}</p>
         <p>🪨 Fator Solo: ${fatorSolo} | 📍 Estado: ${dadosEstado.nome}</p>
-        <p class="info">🔄 Aplicando Fórmula FCA + Travas de Segurança...</p>
-        <hr>`;
+        <p class="info">🔄 Aplicando Fórmula FCA + Travas de Segurança...</p><hr>`;
 
     let htmlSemanas = "";
     let chuvaMes = dadosEstado.chuvaHistorica[mesInicio] || 35;
@@ -180,7 +154,6 @@ function gerarRelatorioCompleto() {
         const chuvaSemana = Math.round((chuvaMes / 5) * (0.7 + Math.random() * 0.6));
         const tempMin = Math.round(tempMinBase - 1 + Math.random() * 2);
         const tempMax = Math.round(tempMaxBase - 2 + Math.random() * 4);
-
         const estaProibidoSoja = dadosEstado.vazioSoja.includes(mesInicio);
         const estaProibidoMilho = !dadosEstado.janelaMilho.includes(mesInicio);
 
@@ -196,23 +169,19 @@ function gerarRelatorioCompleto() {
             }
         });
 
-        htmlSemanas += `
-        <div class="semana-card">
+        htmlSemanas += `<div class="semana-card">
             <strong>🔹 Semana ${sem+1} | Confiança: ${conf}%</strong><br>
             🌡️ Temperatura: ${tempMin}°C a ${tempMax}°C<br>
-            💧 Chuva prevista: ${chuvaSemana} mm<br>
-            ${linhasCulturas}
+            💧 Chuva prevista: ${chuvaSemana} mm<br>${linhasCulturas}
         </div>`;
     }
 
     const CFI_GERAL = CONFIANCA.reduce((a,b)=>a+b,0)/5;
-    htmlSemanas += `<hr>
-    <h3>📊 PARECER GERAL</h3>
-    <p><strong>CFI — Confiabilidade da Informação:</strong> ${CFI_GERAL.toFixed(1)}%</p>
-    <p>💧 Chuva mensal esperada: ~${chuvaMes} mm | Estação seca em curso</p>
-    <p>⚖️ Vazio Sanitário: ${estaProibidoSoja ? "✅ Respeitado automaticamente" : "Sem restrição neste mês"}</p>
-    <p class="info">ℹ️ Fórmula aplicada: FCA = (Chuva ÷ Mínima) × Solo × Temperatura × Confiança</p>
-    `;
+    htmlSemanas += `<hr><h3>📊 PARECER GERAL</h3>
+        <p><strong>CFI — Confiabilidade da Informação:</strong> ${CFI_GERAL.toFixed(1)}%</p>
+        <p>💧 Chuva mensal esperada: ~${chuvaMes} mm</p>
+        <p>⚖️ Vazio Sanitário: ${estaProibidoSoja ? "✅ Respeitado automaticamente" : "Sem restrição neste mês"}</p>
+        <p class="info">ℹ️ Fórmula aplicada: FCA = (Chuva ÷ Mínima) × Solo × Temperatura × Confiança</p>`;
 
     resDiv.innerHTML += htmlSemanas;
 }
