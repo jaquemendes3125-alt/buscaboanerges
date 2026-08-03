@@ -84,6 +84,9 @@
 </head>
 <body>
 
+    <!-- ============================================== -->
+    <!-- ✅ INTERFACE 1 — PÁGINA PÚBLICA (ESTÁ AQUI) -->
+    <!-- ============================================== -->
     <div class="caixa" id="pagina-publica">
         <h1>🔍 BUSCABOANERGES</h1>
         <p class="subtitulo">Análise Agroclimática com Fórmula Científica Auto-Regulada</p>
@@ -106,6 +109,9 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- ✅ INTERFACE 2 — ÁREA SECRETA (ESTÁ AQUI) -->
+    <!-- ============================================== -->
     <div class="caixa area-trabalho" id="area-trabalho">
         <div class="cabecalho">
             <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
@@ -132,11 +138,17 @@
     </div>
 
 <script>
+// ==============================================
+// SISTEMA DE TROCA DE INTERFACE
+// ==============================================
 if(window.location.hash === "#acesso"){
     document.getElementById("pagina-publica").style.display = "none";
     document.getElementById("area-trabalho").style.display = "block";
 }
 
+// ==============================================
+// DADOS E FÓRMULAS
+// ==============================================
 const BASE_DADOS = {
     "SP": { nome: "São Paulo", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.1, chuvaHistorica: { 8: 35 }, temperatura: { min:15, max:29 } },
     "MT": { nome: "Mato Grosso", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.0, chuvaHistorica: { 8: 40 }, temperatura: { min:18, max:32 } },
