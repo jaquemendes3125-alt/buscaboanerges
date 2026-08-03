@@ -3,20 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔒 Área de Trabalho — BuscaBoanerges</title>
+    <title>BuscaBoanerges | Análise Agroclimática</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body {
             background-color: #f4f7f4;
             max-width: 900px;
             margin: 0 auto;
-            padding: 30px 20px;
+            padding: 40px 20px;
             color: #2c3e50;
+            line-height: 1.8;
         }
-        .cabecalho { text-align: center; margin-bottom: 30px; }
-        h1 { color: #1B5E20; font-size: 28px; }
+        .caixa {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #c8e6c9;
+            text-align: center;
+        }
+        h1 { color: #1B5E20; font-size: 30px; margin-bottom: 10px; }
+        .subtitulo { color: #2E7D32; font-size: 15px; margin-bottom: 30px; }
+        h2 { color: #2E7D32; font-size: 18px; margin: 25px 0 10px; }
+        p { margin-bottom: 10px; font-size: 16px; }
+        .contato {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+        .destaque { font-weight: bold; color: #1B5E20; }
+        hr { border: none; border-top: 1px dashed #c8e6c9; margin: 25px 0; }
+        .rodape { margin-top: 30px; font-size: 13px; color: #666; text-align: center; }
+        .area-trabalho { display: none; }
+        .cabecalho { text-align: center; margin-bottom: 30px; padding-top: 20px; border-top: 2px dashed #c8e6c9; }
         .aviso { background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
-        .campo { margin: 15px 0; }
+        .campo { margin: 15px 0; text-align: left; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #2E7D32; }
         input {
             width: 100%;
@@ -46,6 +67,7 @@
             border: 1px solid #c8e6c9;
             line-height: 1.8;
             display: none;
+            text-align: left;
         }
         .semana-card {
             background: #fafafa;
@@ -54,58 +76,77 @@
             margin: 15px 0;
             border-radius: 0 8px 8px 0;
         }
-        .plena { border-left-color: #2E7D32; }
-        .moderada { border-left-color: #f39c12; }
-        .restrita { border-left-color: #c0392b; }
-        hr { border: none; border-top: 1px dashed #c8e6c9; margin: 20px 0; }
-        .sucesso { color: #2E7D32; font-weight: bold; }
+        .trava { background: #ffebee; padding: 8px; border-radius: 4px; margin: 5px 0; }
         .alerta { color: #C62828; font-weight: bold; }
         .info { color: #1565C0; }
-        .trava { background: #ffebee; padding: 8px; border-radius: 4px; margin: 5px 0; }
     </style>
 </head>
 <body>
 
-<div class="cabecalho">
-    <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-    <p class="aviso">⚡ Acesso exclusivo para geração de relatórios. Não compartilhar.</p>
-</div>
+    <div class="caixa" id="pagina-publica">
+        <h1>🔍 BUSCABOANERGES</h1>
+        <p class="subtitulo">Análise Agroclimática com Fórmula Científica Auto-Regulada</p>
 
-<div style="background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #c8e6c9;">
-    <div class="campo">
-        <label>Cidade e Estado (Ex: Salto - SP):</label>
-        <input type="text" id="cidadeInput" value="Salto - SP" placeholder="Cidade - UF">
-    </div>
-    <div class="campo">
-        <label>Data Inicial (dd/mm/aaaa):</label>
-        <input type="text" id="dataInicio" value="03/08/2026">
-    </div>
-    <div class="campo">
-        <label>Data Final (dd/mm/aaaa):</label>
-        <input type="text" id="dataFim" value="02/09/2026">
-    </div>
-    <button onclick="gerarRelatorioCompleto()" class="botao">📋 Gerar Relatório Completo</button>
-</div>
+        <h2>📋 O que é</h2>
+        <p>Sistema de análise e previsão agroclimática que combina dados climáticos, regras oficiais do ZARC/MAPA e cálculo de aptidão agrícola.</p>
+        <p>Avalia condições de plantio, respeita janelas legais e indica períodos favoráveis com base em critérios científicos.</p>
 
-<div id="resultado" class="resultado"></div>
+        <h2>🎯 Abrangência</h2>
+        <p>Qualquer região do Brasil. Sem limite de período de análise.</p>
+
+        <div class="contato">
+            <h2>📞 Contato</h2>
+            <p class="destaque">WhatsApp: (015) 98156-5052</p>
+            <p class="destaque">E-mail: buscaboanerges@gmail.com</p>
+        </div>
+
+        <div class="rodape">
+            <p>© 2026 BuscaBoanerges. Todos os direitos reservados.</p>
+        </div>
+    </div>
+
+    <div class="caixa area-trabalho" id="area-trabalho">
+        <div class="cabecalho">
+            <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
+            <p class="aviso">⚡ Acesso exclusivo. Não compartilhar.</p>
+        </div>
+
+        <div style="background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #c8e6c9;">
+            <div class="campo">
+                <label>Cidade e Estado (Ex: Salto - SP):</label>
+                <input type="text" id="cidadeInput" value="Salto - SP" placeholder="Cidade - UF">
+            </div>
+            <div class="campo">
+                <label>Data Inicial (dd/mm/aaaa):</label>
+                <input type="text" id="dataInicio" value="03/08/2026">
+            </div>
+            <div class="campo">
+                <label>Data Final (dd/mm/aaaa):</label>
+                <input type="text" id="dataFim" value="02/09/2026">
+            </div>
+            <button onclick="gerarRelatorioCompleto()" class="botao">📋 Gerar Relatório Completo</button>
+        </div>
+
+        <div id="resultado" class="resultado"></div>
+    </div>
 
 <script>
-// ==================================================
-// 📐 FÓRMULAS OFICIAIS DO BUSCABOANERGES
-// ==================================================
+if(window.location.hash === "#area-trabalho"){
+    document.getElementById("pagina-publica").style.display = "none";
+    document.getElementById("area-trabalho").style.display = "block";
+}
+
 const BASE_DADOS = {
     "SP": { nome: "São Paulo", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.1, chuvaHistorica: { 8: 35 }, temperatura: { min:15, max:29 } },
     "MT": { nome: "Mato Grosso", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.0, chuvaHistorica: { 8: 40 }, temperatura: { min:18, max:32 } },
     "PADRAO": { nome: "Brasil", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.0, chuvaHistorica: { 8: 35 }, temperatura: { min:15, max:30 } }
 };
-
 const CULTURAS = [
     { nome: "Soja", chuvaMinSemanal: 28, exigeZarc: true },
     { nome: "Milho Verão", chuvaMinSemanal: 24, exigeZarc: true },
     { nome: "Mandioca", chuvaMinSemanal: 10, exigeZarc: false },
     { nome: "Cana-de-açúcar", chuvaMinSemanal: 14, exigeZarc: false }
 ];
-
 const CONFIANCA = [94.8, 85.5, 72.0, 60.0, 52.0];
 
 function calcularFCA(chuvaSemana, chuvaMin, confianca, fatorSolo, tempMin, tempMax) {
@@ -113,9 +154,9 @@ function calcularFCA(chuvaSemana, chuvaMin, confianca, fatorSolo, tempMin, tempM
     if (tempMin < 12 || tempMax > 30) fatorTemp = 0.7;
     if (tempMin < 10 || tempMax > 32) fatorTemp = 0.4;
     const FCA = (chuvaSemana / chuvaMin) * fatorSolo * fatorTemp * (confianca / 100);
-    if (FCA >= 1.0) return { valor: FCA.toFixed(2), classe: "plena", texto: "✅ Aptidão PLENA" };
-    if (FCA >= 0.5) return { valor: FCA.toFixed(2), classe: "moderada", texto: "⚠️ Aptidão MODERADA" };
-    return { valor: FCA.toFixed(2), classe: "restrita", texto: "❌ Aptidão RESTRITA" };
+    if (FCA >= 1.0) return { valor: FCA.toFixed(2), texto: "✅ Aptidão PLENA" };
+    if (FCA >= 0.5) return { valor: FCA.toFixed(2), texto: "⚠️ Aptidão MODERADA" };
+    return { valor: FCA.toFixed(2), texto: "❌ Aptidão RESTRITA" };
 }
 
 function parseData(dataStr) {
@@ -128,10 +169,7 @@ function gerarRelatorioCompleto() {
     const dataInicioStr = document.getElementById('dataInicio').value.trim();
     const dataFimStr = document.getElementById('dataFim').value.trim();
     const resDiv = document.getElementById('resultado');
-    if (!cidadeInput.includes('-') || !dataInicioStr || !dataFimStr) {
-        alert("Preencha todos os campos corretamente!");
-        return;
-    }
+    if (!cidadeInput.includes('-') || !dataInicioStr || !dataFimStr) { alert("Preencha todos os campos!"); return; }
 
     const [cidade, uf] = cidadeInput.split('-').map(s => s.trim());
     const { mes: mesInicio } = parseData(dataInicioStr);
@@ -178,10 +216,10 @@ function gerarRelatorioCompleto() {
 
     const CFI_GERAL = CONFIANCA.reduce((a,b)=>a+b,0)/5;
     htmlSemanas += `<hr><h3>📊 PARECER GERAL</h3>
-        <p><strong>CFI — Confiabilidade da Informação:</strong> ${CFI_GERAL.toFixed(1)}%</p>
+        <p><strong>CFI — Confiabilidade:</strong> ${CFI_GERAL.toFixed(1)}%</p>
         <p>💧 Chuva mensal esperada: ~${chuvaMes} mm</p>
-        <p>⚖️ Vazio Sanitário: ${estaProibidoSoja ? "✅ Respeitado automaticamente" : "Sem restrição neste mês"}</p>
-        <p class="info">ℹ️ Fórmula aplicada: FCA = (Chuva ÷ Mínima) × Solo × Temperatura × Confiança</p>`;
+        <p>⚖️ Vazio Sanitário: ${estaProibidoSoja ? "✅ Respeitado automaticamente" : "Sem restrição"}</p>
+        <p class="info">ℹ️ Fórmula: FCA = (Chuva ÷ Mínima) × Solo × Temperatura × Confiança</p>`;
 
     resDiv.innerHTML += htmlSemanas;
 }
