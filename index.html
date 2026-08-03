@@ -36,8 +36,8 @@
         .destaque { font-weight: bold; color: #1B5E20; }
         .rodape { margin-top: 30px; font-size: 13px; color: #666; text-align: center; }
 
-        /* ===== ÁREA DE TRABALHO (INICIALMENTE OCULTA) ===== */
-        .area-trabalho { display: none; }
+        /* ===== ÁREA SECRETA — INICIALMENTE OCULTA ===== */
+        .area-secreta { display: none; }
         .cabecalho-secreto { text-align: center; margin-bottom: 30px; }
         .cabecalho-secreto h1 { font-size: 28px; }
         .aviso { background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; text-align: center; }
@@ -93,9 +93,7 @@
 </head>
 <body>
 
-    <!-- ============================================== -->
-    <!-- PÁGINA PÚBLICA — CLIENTE VÊ ISSO -->
-    <!-- ============================================== -->
+    <!-- PÁGINA PÚBLICA -->
     <div class="pagina-publica" id="tela-publica">
         <h1>🔍 BUSCABOANERGES</h1>
         <p class="subtitulo">Análise Agroclimática com Fórmula Científica Auto-Regulada</p>
@@ -118,10 +116,8 @@
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- ÁREA DE TRABALHO — SÓ VOCÊ VÊ ISSO -->
-    <!-- ============================================== -->
-    <div class="area-trabalho" id="tela-secreta">
+    <!-- ÁREA SECRETA -->
+    <div class="area-secreta" id="tela-secreta">
         <div class="cabecalho-secreto">
             <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
             <p class="aviso">⚡ Acesso exclusivo. Não compartilhar.</p>
@@ -148,15 +144,15 @@
 
 <script>
 // ==============================================
-// CONTROLE DE TELA — NÃO MEXER
+// SÓ FUNCIONA COM O SÍMBOLO # NO FINAL — ISSO O GITHUB ACEITA
 // ==============================================
-if(window.location.hash === "#acesso"){
+if(window.location.hash === "#acesso-buscaboanerges-secreto"){
     document.getElementById("tela-publica").style.display = "none";
     document.getElementById("tela-secreta").style.display = "block";
 }
 
 // ==============================================
-// BANCO DE DADOS E FÓRMULAS — NÃO MEXER
+// BANCO DE DADOS E FÓRMULAS
 // ==============================================
 const BASE_DADOS = {
     "SP": { nome: "São Paulo", vazioSoja: [6,7,8,9], janelaMilho: [10,11,12,1,2,3], fatorSolo: 1.1, chuvaHistorica: { 8: 35 }, temperatura: { min:15, max:29 } },
