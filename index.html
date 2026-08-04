@@ -22,12 +22,12 @@
         .pagina-publica .contatos p { font-size: 16px; margin: 8px 0; text-align: center; }
         .pagina-publica .contatos a { color: #2e7d32; font-weight: bold; text-decoration: none; }
 
-        /* ==== PÁGINA SECRETA — GERADOR DE RELATÓRIO ==== */
+        /* ==== PÁGINA DE TRABALHO ==== */
         .pagina-secreta { display: none; }
         .pagina-secreta.visivel { display: block; }
         .form-bloco { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px; }
         label { display: block; margin: 13px 0 5px 0; font-weight: bold; color: #2e7d32; font-size: 15px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 15px; background: #f9fef9; }
+        input { width: 100%; padding: 12px; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 16px; background: #f9fef9; }
         input.data { font-size: 18px; letter-spacing: 2px; }
         button { background: #2e7d32; color: white; border: none; padding: 13px 28px; font-size: 17px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 18px; font-weight: bold; }
         button:hover { background: #1b5e20; }
@@ -40,6 +40,7 @@
         .recomendacao { background: #e8f5e9; border-left: 4px solid #2e7d32; }
         hr { border: none; border-top: 1px solid #c8e6c9; margin: 12px 0; }
         .carregando { color: #2e7d32; font-style: italic; margin-top: 12px; display: none; }
+        .aviso { color: #e65100; background: #fff3e0; padding: 10px; border-radius: 6px; margin-top: 10px; }
         .barra-assertividade { height: 30px; background: #e0e0e0; border-radius: 15px; overflow: hidden; margin: 10px 0; }
         .barra-preenchida { height: 100%; text-align: center; line-height: 30px; color: white; font-weight: bold; transition: width 0.5s ease; }
         .favoravel { background: linear-gradient(90deg, #2e7d32, #4caf50); }
@@ -51,7 +52,7 @@
 <body>
 
 <!-- ======================================================
-     PÁGINA PÚBLICA — APRESENTAÇÃO E CONTATOS
+     PÁGINA PÚBLICA
      ====================================================== -->
 <div class="pagina-publica" id="paginaPublica">
     <header>
@@ -71,18 +72,18 @@
 </div>
 
 <!-- ======================================================
-     ÁREA DE TRABALHO — GERADOR DE RELATÓRIO COM DATAS
+     ÁREA DE TRABALHO — DIGITAÇÃO LIVRE DA CULTURA
      ====================================================== -->
 <div class="pagina-secreta" id="paginaSecreta">
     <header>
         <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-        <p class="subtitulo">Fórmula de Assertividade — Temp(40%) + Úm(30%) + Calendário(30%)</p>
+        <p class="subtitulo">Fórmula: Temp(40%) + Umidade(30%) + Calendário(30%)</p>
     </header>
 
     <div class="form-bloco">
-        <div class="datas-info">💡 Digite apenas os números — a barra aparece sozinha: dd/mm/aaaa</div>
+        <div class="datas-info">💡 Digite apenas os números nas datas — a barra aparece sozinha: dd/mm/aaaa</div>
 
-        <label>📍 Cidade (apenas nome, ex: Sorocaba)</label>
+        <label>📍 Cidade (ex: Salto)</label>
         <input type="text" id="cidade" placeholder="Digite o nome da cidade">
 
         <label>📅 Data Inicial</label>
@@ -91,25 +92,11 @@
         <label>📅 Data Final</label>
         <input type="text" id="dataFinal" class="data" placeholder="__/__/____" maxlength="10">
 
-        <label>🌱 Cultura</label>
-        <select id="cultura">
-            <optgroup label="🌾 Grãos">
-                <option value="Soja">Soja</option>
-                <option value="Milho">Milho</option>
-                <option value="Trigo">Trigo</option>
-            </optgroup>
-            <optgroup label="🌳 Permanentes / Industriais">
-                <option value="Cana-de-Açúcar">Cana-de-Açúcar</option>
-            </optgroup>
-            <optgroup label="🥬 Folhas / Hortaliças">
-                <option value="Alface">Alface</option>
-                <option value="Couve">Couve</option>
-                <option value="Espinafre">Espinafre</option>
-            </optgroup>
-        </select>
+        <label>🌱 Cultura (digite o nome, ex: Cana-de-Açúcar, Café, Alface...)</label>
+        <input type="text" id="cultura" placeholder="Digite o nome da cultura que deseja consultar">
 
         <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO COMPLETO</button>
-        <div id="carregando" class="carregando">🔄 Buscando dados climáticos... Aplicando Fórmula de Assertividade...</div>
+        <div id="carregando" class="carregando">🔄 Buscando dados... Aplicando Fórmula...</div>
     </div>
 
     <div id="resultado" class="resultado">
@@ -146,58 +133,66 @@
 function verificarAcesso() {
     const caminho = window.location.href.toLowerCase();
     const ehSecreto = caminho.indexOf("acesso_buscaboanerges_secreto") !== -1;
-    if (ehSecreto) {
-        document.getElementById("paginaPublica").style.display = "none";
-        document.getElementById("paginaSecreta").style.display = "block";
-    } else {
-        document.getElementById("paginaPublica").style.display = "block";
-        document.getElementById("paginaSecreta").style.display = "none";
-    }
+    document.getElementById("paginaPublica").style.display = ehSecreto ? "none" : "block";
+    document.getElementById("paginaSecreta").style.display = ehSecreto ? "block" : "none";
 }
 
 // ==========================================================
-// 📅 FORMATAÇÃO AUTOMÁTICA DE DATA — só digitar números!
+// 📅 FORMATAÇÃO AUTOMÁTICA DE DATA
 // ==========================================================
 function formatarData(input) {
-    let valor = input.value.replace(/\D/g, ''); // só deixa números
+    let valor = input.value.replace(/\D/g, '');
     let resultado = '';
-    
     if (valor.length > 0) resultado = valor.substring(0, 2);
     if (valor.length > 2) resultado += '/' + valor.substring(2, 4);
     if (valor.length > 4) resultado += '/' + valor.substring(4, 8);
-    
     input.value = resultado;
 }
 
-// Aplica a formatação automática nos campos de data
 document.addEventListener('DOMContentLoaded', function() {
-    const camposData = ['dataInicial', 'dataFinal'];
-    camposData.forEach(id => {
-        const campo = document.getElementById(id);
-        campo.addEventListener('input', function() { formatarData(this); });
+    ['dataInicial', 'dataFinal'].forEach(id => {
+        document.getElementById(id).addEventListener('input', e => formatarData(e.target));
     });
 });
 
 // ==========================================================
-// 📋 BANCO DE DADOS AGRO
+// 📋 BANCO DE DADOS COMPLETO — VÁRIAS CULTURAS
 // ==========================================================
 const BANCO_DE_DADOS_AGRO = {
-    "Soja":         { tipo: "Grão", temp_min: 20.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [10, 11, 12, 1] },
-    "Milho":        { tipo: "Grão", temp_min: 18.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [1, 2, 3, 10, 11, 12] },
-    "Trigo":        { tipo: "Grão", temp_min: 10.0, temp_max: 24.0, umidade_min: 45, meses_permitidos: [4, 5, 6, 7] },
-    "Cana-de-Açúcar": { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    "Alface":       { tipo: "Folha", temp_min: 15.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    "Couve":        { tipo: "Folha", temp_min: 12.0, temp_max: 22.0, umidade_min: 65, meses_permitidos: [3,4,5,6,7,8,9] },
-    "Espinafre":    { tipo: "Folha", temp_min: 10.0, temp_max: 20.0, umidade_min: 60, meses_permitidos: [4,5,6,7,8,9,10,11] }
+    // GRÃOS
+    "soja":        { tipo: "Grão", temp_min: 20.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [10,11,12,1] },
+    "milho":       { tipo: "Grão", temp_min: 18.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [1,2,3,10,11,12] },
+    "trigo":       { tipo: "Grão", temp_min: 10.0, temp_max: 24.0, umidade_min: 45, meses_permitidos: [4,5,6,7] },
+    "feijão":      { tipo: "Grão", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [9,10,11,2,3,4] },
+    "arroz":       { tipo: "Grão", temp_min: 22.0, temp_max: 32.0, umidade_min: 70, meses_permitidos: [10,11,12,1,2] },
+    "sorgo":       { tipo: "Grão", temp_min: 20.0, temp_max: 35.0, umidade_min: 50, meses_permitidos: [10,11,12,1,2,3] },
+    
+    // PERMANENTES / INDUSTRIAIS
+    "cana-de-açúcar": { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    "café":        { tipo: "Permanente", temp_min: 18.0, temp_max: 26.0, umidade_min: 60, meses_permitidos: [5,6,7,8] },
+    "algodão":     { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [10,11,12,1] },
+    "laranja":     { tipo: "Frutífera", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [6,7,8,9] },
+    "uva":         { tipo: "Frutífera", temp_min: 12.0, temp_max: 28.0, umidade_min: 50, meses_permitidos: [7,8,9] },
+    "manga":       { tipo: "Frutífera", temp_min: 20.0, temp_max: 34.0, umidade_min: 60, meses_permitidos: [9,10,11,12] },
+    
+    // FOLHAS / HORTALIÇAS
+    "alface":      { tipo: "Hortaliça", temp_min: 15.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    "couve":       { tipo: "Hortaliça", temp_min: 12.0, temp_max: 22.0, umidade_min: 65, meses_permitidos: [3,4,5,6,7,8,9] },
+    "espinafre":   { tipo: "Hortaliça", temp_min: 10.0, temp_max: 20.0, umidade_min: 60, meses_permitidos: [4,5,6,7,8,9,10,11] },
+    "tomate":      { tipo: "Hortaliça", temp_min: 18.0, temp_max: 30.0, umidade_min: 60, meses_permitidos: [8,9,10,11,2,3] },
+    "batata":      { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [3,4,5,6,7,8,9] },
+    "cenoura":     { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 55, meses_permitidos: [3,4,5,6,7,8,9] }
 };
 
 // ==========================================================
-// 🧮 FÓRMULA DE ASSERTIVIDADE
+// 🧮 FÓRMULA DE ASSERTIVIDADE — CÁLCULO EXATO
 // ==========================================================
-function calcularAssertividade(cultura, tempReal, umidadeReal, mesAtual) {
-    const regras = BANCO_DE_DADOS_AGRO[cultura];
+function calcularAssertividade(culturaNome, tempReal, umidadeReal, mesAtual) {
+    const chave = culturaNome.trim().toLowerCase();
+    const regras = BANCO_DE_DADOS_AGRO[chave];
     if (!regras) return null;
 
+    // CÁLCULO 1: Temperatura — PESO 40%
     let ptsTemp = 0;
     if (tempReal >= regras.temp_min && tempReal <= regras.temp_max) {
         ptsTemp = 40;
@@ -209,6 +204,7 @@ function calcularAssertividade(cultura, tempReal, umidadeReal, mesAtual) {
         ptsTemp = Math.max(0, 40 - (desvio * 5));
     }
 
+    // CÁLCULO 2: Umidade — PESO 30%
     let ptsUmidade = 0;
     if (umidadeReal >= regras.umidade_min) {
         ptsUmidade = 30;
@@ -217,7 +213,10 @@ function calcularAssertividade(cultura, tempReal, umidadeReal, mesAtual) {
         ptsUmidade = Math.max(0, 30 - (desvio * 1.5));
     }
 
+    // CÁLCULO 3: Calendário — PESO 30%
     const ptsCalendario = regras.meses_permitidos.includes(mesAtual) ? 30 : 0;
+
+    // TOTAL FINAL
     const total = ptsTemp + ptsUmidade + ptsCalendario;
 
     let status, classe;
@@ -232,11 +231,11 @@ function calcularAssertividade(cultura, tempReal, umidadeReal, mesAtual) {
         classe = "desfavoravel";
     }
 
-    return { ptsTemp, ptsUmidade, ptsCalendario, total, status, classe, regras };
+    return { culturaNome, regras, ptsTemp, ptsUmidade, ptsCalendario, total, status, classe };
 }
 
 // ==========================================================
-// 🌤️ BUSCA DADOS CLIMÁTICOS — aceita cidade com ou sem estado
+// 🌤️ BUSCA CLIMA — CORRIGIDA E ACEITA QUALQUER CIDADE
 // ==========================================================
 async function buscarDadosClimaticos(cidadeInput) {
     let nomeCidade = cidadeInput
@@ -262,17 +261,18 @@ async function buscarDadosClimaticos(cidadeInput) {
 }
 
 // ==========================================================
-// 📋 GERAR RELATÓRIO COMPLETO COM DATAS
+// 📋 GERAR RELATÓRIO — TUDO CONCILIADO E SEM DIVERGÊNCIA
 // ==========================================================
 async function gerarRelatorio() {
     const cidadeInput = document.getElementById("cidade").value.trim();
+    const culturaInput = document.getElementById("cultura").value.trim();
     const dataInicial = document.getElementById("dataInicial").value.trim();
     const dataFinal = document.getElementById("dataFinal").value.trim();
-    const cultura = document.getElementById("cultura").value;
     const mesAtual = new Date().getMonth() + 1;
 
     if (!cidadeInput) { alert("Digite o nome da cidade!"); return; }
-    if (!dataInicial || !dataFinal) { alert("Preencha a Data Inicial e a Data Final!"); return; }
+    if (!culturaInput) { alert("Digite o nome da cultura!"); return; }
+    if (!dataInicial || !dataFinal) { alert("Preencha as datas!"); return; }
 
     const carregando = document.getElementById("carregando");
     const resultado = document.getElementById("resultado");
@@ -280,15 +280,26 @@ async function gerarRelatorio() {
     resultado.classList.remove("mostrar");
 
     try {
+        // 1. Busca clima
         const clima = await buscarDadosClimaticos(cidadeInput);
-        const calc = calcularAssertividade(cultura, clima.temp, clima.umidade, mesAtual);
         
-        if (!calc) { alert("Cultura não localizada no banco de dados."); return; }
+        // 2. Calcula com a FÓRMULA
+        const calc = calcularAssertividade(culturaInput, clima.temp, clima.umidade, mesAtual);
+        
+        if (!calc) {
+            resultado.innerHTML = `
+                <h3 class="aviso">⚠️ Cultura "${culturaInput}" não cadastrada no banco de dados.</h3>
+                <p>Verifique o nome ou consulte a lista de culturas disponíveis.</p>
+            `;
+            resultado.classList.add("mostrar");
+            return;
+        }
 
+        // 3. EXIBE TUDO CONCILIADO — SEM DIVERGÊNCIA
         document.getElementById("regiaoInfo").innerHTML = `
             <strong>📍 Localidade:</strong> ${clima.nome}<br>
             <strong>📅 Período:</strong> ${dataInicial} a ${dataFinal}<br>
-            <strong>🌱 Cultura:</strong> ${cultura} (${calc.regras.tipo})<br>
+            <strong>🌱 Cultura:</strong> ${calc.culturaNome} (${calc.regras.tipo})<br>
             <strong>📅 Mês atual: ${mesAtual} — </strong>
             ${calc.regras.meses_permitidos.includes(mesAtual) 
                 ? '<span style="color:green">✅ Janela de Plantio Permitida</span>' 
@@ -307,9 +318,9 @@ async function gerarRelatorio() {
         `;
 
         document.getElementById("blocoFormula").innerHTML = `
-            🌡️ Temperatura: <strong>${calc.ptsTemp.toFixed(1)}/40 pontos</strong><br>
-            💧 Umidade: <strong>${calc.ptsUmidade.toFixed(1)}/30 pontos</strong><br>
-            📅 Calendário Agrícola: <strong>${calc.ptsCalendario}/30 pontos</strong><hr>
+            🌡️ Temperatura: <strong>${calc.ptsTemp.toFixed(1)} / 40 pontos</strong><br>
+            💧 Umidade: <strong>${calc.ptsUmidade.toFixed(1)} / 30 pontos</strong><br>
+            📅 Calendário Agrícola: <strong>${calc.ptsCalendario} / 30 pontos</strong><hr>
             <h3>🎯 Índice de Assertividade: ${calc.total.toFixed(1)} / 100</h3>
         `;
 
