@@ -76,6 +76,7 @@
             border-radius: 0 8px 8px 0;
         }
         .trava { background: #ffebee; padding: 8px 12px; border-radius: 4px; margin: 8px 0; display: block; color: #C62828; font-weight: bold; text-align: center; font-size: 17px; }
+        .perene { background: #e3f2fd; padding: 6px 10px; border-radius: 4px; margin-top: 4px; display: inline-block; font-size: 14px; }
         hr { border: none; border-top: 1px dashed #c8e6c9; margin: 18px 0; }
     </style>
 </head>
@@ -104,11 +105,11 @@
         </div>
         <div class="formulario">
             <div class="campo">
-                <label>Cidade e Estado (Ex: Salto - SP):</label>
+                <label>Cidade e Estado (Ex: Contagem - MG):</label>
                 <input type="text" id="cidadeInput" placeholder="Digite a cidade e o estado">
             </div>
             <div class="campo">
-                <label>🌾 Qual produto quer plantar?</label>
+                <label>🌾 Qual produto quer consultar?</label>
                 <select id="culturaInput">
                     <option value="TODAS">— Ver TODAS as culturas —</option>
                     <optgroup label="🌾 Grãos">
@@ -119,19 +120,19 @@
                         <option value="Trigo">✅ Trigo</option>
                         <option value="Sorgo">✅ Sorgo</option>
                     </optgroup>
-                    <optgroup label="🌱 Culturas Permanentes">
-                        <option value="Café">✅ Café</option>
-                        <option value="Cana-de-açúcar">✅ Cana-de-açúcar</option>
-                        <option value="Mandioca">✅ Mandioca</option>
-                        <option value="Algodão">✅ Algodão</option>
+                    <optgroup label="🌱 Culturas Perenes">
+                        <option value="Café">☕ Café</option>
+                        <option value="Cana-de-açúcar">🌾 Cana-de-açúcar</option>
+                        <option value="Mandioca">🥔 Mandioca</option>
+                        <option value="Algodão">☁️ Algodão</option>
+                        <option value="Laranja">🍊 Laranja</option>
+                        <option value="Manga">🥭 Manga</option>
+                        <option value="Banana">🍌 Banana</option>
                     </optgroup>
-                    <optgroup label="🥔 Hortaliças e Frutas">
-                        <option value="Batata">✅ Batata</option>
-                        <option value="Tomate">✅ Tomate</option>
-                        <option value="Cebola">✅ Cebola</option>
-                        <option value="Banana">✅ Banana</option>
-                        <option value="Laranja">✅ Laranja</option>
-                        <option value="Manga">✅ Manga</option>
+                    <optgroup label="🥬 Hortaliças">
+                        <option value="Batata">🥔 Batata</option>
+                        <option value="Tomate">🍅 Tomate</option>
+                        <option value="Cebola">🧅 Cebola</option>
                     </optgroup>
                 </select>
             </div>
@@ -186,31 +187,35 @@ const DADOS_ESTADO = {
 };
 
 // =============================================
-// ✅ BANCO DE DADOS COMPLETO — TODAS AS CULTURAS
+// ✅ BANCO DE DADOS — COM CLASSIFICAÇÃO PERENE/ANUAL
 // =============================================
 const CULTURAS = [
-    // GRÃOS
-    { nome: "Soja", chuvaMin: 40, tempIdeal: [20,30], 
+    // GRÃOS (ANUAIS)
+    { nome: "Soja", tipo: "anual", chuvaMin: 40, tempIdeal: [20,30], 
       vazioNacional: {inicio: {m:6,d:15}, fim: {m:9,d:15}} },
-    { nome: "Milho Verão", chuvaMin: 35, tempIdeal: [18,32], vazioNacional: null },
-    { nome: "Arroz", chuvaMin: 45, tempIdeal: [22,30], vazioNacional: null },
-    { nome: "Feijão", chuvaMin: 30, tempIdeal: [15,28], vazioNacional: null },
-    { nome: "Trigo", chuvaMin: 25, tempIdeal: [10,22], vazioNacional: null },
-    { nome: "Sorgo", chuvaMin: 20, tempIdeal: [20,35], vazioNacional: null },
+    { nome: "Milho Verão", tipo: "anual", chuvaMin: 35, tempIdeal: [18,32], vazioNacional: null },
+    { nome: "Arroz", tipo: "anual", chuvaMin: 45, tempIdeal: [22,30], vazioNacional: null },
+    { nome: "Feijão", tipo: "anual", chuvaMin: 30, tempIdeal: [15,28], vazioNacional: null },
+    { nome: "Trigo", tipo: "anual", chuvaMin: 25, tempIdeal: [10,22], vazioNacional: null },
+    { nome: "Sorgo", tipo: "anual", chuvaMin: 20, tempIdeal: [20,35], vazioNacional: null },
     
-    // PERMANENTES
-    { nome: "Café", chuvaMin: 25, tempIdeal: [18,26], vazioNacional: null },
-    { nome: "Cana-de-açúcar", chuvaMin: 15, tempIdeal: [18,30], vazioNacional: null },
-    { nome: "Mandioca", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
-    { nome: "Algodão", chuvaMin: 40, tempIdeal: [20,32], vazioNacional: null },
+    // PERENES — NÃO SE PLANTAM EM AGOSTO, MAS SE FAZ MANEJO
+    { nome: "Café", tipo: "perene", chuvaMin: 25, tempIdeal: [18,26], vazioNacional: null,
+      orientacaoSeca: "Período de colheita e adubação de pós-colheita. Monitorar umidade." },
+    { nome: "Cana-de-açúcar", tipo: "perene", chuvaMin: 15, tempIdeal: [18,30], vazioNacional: null,
+      orientacaoSeca: "Período ideal para colheita e manejo sem irrigação." },
+    { nome: "Mandioca", tipo: "perene", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
+    { nome: "Algodão", tipo: "perene", chuvaMin: 40, tempIdeal: [20,32], vazioNacional: null },
+    { nome: "Laranja", tipo: "perene", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null,
+      orientacaoSeca: "Período de colheita e poda. Água reduzida favorece floração posterior." },
+    { nome: "Manga", tipo: "perene", chuvaMin: 20, tempIdeal: [20,32], vazioNacional: null,
+      orientacaoSeca: "Pós-colheita. Poda e adubação de renovação." },
+    { nome: "Banana", tipo: "perene", chuvaMin: 40, tempIdeal: [22,30], vazioNacional: null },
     
-    // HORTALIÇAS E FRUTAS
-    { nome: "Batata", chuvaMin: 30, tempIdeal: [10,25], vazioNacional: null },
-    { nome: "Tomate", chuvaMin: 35, tempIdeal: [18,28], vazioNacional: null },
-    { nome: "Cebola", chuvaMin: 20, tempIdeal: [12,28], vazioNacional: null },
-    { nome: "Banana", chuvaMin: 40, tempIdeal: [22,30], vazioNacional: null },
-    { nome: "Laranja", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
-    { nome: "Manga", chuvaMin: 20, tempIdeal: [20,32], vazioNacional: null }
+    // HORTALIÇAS (ANUAIS/SEMI)
+    { nome: "Batata", tipo: "anual", chuvaMin: 30, tempIdeal: [10,25], vazioNacional: null },
+    { nome: "Tomate", tipo: "anual", chuvaMin: 35, tempIdeal: [18,28], vazioNacional: null },
+    { nome: "Cebola", tipo: "anual", chuvaMin: 20, tempIdeal: [12,28], vazioNacional: null }
 ];
 
 async function salvarNoBanco(cidade, dados) {
@@ -232,6 +237,20 @@ function estaEmVazioSanitario(cultura, uf, data) {
     const fim = new Date(data.ano, v.fim.m - 1, v.fim.d);
     
     return dataRef >= inicio && dataRef <= fim;
+}
+
+// ✅ LÓGICA INTELIGENTE — DIFERENCIA PLANTIO DE MANEJO PERENE
+function interpretarFCA(cultura, fca, estacaoSeca) {
+    if (cultura.tipo === "perene" && estacaoSeca) {
+        return {
+            plantio: "❌ BAIXA — Fora da janela de instalação de lavoura (período seco)",
+            manejo: "⚠️ MANUTENÇÃO — " + (cultura.orientacaoSeca || "Período de colheita e tratos culturais. Monitorar umidade."),
+            status: "PERENE"
+        };
+    }
+    if (fca >= 1.0) return {plantio: "✅ PLENA — Pode plantar", status: "PLENA"};
+    if (fca >= 0.7) return {plantio: "⚠️ MODERADA — Cuidados especiais", status: "MODERADA"};
+    return {plantio: "❌ BAIXA — Não recomendado para plantio", status: "BAIXA"};
 }
 
 async function gerarRelatorioCompleto() {
@@ -269,6 +288,10 @@ async function gerarRelatorioCompleto() {
     const qtdSemanas = Math.max(1, Math.ceil((fim - ini) / (7 * 86400000)));
     const periodo = `${dInicio.dia}/${String(dInicio.mes).padStart(2,'0')}/${dInicio.ano} a ${dFim.dia}/${String(dFim.mes).padStart(2,'0')}/${dFim.ano}`;
 
+    // É período de ESTAÇÃO SECA? (Maio a Setembro = seca no Centro-Sul)
+    const mesInicio = dInicio.mes;
+    const estacaoSeca = (mesInicio >= 5 && mesInicio <= 9);
+
     let confiancaInicial = 92;
     let confiancaPorSemana = [];
     for (let s = 0; s < qtdSemanas; s++) {
@@ -278,7 +301,9 @@ async function gerarRelatorioCompleto() {
     let html = `<h3>📋 RELATÓRIO — ${cidade}</h3>`;
     html += `<p>Período: ${periodo}</p>`;
     html += `<p>Produto consultado: <strong>${culturaEscolhida === 'TODAS' ? 'Todas as culturas cadastradas' : culturaEscolhida}</strong></p>`;
-    html += `<p>Fator Solo: ${est.fatorSolo} | Estado: ${est.nome}</p><hr>`;
+    html += `<p>Fator Solo: ${est.fatorSolo} | Estado: ${est.nome}</p>`;
+    html += estacaoSeca ? `<p style="color:#8D6E63;">☀️ Período: Estação Seca — Centro-Sul</p>` : "";
+    html += `<hr>`;
 
     let dadosParaSalvar = { cidade, cultura: culturaEscolhida, periodo, semanas: [] };
 
@@ -318,20 +343,24 @@ async function gerarRelatorioCompleto() {
                               tMed < c.tempIdeal[0] ? 0.6 : 0.8;
                 const TR = 1;
                 const fca = (fChuva * fTemp * est.fatorSolo * TR).toFixed(2);
-                const sts = fca >= 1.0 ? "✅ PLENA — Pode plantar" : 
-                            fca >= 0.7 ? "⚠️ MODERADA — Cuidados especiais" : "❌ BAIXA — Não recomendado";
-                html += `🌱 ${c.nome}: FCA = ${fca} → <strong>${sts}</strong><br>`;
-                semana.culturas.push({nome: c.nome, TR: 1, fca: fca, aptidao: sts});
+                const sts = interpretarFCA(c, parseFloat(fca), estacaoSeca);
+                
+                html += `🌱 ${c.nome}: FCA = ${fca}<br>`;
+                html += `&nbsp;&nbsp;↳ ${sts.plantio}`;
+                if (sts.status === "PERENE") {
+                    html += `<br><span class="perene">ℹ️ ${sts.manejo}</span>`;
+                }
+                semana.culturas.push({nome: c.nome, tipo: c.tipo, fca: fca, status: sts.status});
             }
         }
         html += `</div>`;
         dadosParaSalvar.semanas.push(semana);
     }
 
-    html += `<hr><p>Chuva mensal esperada: ~${est.chuva} mm</p>`;
-    html += `<p>Vazio Sanitário: Respeitado automaticamente • Trava Regulatória ZARC/MAPA ativa</p>`;
-    html += `<p style="font-size:14px; color:#666;">📌 Soja: Vazio Sanitário de 15 de junho a 15 de setembro — Lei Federal nº 9.428/1997</p>`;
-    html += `<p style="font-size:14px; color:#666;">📊 Banco de dados: 16 culturas cadastradas • Grãos, Permanentes, Hortaliças e Frutas</p>`;
+    html += `<hr><p>💧 Chuva mensal esperada: ~${est.chuva} mm</p>`;
+    html += `<p>🛡️ Vazio Sanitário: Respeitado automaticamente • Trava Regulatória ZARC/MAPA ativa</p>`;
+    html += `<p style="font-size:14px; color:#666;">📌 Soja: Vazio Sanitário de 15/jun a 15/set — Lei Federal nº 9.428/1997</p>`;
+    html += `<p style="font-size:14px; color:#666;">📊 Banco de dados: ${CULTURAS.length} culturas • Grãos Anuais • Perenes • Hortaliças</p>`;
 
     res.innerHTML = html;
     await salvarNoBanco(cidade, dadosParaSalvar);
