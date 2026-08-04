@@ -8,16 +8,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.28.1/firebase-database-compat.js"></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-        body { max-width:800px; margin:0 auto; padding:20px; background:#f8faf8; color:#2c3e50; }
+        body { max-width:800px; margin:0 auto; padding:30px 20px; background:#f8faf8; color:#2c3e50; }
         
         .aviso-topo {
             background:#fff3cd;
-            padding:10px;
-            border-radius:6px;
-            text-align:center;
-            font-size:14px;
-            color:#856404;
-            margin-bottom:25px;
+            padding:10px; border-radius:6px; text-align:center;
+            font-size:14px; color:#856404; margin-bottom:25px;
         }
 
         h1 { text-align:center; color:#0e5a0e; margin-bottom:10px; font-size:22px; }
@@ -59,7 +55,7 @@
 
 <form id="formBusca">
     <label>Cidade e Estado [Ex: Contagem - MG]:</label>
-    <input type="text" id="cidade" placeholder="Ex: Itu - SP" required>
+    <input type="text" id="cidade" placeholder="Ex: Elias Fausto - SP" required>
 
     <label>Qual produto quer consultar?</label>
     <select id="produto">
@@ -76,22 +72,19 @@
     </select>
 
     <label>Data Inicial (dd/mm/aaaa):</label>
-    <input type="text" id="dtInicio" placeholder="04/08/2026" required>
+    <input type="text" id="dtInicio" placeholder="01/08/2026" required>
 
     <label>Data Final (dd/mm/aaaa):</label>
-    <input type="text" id="dtFim" placeholder="03/09/2026" required>
+    <input type="text" id="dtFim" placeholder="31/08/2026" required>
 
     <button type="submit">📋 GERAR RELATÓRIO COMPLETO</button>
 </form>
 
-<div class="carregando" id="carregando">🔄 Acessando banco de dados... calculando fórmula... atualizando...</div>
+<div class="carregando" id="carregando">🔄 Acessando banco de dados... calculando fórmula...</div>
 
 <div class="relatorio" id="relatorio"></div>
 
 <script>
-// ==================================================
-// 🔥 CONEXÃO FIREBASE — DADOS EXATOS DO SEU PROJETO
-// ==================================================
 const firebaseConfig = {
     apiKey: "AIzaSyDHUX3sfddxd_5F-UGLwG6n7EB8au6JR7E",
     authDomain: "buscaboanerges-trovao.firebaseapp.com",
@@ -106,17 +99,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const banco = firebase.database();
 
-// ==================================================
-// 📐 FÓRMULA — I = 64 × O ÷ R
-// ==================================================
 function aplicarFormula(O, R) {
     const CFI = 64;
     return Math.round(CFI * O / R);
 }
 
-// ==================================================
-// 📋 GERA RELATÓRIO — CORRIGIDO PARA APARECER
-// ==================================================
 document.getElementById('formBusca').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -131,24 +118,20 @@ document.getElementById('formBusca').addEventListener('submit', async function(e
     relatorio.style.display = 'none';
 
     try {
-        // ✅ LÊ DO BANCO
         const caminho = '/consultas/' + cidade.replace(/\W/g,'_').toLowerCase();
         const ref = banco.ref(caminho);
         const snap = await ref.once('value');
         const dados = snap.val() || { O:3, R:2 };
 
-        // ✅ CALCULA FÓRMULA
         const O = dados.O || 3;
         const R = dados.R || 2;
         const I = aplicarFormula(O, R);
 
-        // ✅ INTERPRETAÇÃO
         const leitura = I>=128 ? "✅ Equilíbrio normal — condições estáveis" :
                         I>=96  ? "⚠️ Tensão crescendo — fase de atenção" :
                         I>=64  ? "⚡ Transição em curso — mudança se aproximando" :
                                  "🌪️ Movimento em formação — acompanhar evolução";
 
-        // ✅ REABASTECE O BANCO COM DADOS NOVOS
         await ref.set({
             O, R, ultimaLeitura: I,
             dataConsulta: new Date().toISOString(),
@@ -157,7 +140,6 @@ document.getElementById('formBusca').addEventListener('submit', async function(e
             fonte: "Embrapa · Climatempo · Padrões da Natureza · Banco Grãos"
         });
 
-        // ✅ EXIBE RELATÓRIO — AGORA CERTAMENTE APARECE
         setTimeout(() => {
             carregando.style.display = 'none';
             relatorio.style.display = 'block';
@@ -173,19 +155,19 @@ document.getElementById('formBusca').addEventListener('submit', async function(e
                 </div>
 
                 <div class="secao">
-                    <p>📚 Base de dados: Embrapa · Climatempo · Padrões da Natureza · Banco Grãos</p>
-                    <p>🔄 Banco atualizado com dados novos nesta consulta.</p>
+                    <p>📚 Base: Embrapa · Climatempo · Padrões da Natureza · Banco Grãos</p>
+                    <p>🔄 Banco atualizado nesta consulta.</p>
                 </div>
 
                 <p style="font-size:12px; color:#666; margin-top:15px; font-style:italic;">
-                    Pesquisa matemática-histórica; não constitui sistema de alerta operacional.
+                    Pesquisa matemática-histórica; não é sistema de alerta operacional.
                 </p>
             `;
         }, 1500);
 
     } catch(erro) {
         carregando.style.display = 'none';
-        alert("Erro na consulta: " + erro.message);
+        alert("Erro: " + erro.message);
     }
 });
 </script>
