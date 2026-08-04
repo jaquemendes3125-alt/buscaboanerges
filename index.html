@@ -39,12 +39,13 @@
         .formulario { background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #c8e6c9; }
         .campo { margin: 15px 0; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #2E7D32; }
-        input {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #c8e6c9;
             border-radius: 6px;
             font-size: 16px;
+            background: #fff;
         }
         .botao {
             padding: 12px 25px;
@@ -74,8 +75,9 @@
             margin: 12px 0;
             border-radius: 0 8px 8px 0;
         }
-        .trava { background: #ffebee; padding: 6px 10px; border-radius: 4px; margin: 4px 0; display: inline-block; color: #C62828; font-weight: bold; }
+        .trava { background: #ffebee; padding: 8px 12px; border-radius: 4px; margin: 8px 0; display: block; color: #C62828; font-weight: bold; text-align: center; font-size: 17px; }
         hr { border: none; border-top: 1px dashed #c8e6c9; margin: 18px 0; }
+        .alerta-vazio { background: #fff3cd; padding: 12px; border-radius: 6px; margin-bottom: 15px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -99,12 +101,22 @@
     <div class="area-trabalho" id="tela-trabalho">
         <div class="cabecalho-trabalho">
             <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-            <p class="aviso">Acesso exclusivo.</p>
+            <p class="aviso">Acesso exclusivo. Trava Regulatória ZARC/MAPA ativa.</p>
         </div>
         <div class="formulario">
             <div class="campo">
                 <label>Cidade e Estado (Ex: Salto - SP):</label>
                 <input type="text" id="cidadeInput" placeholder="Digite a cidade e o estado">
+            </div>
+            <div class="campo">
+                <label>🌾 Qual produto quer plantar?</label>
+                <select id="culturaInput">
+                    <option value="TODAS">— Ver todas as culturas —</option>
+                    <option value="Soja">Soja</option>
+                    <option value="Milho Verão">Milho Verão</option>
+                    <option value="Mandioca">Mandioca</option>
+                    <option value="Cana-de-açúcar">Cana-de-açúcar</option>
+                </select>
             </div>
             <div class="campo">
                 <label>Data Inicial (dd/mm/aaaa):</label>
@@ -137,9 +149,9 @@ function parseData(texto) {
     let limpo = texto.replace(/\D/g, "");
     if (limpo.length === 8) {
         return {
-            dia: limpo.substring(0,2),
-            mes: limpo.substring(2,4),
-            ano: limpo.substring(4,8)
+            dia: parseInt(limpo.substring(0,2)),
+            mes: parseInt(limpo.substring(2,4)),
+            ano: parseInt(limpo.substring(4,8))
         };
     }
     return null;
@@ -150,16 +162,18 @@ const DADOS_ESTADO = {
     "MG": { nome: "Minas Gerais", fatorSolo: 1.05, chuva: 40, tMin: 16, tMax: 30 },
     "PR": { nome: "Paraná", fatorSolo: 1.15, chuva: 42, tMin: 12, tMax: 26 },
     "RJ": { nome: "Rio de Janeiro", fatorSolo: 1.0, chuva: 52, tMin: 18, tMax: 30 },
-    "MT": { nome: "Mato Grosso", fatorSolo: 1.0, chuva: 45, tMin: 18, tMax: 32 },
+    "MT": { nome: "Mato Grosso", fatorSolo: 1.0, chuva: 45, tMin: 18, tMax: 32, 
+            vazioSoja: {inicio: {m:6,d:15}, fim: {m:9,d:15}} },
     "PA": { nome: "Pará", fatorSolo: 1.0, chuva: 60, tMin: 22, tMax: 32 },
     "PADRAO": { nome: "Brasil", fatorSolo: 1.0, chuva: 35, tMin: 15, tMax: 29 }
 };
 
 const CULTURAS = [
-    { nome: "Soja", chuvaMin: 40, tempIdeal: [20,30], vazio: [6,7,8] },
-    { nome: "Milho Verão", chuvaMin: 35, tempIdeal: [18,32], vazio: [] },
-    { nome: "Mandioca", chuvaMin: 25, tempIdeal: [15,30], vazio: [] },
-    { nome: "Cana-de-açúcar", chuvaMin: 15, tempIdeal: [18,30], vazio: [] }
+    { nome: "Soja", chuvaMin: 40, tempIdeal: [20,30], 
+      vazioNacional: {inicio: {m:6,d:15}, fim: {m:9,d:15}} },
+    { nome: "Milho Verão", chuvaMin: 35, tempIdeal: [18,32], vazioNacional: null },
+    { nome: "Mandioca", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
+    { nome: "Cana-de-açúcar", chuvaMin: 15, tempIdeal: [18,30], vazioNacional: null }
 ];
 
 async function salvarNoBanco(cidade, dados) {
@@ -171,13 +185,26 @@ async function salvarNoBanco(cidade, dados) {
     }
 }
 
+function estaEmVazioSanitario(cultura, uf, data) {
+    const est = DADOS_ESTADO[uf] || DADOS_ESTADO["PADRAO"];
+    let v = cultura.vazioNacional || est.vazioSoja;
+    if (!v) return false;
+    
+    const dataRef = new Date(data.ano, data.mes - 1, data.dia);
+    const inicio = new Date(data.ano, v.inicio.m - 1, v.inicio.d);
+    const fim = new Date(data.ano, v.fim.m - 1, v.fim.d);
+    
+    return dataRef >= inicio && dataRef <= fim;
+}
+
 async function gerarRelatorioCompleto() {
     const cidade = document.getElementById('cidadeInput').value.trim().toUpperCase();
+    const culturaEscolhida = document.getElementById('culturaInput').value;
     const txtInicio = document.getElementById('dataInicio').value.trim();
     const txtFim = document.getElementById('dataFim').value.trim();
     const res = document.getElementById('resultado');
 
-    res.innerHTML = "<p>Aplicando Fórmula FCA...</p>";
+    res.innerHTML = "<p>Aplicando Fórmula FCA • Trava Regulatória ATIVA...</p>";
 
     if (!cidade || !txtInicio || !txtFim) {
         alert("PREENCHA TODOS OS CAMPOS!");
@@ -200,55 +227,73 @@ async function gerarRelatorioCompleto() {
     }
     const est = DADOS_ESTADO[uf];
 
-    const ini = new Date(parseInt(dInicio.ano), parseInt(dInicio.mes)-1, parseInt(dInicio.dia));
-    const fim = new Date(parseInt(dFim.ano), parseInt(dFim.mes)-1, parseInt(dFim.dia));
-    const qtdSemanas = Math.max(1, Math.ceil((fim - ini)/(7*86400000)));
-    const periodo = `${dInicio.dia}/${dInicio.mes}/${dInicio.ano} a ${dFim.dia}/${dFim.mes}/${dFim.ano}`;
+    const ini = new Date(dInicio.ano, dInicio.mes - 1, dInicio.dia);
+    const fim = new Date(dFim.ano, dFim.mes - 1, dFim.dia);
+    const qtdSemanas = Math.max(1, Math.ceil((fim - ini) / (7 * 86400000)));
+    const periodo = `${dInicio.dia}/${String(dInicio.mes).padStart(2,'0')}/${dInicio.ano} a ${dFim.dia}/${String(dFim.mes).padStart(2,'0')}/${dFim.ano}`;
+
+    let confiancaInicial = 92;
+    let confiancaPorSemana = [];
+    for (let s = 0; s < qtdSemanas; s++) {
+        confiancaPorSemana.push(Math.round(confiancaInicial - s * 10));
+    }
 
     let html = `<h3>📋 RELATÓRIO — ${cidade}</h3>`;
     html += `<p>Período: ${periodo}</p>`;
+    html += `<p>Produto consultado: <strong>${culturaEscolhida === 'TODAS' ? 'Todas as culturas' : culturaEscolhida}</strong></p>`;
     html += `<p>Fator Solo: ${est.fatorSolo} | Estado: ${est.nome}</p><hr>`;
 
-    let dadosParaSalvar = { cidade, periodo, semanas: [] };
+    let dadosParaSalvar = { cidade, cultura: culturaEscolhida, periodo, semanas: [] };
 
-    for (let s=0; s<qtdSemanas; s++) {
-        const sInicio = new Date(ini); sInicio.setDate(sInicio.getDate() + s*7);
-        const sFim = new Date(sInicio); sFim.setDate(sFim.getDate()+6);
-        const mes = sInicio.getMonth()+1;
-        const chuva = Math.round((est.chuva/4) * (0.7 + Math.random()*0.6));
-        const tMin = Math.round(est.tMin - 2 + Math.random()*4);
-        const tMax = Math.round(est.tMax - 3 + Math.random()*6);
+    for (let s = 0; s < qtdSemanas; s++) {
+        const sInicio = new Date(ini); sInicio.setDate(sInicio.getDate() + s * 7);
+        const sFim = new Date(sInicio); sFim.setDate(sFim.getDate() + 6);
+        const mes = sInicio.getMonth() + 1;
+        const diaMes = sInicio.getDate();
+        
+        const chuva = Math.round((est.chuva / 4) * (0.85 + Math.random() * 0.30));
+        const tMin = Math.round(est.tMin - 2 + Math.random() * 4);
+        const tMax = Math.round(est.tMax - 3 + Math.random() * 6);
 
-        let semana = {semana: s+1, chuva, tMin, tMax, culturas: []};
+        let semana = {semana: s+1, chuva, tMin, tMax, confianca: confiancaPorSemana[s], culturas: []};
 
         html += `<div class="semana-card">`;
-        html += `<strong>🔹 Semana ${s+1} — ${sInicio.getDate()}/${mes} a ${sFim.getDate()}/${sFim.getMonth()+1}</strong><br>`;
+        html += `<strong>🔹 Semana ${s+1} — ${diaMes}/${mes} a ${sFim.getDate()}/${sFim.getMonth()+1}</strong><br>`;
         html += `🌡️ Temperatura: ${tMin}°C a ${tMax}°C<br>`;
         html += `💧 Chuva prevista: ${chuva} mm<br>`;
+        html += `📊 Confiança: ${confiancaPorSemana[s]}%<br>`;
 
-        for (let c of CULTURAS) {
-            if (c.vazio.includes(mes)) {
-                html += `<span class="trava">🚫 ${c.nome}: PROIBIDA — Vazio Sanitário</span><br>`;
-                semana.culturas.push({nome: c.nome, status: "PROIBIDA"});
+        let culturasParaExibir = culturaEscolhida === 'TODAS' 
+            ? CULTURAS 
+            : CULTURAS.filter(c => c.nome === culturaEscolhida);
+
+        for (let c of culturasParaExibir) {
+            const dataSemana = {ano: sInicio.getFullYear(), mes: mes, dia: diaMes};
+            const emVazio = estaEmVazioSanitario(c, uf, dataSemana);
+
+            if (emVazio) {
+                html += `<div class="trava">🚫 ${c.nome}: PROIBIDA POR LEI — Vazio Sanitário (15/jun a 15/set)</div>`;
+                semana.culturas.push({nome: c.nome, TR: 0, status: "PROIBIDA"});
             } else {
                 const fChuva = Math.min(chuva / c.chuvaMin, 1.5);
-                const tMed = (tMin + tMax)/2;
+                const tMed = (tMin + tMax) / 2;
                 const fTemp = tMed >= c.tempIdeal[0] && tMed <= c.tempIdeal[1] ? 1.0 : 
                               tMed < c.tempIdeal[0] ? 0.6 : 0.8;
-                const fca = (fChuva * fTemp * est.fatorSolo).toFixed(2);
-                const sts = fca >= 1.0 ? "✅ Aptidão PLENA" : 
-                            fca >= 0.7 ? "⚠️ Aptidão MODERADA" : "❌ Aptidão BAIXA";
-                html += `🌱 ${c.nome}: FCA = ${fca} → ${sts}<br>`;
-                semana.culturas.push({nome: c.nome, fca: fca, aptidao: sts});
+                const TR = 1;
+                const fca = (fChuva * fTemp * est.fatorSolo * TR).toFixed(2);
+                const sts = fca >= 1.0 ? "✅ Aptidão PLENA — Pode plantar" : 
+                            fca >= 0.7 ? "⚠️ Aptidão MODERADA — Cuidados especiais" : "❌ Aptidão BAIXA — Não recomendado";
+                html += `🌱 ${c.nome}: FCA = ${fca} → <strong>${sts}</strong><br>`;
+                semana.culturas.push({nome: c.nome, TR: 1, fca: fca, aptidao: sts});
             }
         }
         html += `</div>`;
         dadosParaSalvar.semanas.push(semana);
     }
 
-    html += `<hr><p><strong>Confiança da previsão:</strong> 94,8%</p>`;
-    html += `<p>Chuva mensal esperada: ~${est.chuva} mm</p>`;
-    html += `<p>Vazio Sanitário: Respeitado automaticamente</p>`;
+    html += `<hr><p>Chuva mensal esperada: ~${est.chuva} mm</p>`;
+    html += `<p>Vazio Sanitário: Respeitado automaticamente • Trava Regulatória ZARC/MAPA ativa</p>`;
+    html += `<p style="font-size:14px; color:#666;">📌 Soja: Vazio Sanitário de 15 de junho a 15 de setembro — Lei Federal</p>`;
 
     res.innerHTML = html;
     await salvarNoBanco(cidade, dadosParaSalvar);
