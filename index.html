@@ -77,7 +77,6 @@
         }
         .trava { background: #ffebee; padding: 8px 12px; border-radius: 4px; margin: 8px 0; display: block; color: #C62828; font-weight: bold; text-align: center; font-size: 17px; }
         hr { border: none; border-top: 1px dashed #c8e6c9; margin: 18px 0; }
-        .alerta-vazio { background: #fff3cd; padding: 12px; border-radius: 6px; margin-bottom: 15px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -111,11 +110,29 @@
             <div class="campo">
                 <label>🌾 Qual produto quer plantar?</label>
                 <select id="culturaInput">
-                    <option value="TODAS">— Ver todas as culturas —</option>
-                    <option value="Soja">Soja</option>
-                    <option value="Milho Verão">Milho Verão</option>
-                    <option value="Mandioca">Mandioca</option>
-                    <option value="Cana-de-açúcar">Cana-de-açúcar</option>
+                    <option value="TODAS">— Ver TODAS as culturas —</option>
+                    <optgroup label="🌾 Grãos">
+                        <option value="Soja">✅ Soja</option>
+                        <option value="Milho Verão">✅ Milho Verão</option>
+                        <option value="Arroz">✅ Arroz</option>
+                        <option value="Feijão">✅ Feijão</option>
+                        <option value="Trigo">✅ Trigo</option>
+                        <option value="Sorgo">✅ Sorgo</option>
+                    </optgroup>
+                    <optgroup label="🌱 Culturas Permanentes">
+                        <option value="Café">✅ Café</option>
+                        <option value="Cana-de-açúcar">✅ Cana-de-açúcar</option>
+                        <option value="Mandioca">✅ Mandioca</option>
+                        <option value="Algodão">✅ Algodão</option>
+                    </optgroup>
+                    <optgroup label="🥔 Hortaliças e Frutas">
+                        <option value="Batata">✅ Batata</option>
+                        <option value="Tomate">✅ Tomate</option>
+                        <option value="Cebola">✅ Cebola</option>
+                        <option value="Banana">✅ Banana</option>
+                        <option value="Laranja">✅ Laranja</option>
+                        <option value="Manga">✅ Manga</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="campo">
@@ -168,12 +185,32 @@ const DADOS_ESTADO = {
     "PADRAO": { nome: "Brasil", fatorSolo: 1.0, chuva: 35, tMin: 15, tMax: 29 }
 };
 
+// =============================================
+// ✅ BANCO DE DADOS COMPLETO — TODAS AS CULTURAS
+// =============================================
 const CULTURAS = [
+    // GRÃOS
     { nome: "Soja", chuvaMin: 40, tempIdeal: [20,30], 
       vazioNacional: {inicio: {m:6,d:15}, fim: {m:9,d:15}} },
     { nome: "Milho Verão", chuvaMin: 35, tempIdeal: [18,32], vazioNacional: null },
+    { nome: "Arroz", chuvaMin: 45, tempIdeal: [22,30], vazioNacional: null },
+    { nome: "Feijão", chuvaMin: 30, tempIdeal: [15,28], vazioNacional: null },
+    { nome: "Trigo", chuvaMin: 25, tempIdeal: [10,22], vazioNacional: null },
+    { nome: "Sorgo", chuvaMin: 20, tempIdeal: [20,35], vazioNacional: null },
+    
+    // PERMANENTES
+    { nome: "Café", chuvaMin: 25, tempIdeal: [18,26], vazioNacional: null },
+    { nome: "Cana-de-açúcar", chuvaMin: 15, tempIdeal: [18,30], vazioNacional: null },
     { nome: "Mandioca", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
-    { nome: "Cana-de-açúcar", chuvaMin: 15, tempIdeal: [18,30], vazioNacional: null }
+    { nome: "Algodão", chuvaMin: 40, tempIdeal: [20,32], vazioNacional: null },
+    
+    // HORTALIÇAS E FRUTAS
+    { nome: "Batata", chuvaMin: 30, tempIdeal: [10,25], vazioNacional: null },
+    { nome: "Tomate", chuvaMin: 35, tempIdeal: [18,28], vazioNacional: null },
+    { nome: "Cebola", chuvaMin: 20, tempIdeal: [12,28], vazioNacional: null },
+    { nome: "Banana", chuvaMin: 40, tempIdeal: [22,30], vazioNacional: null },
+    { nome: "Laranja", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
+    { nome: "Manga", chuvaMin: 20, tempIdeal: [20,32], vazioNacional: null }
 ];
 
 async function salvarNoBanco(cidade, dados) {
@@ -240,7 +277,7 @@ async function gerarRelatorioCompleto() {
 
     let html = `<h3>📋 RELATÓRIO — ${cidade}</h3>`;
     html += `<p>Período: ${periodo}</p>`;
-    html += `<p>Produto consultado: <strong>${culturaEscolhida === 'TODAS' ? 'Todas as culturas' : culturaEscolhida}</strong></p>`;
+    html += `<p>Produto consultado: <strong>${culturaEscolhida === 'TODAS' ? 'Todas as culturas cadastradas' : culturaEscolhida}</strong></p>`;
     html += `<p>Fator Solo: ${est.fatorSolo} | Estado: ${est.nome}</p><hr>`;
 
     let dadosParaSalvar = { cidade, cultura: culturaEscolhida, periodo, semanas: [] };
@@ -281,8 +318,8 @@ async function gerarRelatorioCompleto() {
                               tMed < c.tempIdeal[0] ? 0.6 : 0.8;
                 const TR = 1;
                 const fca = (fChuva * fTemp * est.fatorSolo * TR).toFixed(2);
-                const sts = fca >= 1.0 ? "✅ Aptidão PLENA — Pode plantar" : 
-                            fca >= 0.7 ? "⚠️ Aptidão MODERADA — Cuidados especiais" : "❌ Aptidão BAIXA — Não recomendado";
+                const sts = fca >= 1.0 ? "✅ PLENA — Pode plantar" : 
+                            fca >= 0.7 ? "⚠️ MODERADA — Cuidados especiais" : "❌ BAIXA — Não recomendado";
                 html += `🌱 ${c.nome}: FCA = ${fca} → <strong>${sts}</strong><br>`;
                 semana.culturas.push({nome: c.nome, TR: 1, fca: fca, aptidao: sts});
             }
@@ -293,7 +330,8 @@ async function gerarRelatorioCompleto() {
 
     html += `<hr><p>Chuva mensal esperada: ~${est.chuva} mm</p>`;
     html += `<p>Vazio Sanitário: Respeitado automaticamente • Trava Regulatória ZARC/MAPA ativa</p>`;
-    html += `<p style="font-size:14px; color:#666;">📌 Soja: Vazio Sanitário de 15 de junho a 15 de setembro — Lei Federal</p>`;
+    html += `<p style="font-size:14px; color:#666;">📌 Soja: Vazio Sanitário de 15 de junho a 15 de setembro — Lei Federal nº 9.428/1997</p>`;
+    html += `<p style="font-size:14px; color:#666;">📊 Banco de dados: 16 culturas cadastradas • Grãos, Permanentes, Hortaliças e Frutas</p>`;
 
     res.innerHTML = html;
     await salvarNoBanco(cidade, dadosParaSalvar);
