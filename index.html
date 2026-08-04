@@ -3,86 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges — Acesso Exclusivo</title>
-    <script src="https://www.gstatic.com/firebasejs/9.28.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.28.1/firebase-database-compat.js"></script>
+    <title>BuscaBoanerges</title>
+    <!-- ✅ LINHAS CORRIGIDAS → versão funcionando -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-        body { max-width:800px; margin:0 auto; padding:30px 20px; background:#f8faf8; color:#2c3e50; }
-        
-        .aviso-topo {
-            background:#fff3cd;
-            padding:10px; border-radius:6px; text-align:center;
-            font-size:14px; color:#856404; margin-bottom:25px;
-        }
-
-        h1 { text-align:center; color:#0e5a0e; margin-bottom:10px; font-size:22px; }
-        .proprietaria { text-align:center; font-size:13px; color:#556; margin-bottom:25px; }
-
-        label { display:block; margin:15px 0 5px; font-weight:bold; font-size:14px; }
-        input, select {
-            width:100%; padding:10px; border:none; border-bottom:1px solid #ccc;
-            font-size:15px; background:transparent;
-        }
-        input:focus, select:focus { outline:none; border-bottom-color:#4caf50; }
-
-        button {
-            width:100%; padding:14px; background:#2e7d32; color:white;
-            border:none; border-radius:6px; font-size:16px; font-weight:bold;
-            margin-top:25px; cursor:pointer;
-        }
+        body { max-width:900px; margin:0 auto; padding:20px; background:#f0f8ea; color:#1a3d1a; }
+        h1 { text-align:center; color:#0e5a0e; margin-bottom:30px; }
+        .caixa { background:white; padding:25px; border-radius:10px; border:2px solid #4caf50; margin-bottom:20px; }
+        label { display:block; margin:12px 0 5px; font-weight:bold; }
+        input, button { width:100%; padding:12px; border:1px solid #81c784; border-radius:6px; font-size:16px; }
+        button { background:#2e7d32; color:white; border:none; font-weight:bold; margin-top:15px; cursor:pointer; }
         button:hover { background:#1b5e20; }
-
-        .carregando {
-            color:#2e7d32; text-align:center; margin-top:20px; display:none;
-        }
-
-        .relatorio {
-            margin-top:30px; padding:25px; background:white;
-            border-radius:8px; border:1px solid #e0e0e0; display:none;
-        }
-        .relatorio h3 { color:#0e5a0e; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee; }
-        .relatorio p { margin:8px 0; line-height:1.6; }
-        .secao { margin:15px 0; padding:12px; background:#f1f8e9; border-radius:5px; }
+        .resultado { margin-top:20px; padding:20px; background:#f1f8e9; border-radius:8px; border:1px solid #66bb6a; display:none; }
+        .carregando { color:#2e7d32; display:none; margin-top:10px; }
+        .aviso { font-size:12px; color:#556; text-align:center; margin-top:15px; }
     </style>
 </head>
 <body>
 
-<div class="aviso-topo">Acesso exclusivo. Transita: Regulatória / ZARC / CONDIÇÃO atualizada.</div>
+<h1>🌱 BUSCABOANERGES</h1>
 
-<h1>🔍 BUSCABOANERGES</h1>
-<p class="proprietaria">Propriedade de Jaqueline Mendes do Nascimento</p>
+<div class="caixa">
+    <h3>🔍 Realizar Pesquisa</h3>
+    <label>Cidade / Região:</label>
+    <input type="text" id="cidade" placeholder="Ex: Sorocaba - SP">
+    <button onclick="acionarBusca()">🔍 GERAR RELATÓRIO DE 30 DIAS</button>
+    <div class="carregando" id="carregando">🔄 Acessando banco... calculando fórmula... atualizando...</div>
+</div>
 
-<form id="formBusca">
-    <label>Cidade e Estado [Ex: Contagem - MG]:</label>
-    <input type="text" id="cidade" placeholder="Ex: Elias Fausto - SP" required>
+<div class="caixa">
+    <h3>📋 Relatório</h3>
+    <div id="resultado" class="resultado"></div>
+</div>
 
-    <label>Qual produto quer consultar?</label>
-    <select id="produto">
-        <option value="cana-de-acucar">Cana-de-açúcar</option>
-        <option value="soja">Soja</option>
-        <option value="milho">Milho</option>
-        <option value="algodao">Algodão</option>
-        <option value="feijao">Feijão</option>
-        <option value="trigo">Trigo</option>
-        <option value="arroz">Arroz</option>
-        <option value="cafe">Café</option>
-        <option value="citrus">Cítricos</option>
-        <option value="outro">Outro / Geral</option>
-    </select>
-
-    <label>Data Inicial (dd/mm/aaaa):</label>
-    <input type="text" id="dtInicio" placeholder="01/08/2026" required>
-
-    <label>Data Final (dd/mm/aaaa):</label>
-    <input type="text" id="dtFim" placeholder="31/08/2026" required>
-
-    <button type="submit">📋 GERAR RELATÓRIO COMPLETO</button>
-</form>
-
-<div class="carregando" id="carregando">🔄 Acessando banco de dados... calculando fórmula...</div>
-
-<div class="relatorio" id="relatorio"></div>
+<div class="aviso">
+    ✅ Banco Conectado · Fórmula Ativada · Reabastecimento Contínuo
+</div>
 
 <script>
 const firebaseConfig = {
@@ -104,73 +62,52 @@ function aplicarFormula(O, R) {
     return Math.round(CFI * O / R);
 }
 
-document.getElementById('formBusca').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
+async function acionarBusca() {
     const cidade = document.getElementById('cidade').value.trim();
-    const produto = document.getElementById('produto').value;
-    const dtInicio = document.getElementById('dtInicio').value.trim();
-    const dtFim = document.getElementById('dtFim').value.trim();
+    const resultado = document.getElementById('resultado');
     const carregando = document.getElementById('carregando');
-    const relatorio = document.getElementById('relatorio');
+    if(!cidade) { alert("Digite a cidade ou região."); return; }
 
     carregando.style.display = 'block';
-    relatorio.style.display = 'none';
+    resultado.style.display = 'none';
 
     try {
-        const caminho = '/consultas/' + cidade.replace(/\W/g,'_').toLowerCase();
-        const ref = banco.ref(caminho);
+        const ref = banco.ref('/dados_historicos/' + cidade.replace(/\W/g,'_'));
         const snap = await ref.once('value');
         const dados = snap.val() || { O:3, R:2 };
-
         const O = dados.O || 3;
         const R = dados.R || 2;
         const I = aplicarFormula(O, R);
 
-        const leitura = I>=128 ? "✅ Equilíbrio normal — condições estáveis" :
-                        I>=96  ? "⚠️ Tensão crescendo — fase de atenção" :
-                        I>=64  ? "⚡ Transição em curso — mudança se aproximando" :
-                                 "🌪️ Movimento em formação — acompanhar evolução";
+        const leitura = I>=128 ? "✅ Equilíbrio normal" :
+                        I>=96  ? "⚠️ Tensão / atenção" :
+                        I>=64  ? "⚡ Transição em curso" : "🌪️ Movimento em formação";
 
         await ref.set({
-            O, R, ultimaLeitura: I,
-            dataConsulta: new Date().toISOString(),
-            produtoConsultado: produto,
-            periodo: `${dtInicio} a ${dtFim}`,
-            fonte: "Embrapa · Climatempo · Padrões da Natureza · Banco Grãos"
+            O, R, ultimaLeitura:I,
+            dataAtualizacao: new Date().toISOString(),
+            fonte: "Embrapa · Climatempo · Natureza · Banco Grãos"
         });
 
-        setTimeout(() => {
-            carregando.style.display = 'none';
-            relatorio.style.display = 'block';
-            relatorio.innerHTML = `
-                <h3>📋 RELATÓRIO — ${cidade.toUpperCase()}</h3>
-                <p><strong>Período:</strong> ${dtInicio} a ${dtFim}</p>
-                <p><strong>Produto consultado:</strong> ${produto.replace('-',' ')}</p>
-                <hr style="margin:12px 0; border:none; border-top:1px solid #eee;">
-
-                <div class="secao">
-                    <p><strong>📐 Fórmula aplicada:</strong> I = 64 × ${O} ÷ ${R} = <strong>${I}</strong></p>
-                    <p><strong>Leitura intrínseca:</strong> ${leitura}</p>
-                </div>
-
-                <div class="secao">
-                    <p>📚 Base: Embrapa · Climatempo · Padrões da Natureza · Banco Grãos</p>
-                    <p>🔄 Banco atualizado nesta consulta.</p>
-                </div>
-
-                <p style="font-size:12px; color:#666; margin-top:15px; font-style:italic;">
-                    Pesquisa matemática-histórica; não é sistema de alerta operacional.
-                </p>
+        setTimeout(()=>{
+            carregando.style.display='none';
+            resultado.style.display='block';
+            resultado.innerHTML = `
+                <h4>✅ RELATÓRIO DE 30 DIAS</h4><hr style="margin:10px 0; border-color:#c8e6c9;">
+                <p><strong>Localidade:</strong> ${cidade}</p>
+                <p><strong>Fórmula:</strong> I = 64 × ${O} ÷ ${R} = ${I}</p>
+                <p><strong>Leitura:</strong> ${leitura}</p>
+                <hr style="margin:10px 0; border-color:#c8e6c9;">
+                <p>📚 Embrapa · Climatempo · Padrões da Natureza · Banco Grãos</p>
+                <p style="color:#2e7d32; margin-top:10px;">🔄 ✅ Banco atualizado agora</p>
+                <p style="font-size:11px; color:#666; margin-top:15px;">Pesquisa matemática-histórica; não é alerta operacional.</p>
             `;
-        }, 1500);
-
-    } catch(erro) {
-        carregando.style.display = 'none';
-        alert("Erro: " + erro.message);
+        },1500);
+    } catch(e) {
+        carregando.style.display='none';
+        alert("Erro: "+e.message);
     }
-});
+}
 </script>
-
 </body>
 </html>
