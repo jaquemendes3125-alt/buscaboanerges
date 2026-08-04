@@ -20,10 +20,10 @@
             margin-bottom:25px;
         }
 
-        h1 { text-align:center; color:#0e5a0e; margin-bottom:25px; font-size:22px; }
-        .proprietaria { text-align:center; font-size:13px; color:#556; margin-bottom:25px; font-style:italic; }
+        h1 { text-align:center; color:#0e5a0e; margin-bottom:10px; font-size:22px; }
+        .proprietaria { text-align:center; font-size:13px; color:#556; margin-bottom:25px; }
 
-        label { display:block; margin:15px 0 5px; font-weight:bold; font-size:15px; }
+        label { display:block; margin:15px 0 5px; font-weight:bold; font-size:14px; }
         input, select {
             width:100%; padding:10px; border:none; border-bottom:1px solid #ccc;
             font-size:15px; background:transparent;
@@ -59,7 +59,7 @@
 
 <form id="formBusca">
     <label>Cidade e Estado [Ex: Contagem - MG]:</label>
-    <input type="text" id="cidade" placeholder="Ex: Elias Fausto - SP" required>
+    <input type="text" id="cidade" placeholder="Ex: Itu - SP" required>
 
     <label>Qual produto quer consultar?</label>
     <select id="produto">
@@ -67,14 +67,19 @@
         <option value="soja">Soja</option>
         <option value="milho">Milho</option>
         <option value="algodao">Algodão</option>
+        <option value="feijao">Feijão</option>
+        <option value="trigo">Trigo</option>
+        <option value="arroz">Arroz</option>
+        <option value="cafe">Café</option>
+        <option value="citrus">Cítricos</option>
         <option value="outro">Outro / Geral</option>
     </select>
 
     <label>Data Inicial (dd/mm/aaaa):</label>
-    <input type="text" id="dtInicio" placeholder="01/08/2026" required>
+    <input type="text" id="dtInicio" placeholder="04/08/2026" required>
 
     <label>Data Final (dd/mm/aaaa):</label>
-    <input type="text" id="dtFim" placeholder="31/08/2026" required>
+    <input type="text" id="dtFim" placeholder="03/09/2026" required>
 
     <button type="submit">📋 GERAR RELATÓRIO COMPLETO</button>
 </form>
@@ -110,7 +115,7 @@ function aplicarFormula(O, R) {
 }
 
 // ==================================================
-// 📋 GERA RELATÓRIO — LÊ → CALCULA → ATUALIZA
+// 📋 GERA RELATÓRIO — CORRIGIDO PARA APARECER
 // ==================================================
 document.getElementById('formBusca').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -152,7 +157,7 @@ document.getElementById('formBusca').addEventListener('submit', async function(e
             fonte: "Embrapa · Climatempo · Padrões da Natureza · Banco Grãos"
         });
 
-        // ✅ EXIBE RELATÓRIO
+        // ✅ EXIBE RELATÓRIO — AGORA CERTAMENTE APARECE
         setTimeout(() => {
             carregando.style.display = 'none';
             relatorio.style.display = 'block';
