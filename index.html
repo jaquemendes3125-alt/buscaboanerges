@@ -12,8 +12,9 @@
         .subtitulo { color: #558b2f; font-size: 14px; font-style: italic; margin-bottom: 20px; }
 
         /* ==== PÁGINA PÚBLICA — CLIENTE VÊ ISSO ==== */
-        .pagina-publica { display: none; }
-        .pagina-publica.ativa { display: block; }
+        .pagina-publica { display: block; }
+        .pagina-publica.escondida { display: none; }
+
         .pagina-publica .caixa { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
         .pagina-publica h2 { color: #2e7d32; font-size: 20px; margin-bottom: 20px; text-align: center; }
         .pagina-publica p { font-size: 16px; line-height: 1.8; margin-bottom: 15px; text-align: justify; }
@@ -24,7 +25,8 @@
 
         /* ==== PÁGINA SECRETA — SÓ VOCÊ VÊ ==== */
         .pagina-secreta { display: none; }
-        .pagina-secreta.ativa { display: block; }
+        .pagina-secreta.visivel { display: block; }
+
         .form-bloco { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px; }
         label { display: block; margin: 13px 0 5px 0; font-weight: bold; color: #2e7d32; font-size: 15px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 15px; background: #f9fef9; }
@@ -77,7 +79,7 @@
 </div>
 
 <!-- ======================================================
-     PÁGINA SECRETA — SÓ VOCÊ VÊ (com /acesso-buscaboanerges-secreto)
+     PÁGINA SECRETA — SÓ VOCÊ VÊ (com /acesso_buscaboanerges_secreto)
      ====================================================== -->
 <div class="pagina-secreta" id="paginaSecreta">
     <header>
@@ -165,19 +167,20 @@
 
 <script>
 // ==========================================================
-// 🔑 DETECÇÃO DE ACESSO — PÚBLICA OU SECRETA?
+// 🔑 DETECÇÃO DE ACESSO — SÓ UNDERLINE AGORA!
 // ==========================================================
 function verificarAcesso() {
-    const caminho = window.location.pathname.toLowerCase();
-    const ehSecreto = caminho.includes("acesso-buscaboanerges-secreto");
+    const caminho = window.location.href.toLowerCase();
+    // AGORA SÓ COM UNDERLINE: acesso_buscaboanerges_secreto
+    const ehSecreto = caminho.indexOf("acesso_buscaboanerges_secreto") !== -1;
 
     if (ehSecreto) {
-        document.getElementById("paginaPublica").classList.remove("ativa");
-        document.getElementById("paginaSecreta").classList.add("ativa");
-        console.log("✅ ÁREA SECRETA CARREGADA — Gerador de Relatório disponível");
+        document.getElementById("paginaPublica").classList.add("escondida");
+        document.getElementById("paginaSecreta").classList.add("visivel");
+        console.log("✅ ÁREA SECRETA CARREGADA");
     } else {
-        document.getElementById("paginaPublica").classList.add("ativa");
-        document.getElementById("paginaSecreta").classList.remove("ativa");
+        document.getElementById("paginaPublica").classList.remove("escondida");
+        document.getElementById("paginaSecreta").classList.remove("visivel");
         console.log("✅ PÁGINA PÚBLICA CARREGADA");
     }
 }
@@ -235,7 +238,7 @@ const REGRAS_POR_ESTADO = {
 };
 
 // ==========================================================
-// 🌾 REGRAS AGRÍCOLAS — TODAS AS PRINCIPAIS CULTURAS
+// 🌾 REGRAS AGRÍCOLAS
 // ==========================================================
 const REGRAS_GRAOS = {
     "Soja": { temp_min:20.0, temp_max:30.0, chuva_min_ciclo_mm:450, meses_permitidos:[10,11,12,1,2], solo:"Argiloso ou médio, bem drenado", ciclo:"~120 dias", sensibilidade:"Alta — não tolera geada nem encharcamento", tipo:"Anual" },
@@ -284,7 +287,7 @@ function calcularFormula(O, R) {
 }
 
 // ==========================================================
-// 🔍 BUSCA CIDADE — BASE OU INTERNET
+// 🔍 BUSCA CIDADE
 // ==========================================================
 async function buscarCoordenadas(cidadeBruta) {
     const chave = cidadeBruta.trim().toLowerCase().replace(/\s+/g,"").replace(/-/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
@@ -314,7 +317,7 @@ async function buscarCoordenadas(cidadeBruta) {
 }
 
 // ==========================================================
-// 🌡️ BUSCA CLIMA — TEMPO REAL
+// 🌡️ BUSCA CLIMA
 // ==========================================================
 async function buscarClimaReal(lat, lon) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=America/Sao_Paulo&forecast_days=7`;
@@ -383,7 +386,7 @@ function avaliarPlantio(grao, dadosClima, mesAtual, siglaEstado) {
 }
 
 // ==========================================================
-// 🚀 GERAR RELATÓRIO COMPLETO
+// 🚀 GERAR RELATÓRIO
 // ==========================================================
 async function gerarRelatorio() {
     const cidade = document.getElementById("cidade").value.trim();
@@ -509,6 +512,9 @@ async function gerarRelatorio() {
     document.getElementById("carregando").style.display = "none";
 }
 
+// ==========================================================
+// ✅ EXECUTA QUANDO CARREGA
+// ==========================================================
 window.onload = function() {
     verificarAcesso();
 };
