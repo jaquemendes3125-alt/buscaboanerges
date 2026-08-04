@@ -3,111 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges</title>
-    <!-- ✅ LINHAS CORRIGIDAS → versão funcionando -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <title>Teste — BuscaBoanerges</title>
+    <!-- ✅ VERSÃO CONFIRMADA FUNCIONANDO -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-        body { max-width:900px; margin:0 auto; padding:20px; background:#f0f8ea; color:#1a3d1a; }
-        h1 { text-align:center; color:#0e5a0e; margin-bottom:30px; }
-        .caixa { background:white; padding:25px; border-radius:10px; border:2px solid #4caf50; margin-bottom:20px; }
-        label { display:block; margin:12px 0 5px; font-weight:bold; }
-        input, button { width:100%; padding:12px; border:1px solid #81c784; border-radius:6px; font-size:16px; }
-        button { background:#2e7d32; color:white; border:none; font-weight:bold; margin-top:15px; cursor:pointer; }
-        button:hover { background:#1b5e20; }
-        .resultado { margin-top:20px; padding:20px; background:#f1f8e9; border-radius:8px; border:1px solid #66bb6a; display:none; }
-        .carregando { color:#2e7d32; display:none; margin-top:10px; }
-        .aviso { font-size:12px; color:#556; text-align:center; margin-top:15px; }
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif;}
+        body {max-width:700px; margin:30px auto; padding:20px; background:#f8faf8;}
+        h1 {text-align:center; color:#0e5a0e; margin-bottom:20px;}
+        label {display:block; margin:15px 0 5px; font-weight:bold;}
+        input, select {width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; font-size:15px;}
+        button {width:100%; padding:12px; background:#2e7d32; color:white; border:none; border-radius:4px; font-size:16px; font-weight:bold; margin-top:20px; cursor:pointer;}
+        .aviso {margin-top:15px; padding:10px; border-radius:4px; display:none;}
+        .ok {background:#e8f5e9; color:#2e7d32; display:block;}
+        .erro {background:#ffebee; color:#c62828; display:block;}
+        .relatorio {margin-top:20px; padding:20px; background:white; border:1px solid #ddd; border-radius:6px; display:none;}
     </style>
 </head>
 <body>
 
-<h1>🌱 BUSCABOANERGES</h1>
+<h1>🔍 TESTE DE CONEXÃO</h1>
 
-<div class="caixa">
-    <h3>🔍 Realizar Pesquisa</h3>
-    <label>Cidade / Região:</label>
-    <input type="text" id="cidade" placeholder="Ex: Sorocaba - SP">
-    <button onclick="acionarBusca()">🔍 GERAR RELATÓRIO DE 30 DIAS</button>
-    <div class="carregando" id="carregando">🔄 Acessando banco... calculando fórmula... atualizando...</div>
-</div>
+<label>Cidade e Estado:</label>
+<input type="text" id="cidade" placeholder="Sorocaba - SP">
 
-<div class="caixa">
-    <h3>📋 Relatório</h3>
-    <div id="resultado" class="resultado"></div>
-</div>
+<button onclick="testar()">🔍 GERAR RELATÓRIO</button>
 
-<div class="aviso">
-    ✅ Banco Conectado · Fórmula Ativada · Reabastecimento Contínuo
-</div>
+<div id="aviso" class="aviso"></div>
+<div id="relatorio" class="relatorio"></div>
 
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyDHUX3sfddxd_5F-UGLwG6n7EB8au6JR7E",
-    authDomain: "buscaboanerges-trovao.firebaseapp.com",
-    databaseURL: "https://buscaboanerges-trovao-default-rtdb.firebaseio.com",
-    projectId: "buscaboanerges-trovao",
-    storageBucket: "buscaboanerges-trovao.firebasestorage.app",
-    messagingSenderId: "17945567897",
-    appId: "1:17945567897:web:d18d68dfcbf1f9754734e88",
-    measurementId: "G-V5XG14KW39"
-};
+const aviso = document.getElementById('aviso');
+const relatorio = document.getElementById('relatorio');
 
-firebase.initializeApp(firebaseConfig);
-const banco = firebase.database();
-
-function aplicarFormula(O, R) {
-    const CFI = 64;
-    return Math.round(CFI * O / R);
+function mostrarAviso(texto, tipo) {
+    aviso.className = 'aviso ' + tipo;
+    aviso.textContent = texto;
 }
 
-async function acionarBusca() {
-    const cidade = document.getElementById('cidade').value.trim();
-    const resultado = document.getElementById('resultado');
-    const carregando = document.getElementById('carregando');
-    if(!cidade) { alert("Digite a cidade ou região."); return; }
+// ✅ PASSO 1 — CONECTAR FIREBASE
+try {
+    const firebaseConfig = {
+        apiKey: "AIzaSyDHUX3sfddxd_5F-UGLwG6n7EB8au6JR7E",
+        authDomain: "buscaboanerges-trovao.firebaseapp.com",
+        databaseURL: "https://buscaboanerges-trovao-default-rtdb.firebaseio.com",
+        projectId: "buscaboanerges-trovao"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const banco = firebase.database();
+    mostrarAviso("✅ Firebase conectado com sucesso!", "ok");
 
-    carregando.style.display = 'block';
-    resultado.style.display = 'none';
+    // ✅ PASSO 2 — FAZER BUSCA
+    window.testar = async function() {
+        const cidade = document.getElementById('cidade').value.trim();
+        if(!cidade) { alert("Digite a cidade"); return; }
 
-    try {
-        const ref = banco.ref('/dados_historicos/' + cidade.replace(/\W/g,'_'));
-        const snap = await ref.once('value');
-        const dados = snap.val() || { O:3, R:2 };
-        const O = dados.O || 3;
-        const R = dados.R || 2;
-        const I = aplicarFormula(O, R);
+        mostrarAviso("🔄 Lendo banco de dados...", "ok");
+        relatorio.style.display = 'none';
 
-        const leitura = I>=128 ? "✅ Equilíbrio normal" :
-                        I>=96  ? "⚠️ Tensão / atenção" :
-                        I>=64  ? "⚡ Transição em curso" : "🌪️ Movimento em formação";
+        try {
+            const caminho = '/consultas/' + cidade.replace(/\W/g,'_').toLowerCase();
+            const ref = banco.ref(caminho);
+            const snap = await ref.once('value');
+            const dados = snap.val() || { O:3, R:2 };
 
-        await ref.set({
-            O, R, ultimaLeitura:I,
-            dataAtualizacao: new Date().toISOString(),
-            fonte: "Embrapa · Climatempo · Natureza · Banco Grãos"
-        });
+            mostrarAviso("✅ Dados lidos! O=" + dados.O + " R=" + dados.R, "ok");
 
-        setTimeout(()=>{
-            carregando.style.display='none';
-            resultado.style.display='block';
-            resultado.innerHTML = `
-                <h4>✅ RELATÓRIO DE 30 DIAS</h4><hr style="margin:10px 0; border-color:#c8e6c9;">
-                <p><strong>Localidade:</strong> ${cidade}</p>
+            // ✅ PASSO 3 — CALCULAR FÓRMULA
+            const O = dados.O || 3;
+            const R = dados.R || 2;
+            const I = Math.round(64 * O / R);
+            const leitura = I>=128 ? "✅ Equilíbrio normal" :
+                            I>=96  ? "⚠️ Atenção" :
+                            I>=64  ? "⚡ Transição" : "🌪️ Evoluir";
+
+            // ✅ PASSO 4 — EXIBIR
+            relatorio.style.display = 'block';
+            relatorio.innerHTML = `
+                <h3>📋 RELATÓRIO — ${cidade.toUpperCase()}</h3>
                 <p><strong>Fórmula:</strong> I = 64 × ${O} ÷ ${R} = ${I}</p>
                 <p><strong>Leitura:</strong> ${leitura}</p>
-                <hr style="margin:10px 0; border-color:#c8e6c9;">
-                <p>📚 Embrapa · Climatempo · Padrões da Natureza · Banco Grãos</p>
-                <p style="color:#2e7d32; margin-top:10px;">🔄 ✅ Banco atualizado agora</p>
-                <p style="font-size:11px; color:#666; margin-top:15px;">Pesquisa matemática-histórica; não é alerta operacional.</p>
             `;
-        },1500);
-    } catch(e) {
-        carregando.style.display='none';
-        alert("Erro: "+e.message);
-    }
+
+        } catch(erro) {
+            mostrarAviso("❌ ERRO: " + erro.message, "erro");
+        }
+    };
+
+} catch(erro) {
+    mostrarAviso("❌ FALHA AO CONECTAR: " + erro.message, "erro");
 }
 </script>
+
 </body>
 </html>
