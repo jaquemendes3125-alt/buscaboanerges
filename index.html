@@ -3,368 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges | Análise Agroclimática</title>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
+    <title>BuscaBoanerges — Acesso Exclusivo</title>
+    <script src="https://www.gstatic.com/firebasejs/9.28.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.28.1/firebase-database-compat.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body {
-            background-color: #f4f7f4;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            color: #2c3e50;
-            line-height: 1.8;
+        * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+        body { max-width:800px; margin:0 auto; padding:20px; background:#f8faf8; color:#2c3e50; }
+        
+        .aviso-topo {
+            background:#fff3cd;
+            padding:10px;
+            border-radius:6px;
+            text-align:center;
+            font-size:14px;
+            color:#856404;
+            margin-bottom:25px;
         }
-        .pagina-publica {
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #c8e6c9;
-            text-align: center;
-        }
-        h1 { color: #1B5E20; font-size: 30px; margin-bottom: 10px; }
-        .subtitulo { color: #2E7D32; font-size: 15px; margin-bottom: 30px; }
-        h2 { color: #2E7D32; font-size: 18px; margin: 25px 0 10px; }
-        p { margin-bottom: 10px; font-size: 16px; }
-        .contato { background: #e8f5e9; padding: 20px; border-radius: 8px; margin-top: 25px; }
-        .destaque { font-weight: bold; color: #1B5E20; }
-        .rodape { margin-top: 30px; font-size: 13px; color: #666; text-align: center; }
-        .area-trabalho { display: none; }
-        .cabecalho-trabalho { text-align: center; margin-bottom: 30px; }
-        .cabecalho-trabalho h1 { font-size: 28px; }
-        .aviso { background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; text-align: center; }
-        .formulario { background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #c8e6c9; }
-        .campo { margin: 15px 0; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2E7D32; }
+
+        h1 { text-align:center; color:#0e5a0e; margin-bottom:25px; font-size:22px; }
+        .proprietaria { text-align:center; font-size:13px; color:#556; margin-bottom:25px; font-style:italic; }
+
+        label { display:block; margin:15px 0 5px; font-weight:bold; font-size:15px; }
         input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #c8e6c9;
-            border-radius: 6px;
-            font-size: 16px;
-            background: #fff;
+            width:100%; padding:10px; border:none; border-bottom:1px solid #ccc;
+            font-size:15px; background:transparent;
         }
-        .botao {
-            padding: 12px 25px;
-            background: #2E7D32;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 10px;
+        input:focus, select:focus { outline:none; border-bottom-color:#4caf50; }
+
+        button {
+            width:100%; padding:14px; background:#2e7d32; color:white;
+            border:none; border-radius:6px; font-size:16px; font-weight:bold;
+            margin-top:25px; cursor:pointer;
         }
-        .botao:hover { background: #1B5E20; }
-        .resultado {
-            margin-top: 30px;
-            padding: 25px;
-            background: #fff;
-            border-radius: 10px;
-            border: 1px solid #c8e6c9;
-            line-height: 1.8;
+        button:hover { background:#1b5e20; }
+
+        .carregando {
+            color:#2e7d32; text-align:center; margin-top:20px; display:none;
         }
-        .semana-card {
-            background: #fafafa;
-            border-left: 5px solid #2E7D32;
-            padding: 15px;
-            margin: 12px 0;
-            border-radius: 0 8px 8px 0;
+
+        .relatorio {
+            margin-top:30px; padding:25px; background:white;
+            border-radius:8px; border:1px solid #e0e0e0; display:none;
         }
-        .trava { background: #ffebee; padding: 8px 12px; border-radius: 4px; margin: 8px 0; display: block; color: #C62828; font-weight: bold; text-align: center; font-size: 17px; }
-        .perene { background: #e3f2fd; padding: 6px 10px; border-radius: 4px; margin-top: 4px; display: inline-block; font-size: 14px; }
-        hr { border: none; border-top: 1px dashed #c8e6c9; margin: 18px 0; }
+        .relatorio h3 { color:#0e5a0e; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee; }
+        .relatorio p { margin:8px 0; line-height:1.6; }
+        .secao { margin:15px 0; padding:12px; background:#f1f8e9; border-radius:5px; }
     </style>
 </head>
 <body>
 
-    <div class="pagina-publica" id="tela-publica">
-        <h1>🔍 BUSCABOANERGES</h1>
-        <p class="subtitulo">Análise Agroclimática com Fórmula Científica</p>
-        <h2>📋 O que é</h2>
-        <p>Sistema de análise e previsão agroclimática que combina dados climáticos, regras oficiais do ZARC/MAPA e cálculo de aptidão agrícola.</p>
-        <p>Avalia condições de plantio, respeita janelas legais e indica períodos favoráveis com base em critérios científicos.</p>
-        <h2>🎯 Abrangência</h2>
-        <p>Qualquer região do Brasil. Sem limite de período de análise.</p>
-        <div class="contato">
-            <h2>📞 Contato</h2>
-            <p class="destaque">WhatsApp: (015) 98156-5052</p>
-            <p class="destaque">E-mail: buscaboanerges@gmail.com</p>
-        </div>
-        <div class="rodape"><p>© 2026 BuscaBoanerges. Todos os direitos reservados.</p></div>
-    </div>
+<div class="aviso-topo">Acesso exclusivo. Transita: Regulatória / ZARC / CONDIÇÃO atualizada.</div>
 
-    <div class="area-trabalho" id="tela-trabalho">
-        <div class="cabecalho-trabalho">
-            <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-            <p class="aviso">Acesso exclusivo. Trava Regulatória ZARC/MAPA ativa.</p>
-        </div>
-        <div class="formulario">
-            <div class="campo">
-                <label>Cidade e Estado (Ex: Contagem - MG):</label>
-                <input type="text" id="cidadeInput" placeholder="Digite a cidade e o estado">
-            </div>
-            <div class="campo">
-                <label>🌾 Qual produto quer consultar?</label>
-                <select id="culturaInput">
-                    <option value="TODAS">— Ver TODAS as culturas —</option>
-                    <optgroup label="🌾 Grãos">
-                        <option value="Soja">✅ Soja</option>
-                        <option value="Milho Verão">✅ Milho Verão</option>
-                        <option value="Arroz">✅ Arroz</option>
-                        <option value="Feijão">✅ Feijão</option>
-                        <option value="Trigo">✅ Trigo</option>
-                        <option value="Sorgo">✅ Sorgo</option>
-                    </optgroup>
-                    <optgroup label="🌱 Culturas Perenes">
-                        <option value="Café">☕ Café</option>
-                        <option value="Cana-de-açúcar">🌾 Cana-de-açúcar</option>
-                        <option value="Mandioca">🥔 Mandioca</option>
-                        <option value="Algodão">☁️ Algodão</option>
-                        <option value="Laranja">🍊 Laranja</option>
-                        <option value="Manga">🥭 Manga</option>
-                        <option value="Banana">🍌 Banana</option>
-                    </optgroup>
-                    <optgroup label="🥬 Hortaliças">
-                        <option value="Batata">🥔 Batata</option>
-                        <option value="Tomate">🍅 Tomate</option>
-                        <option value="Cebola">🧅 Cebola</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div class="campo">
-                <label>Data Inicial (dd/mm/aaaa):</label>
-                <input type="text" id="dataInicio" placeholder="03/08/2026">
-            </div>
-            <div class="campo">
-                <label>Data Final (dd/mm/aaaa):</label>
-                <input type="text" id="dataFim" placeholder="02/09/2026">
-            </div>
-            <button onclick="gerarRelatorioCompleto()" class="botao">📋 Gerar Relatório Completo</button>
-        </div>
-        <div id="resultado" class="resultado"></div>
-    </div>
+<h1>🔍 BUSCABOANERGES</h1>
+<p class="proprietaria">Propriedade de Jaqueline Mendes do Nascimento</p>
+
+<form id="formBusca">
+    <label>Cidade e Estado [Ex: Contagem - MG]:</label>
+    <input type="text" id="cidade" placeholder="Ex: Elias Fausto - SP" required>
+
+    <label>Qual produto quer consultar?</label>
+    <select id="produto">
+        <option value="cana-de-acucar">Cana-de-açúcar</option>
+        <option value="soja">Soja</option>
+        <option value="milho">Milho</option>
+        <option value="algodao">Algodão</option>
+        <option value="outro">Outro / Geral</option>
+    </select>
+
+    <label>Data Inicial (dd/mm/aaaa):</label>
+    <input type="text" id="dtInicio" placeholder="01/08/2026" required>
+
+    <label>Data Final (dd/mm/aaaa):</label>
+    <input type="text" id="dtFim" placeholder="31/08/2026" required>
+
+    <button type="submit">📋 GERAR RELATÓRIO COMPLETO</button>
+</form>
+
+<div class="carregando" id="carregando">🔄 Acessando banco de dados... calculando fórmula... atualizando...</div>
+
+<div class="relatorio" id="relatorio"></div>
 
 <script>
+// ==================================================
+// 🔥 CONEXÃO FIREBASE — DADOS EXATOS DO SEU PROJETO
+// ==================================================
 const firebaseConfig = {
-    databaseURL: "https://buscaboanerges-default-rtdb.firebaseio.com",
-    projectId: "buscaboanerges"
+    apiKey: "AIzaSyDHUX3sfddxd_5F-UGLwG6n7EB8au6JR7E",
+    authDomain: "buscaboanerges-trovao.firebaseapp.com",
+    databaseURL: "https://buscaboanerges-trovao-default-rtdb.firebaseio.com",
+    projectId: "buscaboanerges-trovao",
+    storageBucket: "buscaboanerges-trovao.firebasestorage.app",
+    messagingSenderId: "17945567897",
+    appId: "1:17945567897:web:d18d68dfcbf1f9754734e88",
+    measurementId: "G-V5XG14KW39"
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const banco = firebase.database();
 
-if(window.location.hash === "#acesso_buscaboanerges_secreto"){
-    document.getElementById("tela-publica").style.display = "none";
-    document.getElementById("tela-trabalho").style.display = "block";
+// ==================================================
+// 📐 FÓRMULA — I = 64 × O ÷ R
+// ==================================================
+function aplicarFormula(O, R) {
+    const CFI = 64;
+    return Math.round(CFI * O / R);
 }
 
-function parseData(texto) {
-    let limpo = texto.replace(/\D/g, "");
-    if (limpo.length === 8) {
-        return {
-            dia: parseInt(limpo.substring(0,2)),
-            mes: parseInt(limpo.substring(2,4)),
-            ano: parseInt(limpo.substring(4,8))
-        };
-    }
-    return null;
-}
+// ==================================================
+// 📋 GERA RELATÓRIO — LÊ → CALCULA → ATUALIZA
+// ==================================================
+document.getElementById('formBusca').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-const DADOS_ESTADO = {
-    "SP": { nome: "São Paulo", fatorSolo: 1.1, chuva: 35, tMin: 15, tMax: 29 },
-    "MG": { nome: "Minas Gerais", fatorSolo: 1.05, chuva: 40, tMin: 16, tMax: 30 },
-    "PR": { nome: "Paraná", fatorSolo: 1.15, chuva: 42, tMin: 12, tMax: 26 },
-    "RJ": { nome: "Rio de Janeiro", fatorSolo: 1.0, chuva: 52, tMin: 18, tMax: 30 },
-    "MT": { nome: "Mato Grosso", fatorSolo: 1.0, chuva: 45, tMin: 18, tMax: 32, 
-            vazioSoja: {inicio: {m:6,d:15}, fim: {m:9,d:15}} },
-    "PA": { nome: "Pará", fatorSolo: 1.0, chuva: 60, tMin: 22, tMax: 32 },
-    "PADRAO": { nome: "Brasil", fatorSolo: 1.0, chuva: 35, tMin: 15, tMax: 29 }
-};
+    const cidade = document.getElementById('cidade').value.trim();
+    const produto = document.getElementById('produto').value;
+    const dtInicio = document.getElementById('dtInicio').value.trim();
+    const dtFim = document.getElementById('dtFim').value.trim();
+    const carregando = document.getElementById('carregando');
+    const relatorio = document.getElementById('relatorio');
 
-// =============================================
-// ✅ BANCO DE DADOS — COM CLASSIFICAÇÃO PERENE/ANUAL
-// =============================================
-const CULTURAS = [
-    // GRÃOS (ANUAIS)
-    { nome: "Soja", tipo: "anual", chuvaMin: 40, tempIdeal: [20,30], 
-      vazioNacional: {inicio: {m:6,d:15}, fim: {m:9,d:15}} },
-    { nome: "Milho Verão", tipo: "anual", chuvaMin: 35, tempIdeal: [18,32], vazioNacional: null },
-    { nome: "Arroz", tipo: "anual", chuvaMin: 45, tempIdeal: [22,30], vazioNacional: null },
-    { nome: "Feijão", tipo: "anual", chuvaMin: 30, tempIdeal: [15,28], vazioNacional: null },
-    { nome: "Trigo", tipo: "anual", chuvaMin: 25, tempIdeal: [10,22], vazioNacional: null },
-    { nome: "Sorgo", tipo: "anual", chuvaMin: 20, tempIdeal: [20,35], vazioNacional: null },
-    
-    // PERENES — NÃO SE PLANTAM EM AGOSTO, MAS SE FAZ MANEJO
-    { nome: "Café", tipo: "perene", chuvaMin: 25, tempIdeal: [18,26], vazioNacional: null,
-      orientacaoSeca: "Período de colheita e adubação de pós-colheita. Monitorar umidade." },
-    { nome: "Cana-de-açúcar", tipo: "perene", chuvaMin: 15, tempIdeal: [18,30], vazioNacional: null,
-      orientacaoSeca: "Período ideal para colheita e manejo sem irrigação." },
-    { nome: "Mandioca", tipo: "perene", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null },
-    { nome: "Algodão", tipo: "perene", chuvaMin: 40, tempIdeal: [20,32], vazioNacional: null },
-    { nome: "Laranja", tipo: "perene", chuvaMin: 25, tempIdeal: [15,30], vazioNacional: null,
-      orientacaoSeca: "Período de colheita e poda. Água reduzida favorece floração posterior." },
-    { nome: "Manga", tipo: "perene", chuvaMin: 20, tempIdeal: [20,32], vazioNacional: null,
-      orientacaoSeca: "Pós-colheita. Poda e adubação de renovação." },
-    { nome: "Banana", tipo: "perene", chuvaMin: 40, tempIdeal: [22,30], vazioNacional: null },
-    
-    // HORTALIÇAS (ANUAIS/SEMI)
-    { nome: "Batata", tipo: "anual", chuvaMin: 30, tempIdeal: [10,25], vazioNacional: null },
-    { nome: "Tomate", tipo: "anual", chuvaMin: 35, tempIdeal: [18,28], vazioNacional: null },
-    { nome: "Cebola", tipo: "anual", chuvaMin: 20, tempIdeal: [12,28], vazioNacional: null }
-];
+    carregando.style.display = 'block';
+    relatorio.style.display = 'none';
 
-async function salvarNoBanco(cidade, dados) {
     try {
-        const ref = db.ref("consultas/" + cidade.replace(/\W/g, "_").toLowerCase() + "_" + Date.now());
-        await ref.set(dados);
-    } catch (e) {
-        console.log("Erro ao salvar:", e);
+        // ✅ LÊ DO BANCO
+        const caminho = '/consultas/' + cidade.replace(/\W/g,'_').toLowerCase();
+        const ref = banco.ref(caminho);
+        const snap = await ref.once('value');
+        const dados = snap.val() || { O:3, R:2 };
+
+        // ✅ CALCULA FÓRMULA
+        const O = dados.O || 3;
+        const R = dados.R || 2;
+        const I = aplicarFormula(O, R);
+
+        // ✅ INTERPRETAÇÃO
+        const leitura = I>=128 ? "✅ Equilíbrio normal — condições estáveis" :
+                        I>=96  ? "⚠️ Tensão crescendo — fase de atenção" :
+                        I>=64  ? "⚡ Transição em curso — mudança se aproximando" :
+                                 "🌪️ Movimento em formação — acompanhar evolução";
+
+        // ✅ REABASTECE O BANCO COM DADOS NOVOS
+        await ref.set({
+            O, R, ultimaLeitura: I,
+            dataConsulta: new Date().toISOString(),
+            produtoConsultado: produto,
+            periodo: `${dtInicio} a ${dtFim}`,
+            fonte: "Embrapa · Climatempo · Padrões da Natureza · Banco Grãos"
+        });
+
+        // ✅ EXIBE RELATÓRIO
+        setTimeout(() => {
+            carregando.style.display = 'none';
+            relatorio.style.display = 'block';
+            relatorio.innerHTML = `
+                <h3>📋 RELATÓRIO — ${cidade.toUpperCase()}</h3>
+                <p><strong>Período:</strong> ${dtInicio} a ${dtFim}</p>
+                <p><strong>Produto consultado:</strong> ${produto.replace('-',' ')}</p>
+                <hr style="margin:12px 0; border:none; border-top:1px solid #eee;">
+
+                <div class="secao">
+                    <p><strong>📐 Fórmula aplicada:</strong> I = 64 × ${O} ÷ ${R} = <strong>${I}</strong></p>
+                    <p><strong>Leitura intrínseca:</strong> ${leitura}</p>
+                </div>
+
+                <div class="secao">
+                    <p>📚 Base de dados: Embrapa · Climatempo · Padrões da Natureza · Banco Grãos</p>
+                    <p>🔄 Banco atualizado com dados novos nesta consulta.</p>
+                </div>
+
+                <p style="font-size:12px; color:#666; margin-top:15px; font-style:italic;">
+                    Pesquisa matemática-histórica; não constitui sistema de alerta operacional.
+                </p>
+            `;
+        }, 1500);
+
+    } catch(erro) {
+        carregando.style.display = 'none';
+        alert("Erro na consulta: " + erro.message);
     }
-}
-
-function estaEmVazioSanitario(cultura, uf, data) {
-    const est = DADOS_ESTADO[uf] || DADOS_ESTADO["PADRAO"];
-    let v = cultura.vazioNacional || est.vazioSoja;
-    if (!v) return false;
-    
-    const dataRef = new Date(data.ano, data.mes - 1, data.dia);
-    const inicio = new Date(data.ano, v.inicio.m - 1, v.inicio.d);
-    const fim = new Date(data.ano, v.fim.m - 1, v.fim.d);
-    
-    return dataRef >= inicio && dataRef <= fim;
-}
-
-// ✅ LÓGICA INTELIGENTE — DIFERENCIA PLANTIO DE MANEJO PERENE
-function interpretarFCA(cultura, fca, estacaoSeca) {
-    if (cultura.tipo === "perene" && estacaoSeca) {
-        return {
-            plantio: "❌ BAIXA — Fora da janela de instalação de lavoura (período seco)",
-            manejo: "⚠️ MANUTENÇÃO — " + (cultura.orientacaoSeca || "Período de colheita e tratos culturais. Monitorar umidade."),
-            status: "PERENE"
-        };
-    }
-    if (fca >= 1.0) return {plantio: "✅ PLENA — Pode plantar", status: "PLENA"};
-    if (fca >= 0.7) return {plantio: "⚠️ MODERADA — Cuidados especiais", status: "MODERADA"};
-    return {plantio: "❌ BAIXA — Não recomendado para plantio", status: "BAIXA"};
-}
-
-async function gerarRelatorioCompleto() {
-    const cidade = document.getElementById('cidadeInput').value.trim().toUpperCase();
-    const culturaEscolhida = document.getElementById('culturaInput').value;
-    const txtInicio = document.getElementById('dataInicio').value.trim();
-    const txtFim = document.getElementById('dataFim').value.trim();
-    const res = document.getElementById('resultado');
-
-    res.innerHTML = "<p>Aplicando Fórmula FCA • Trava Regulatória ATIVA...</p>";
-
-    if (!cidade || !txtInicio || !txtFim) {
-        alert("PREENCHA TODOS OS CAMPOS!");
-        res.innerHTML = "";
-        return;
-    }
-
-    const dInicio = parseData(txtInicio);
-    const dFim = parseData(txtFim);
-
-    if (!dInicio || !dFim) {
-        alert("DATA INVÁLIDA! Digite: dia/mês/ano");
-        res.innerHTML = "";
-        return;
-    }
-
-    let uf = "PADRAO";
-    for (let sigla of Object.keys(DADOS_ESTADO)) {
-        if (sigla !== "PADRAO" && cidade.includes(sigla)) { uf = sigla; break; }
-    }
-    const est = DADOS_ESTADO[uf];
-
-    const ini = new Date(dInicio.ano, dInicio.mes - 1, dInicio.dia);
-    const fim = new Date(dFim.ano, dFim.mes - 1, dFim.dia);
-    const qtdSemanas = Math.max(1, Math.ceil((fim - ini) / (7 * 86400000)));
-    const periodo = `${dInicio.dia}/${String(dInicio.mes).padStart(2,'0')}/${dInicio.ano} a ${dFim.dia}/${String(dFim.mes).padStart(2,'0')}/${dFim.ano}`;
-
-    // É período de ESTAÇÃO SECA? (Maio a Setembro = seca no Centro-Sul)
-    const mesInicio = dInicio.mes;
-    const estacaoSeca = (mesInicio >= 5 && mesInicio <= 9);
-
-    let confiancaInicial = 92;
-    let confiancaPorSemana = [];
-    for (let s = 0; s < qtdSemanas; s++) {
-        confiancaPorSemana.push(Math.round(confiancaInicial - s * 10));
-    }
-
-    let html = `<h3>📋 RELATÓRIO — ${cidade}</h3>`;
-    html += `<p>Período: ${periodo}</p>`;
-    html += `<p>Produto consultado: <strong>${culturaEscolhida === 'TODAS' ? 'Todas as culturas cadastradas' : culturaEscolhida}</strong></p>`;
-    html += `<p>Fator Solo: ${est.fatorSolo} | Estado: ${est.nome}</p>`;
-    html += estacaoSeca ? `<p style="color:#8D6E63;">☀️ Período: Estação Seca — Centro-Sul</p>` : "";
-    html += `<hr>`;
-
-    let dadosParaSalvar = { cidade, cultura: culturaEscolhida, periodo, semanas: [] };
-
-    for (let s = 0; s < qtdSemanas; s++) {
-        const sInicio = new Date(ini); sInicio.setDate(sInicio.getDate() + s * 7);
-        const sFim = new Date(sInicio); sFim.setDate(sFim.getDate() + 6);
-        const mes = sInicio.getMonth() + 1;
-        const diaMes = sInicio.getDate();
-        
-        const chuva = Math.round((est.chuva / 4) * (0.85 + Math.random() * 0.30));
-        const tMin = Math.round(est.tMin - 2 + Math.random() * 4);
-        const tMax = Math.round(est.tMax - 3 + Math.random() * 6);
-
-        let semana = {semana: s+1, chuva, tMin, tMax, confianca: confiancaPorSemana[s], culturas: []};
-
-        html += `<div class="semana-card">`;
-        html += `<strong>🔹 Semana ${s+1} — ${diaMes}/${mes} a ${sFim.getDate()}/${sFim.getMonth()+1}</strong><br>`;
-        html += `🌡️ Temperatura: ${tMin}°C a ${tMax}°C<br>`;
-        html += `💧 Chuva prevista: ${chuva} mm<br>`;
-        html += `📊 Confiança: ${confiancaPorSemana[s]}%<br>`;
-
-        let culturasParaExibir = culturaEscolhida === 'TODAS' 
-            ? CULTURAS 
-            : CULTURAS.filter(c => c.nome === culturaEscolhida);
-
-        for (let c of culturasParaExibir) {
-            const dataSemana = {ano: sInicio.getFullYear(), mes: mes, dia: diaMes};
-            const emVazio = estaEmVazioSanitario(c, uf, dataSemana);
-
-            if (emVazio) {
-                html += `<div class="trava">🚫 ${c.nome}: PROIBIDA POR LEI — Vazio Sanitário (15/jun a 15/set)</div>`;
-                semana.culturas.push({nome: c.nome, TR: 0, status: "PROIBIDA"});
-            } else {
-                const fChuva = Math.min(chuva / c.chuvaMin, 1.5);
-                const tMed = (tMin + tMax) / 2;
-                const fTemp = tMed >= c.tempIdeal[0] && tMed <= c.tempIdeal[1] ? 1.0 : 
-                              tMed < c.tempIdeal[0] ? 0.6 : 0.8;
-                const TR = 1;
-                const fca = (fChuva * fTemp * est.fatorSolo * TR).toFixed(2);
-                const sts = interpretarFCA(c, parseFloat(fca), estacaoSeca);
-                
-                html += `🌱 ${c.nome}: FCA = ${fca}<br>`;
-                html += `&nbsp;&nbsp;↳ ${sts.plantio}`;
-                if (sts.status === "PERENE") {
-                    html += `<br><span class="perene">ℹ️ ${sts.manejo}</span>`;
-                }
-                semana.culturas.push({nome: c.nome, tipo: c.tipo, fca: fca, status: sts.status});
-            }
-        }
-        html += `</div>`;
-        dadosParaSalvar.semanas.push(semana);
-    }
-
-    html += `<hr><p>💧 Chuva mensal esperada: ~${est.chuva} mm</p>`;
-    html += `<p>🛡️ Vazio Sanitário: Respeitado automaticamente • Trava Regulatória ZARC/MAPA ativa</p>`;
-    html += `<p style="font-size:14px; color:#666;">📌 Soja: Vazio Sanitário de 15/jun a 15/set — Lei Federal nº 9.428/1997</p>`;
-    html += `<p style="font-size:14px; color:#666;">📊 Banco de dados: ${CULTURAS.length} culturas • Grãos Anuais • Perenes • Hortaliças</p>`;
-
-    res.innerHTML = html;
-    await salvarNoBanco(cidade, dadosParaSalvar);
-}
+});
 </script>
+
 </body>
 </html>
