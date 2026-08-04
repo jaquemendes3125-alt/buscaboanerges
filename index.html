@@ -174,9 +174,11 @@ function verificarAcesso() {
     if (ehSecreto) {
         document.getElementById("paginaPublica").classList.remove("ativa");
         document.getElementById("paginaSecreta").classList.add("ativa");
+        console.log("✅ ÁREA SECRETA CARREGADA — Gerador de Relatório disponível");
     } else {
         document.getElementById("paginaPublica").classList.add("ativa");
         document.getElementById("paginaSecreta").classList.remove("ativa");
+        console.log("✅ PÁGINA PÚBLICA CARREGADA");
     }
 }
 
@@ -196,11 +198,7 @@ const BASE_NACIONAL = {
     "cuiaba": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / MT", regiao:"Centro-Oeste", estado:"MT" },
     "saoroque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" },
     "são roque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" },
-    "sao roque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" },
-    "salto-sp": { lat:-23.2008, lon:-47.2869, nome:"Salto / SP", regiao:"Sudeste", estado:"SP" },
-    "salto": { lat:-23.2008, lon:-47.2869, nome:"Salto / SP", regiao:"Sudeste", estado:"SP" },
-    "itu-sp": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" },
-    "itu": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" }
+    "sao roque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" }
 };
 
 // ==========================================================
@@ -219,7 +217,6 @@ const REGRAS_POR_ESTADO = {
     BA: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
     ES: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
     RJ: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
-    MG: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
     PE: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
     CE: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
     PB: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
@@ -290,7 +287,7 @@ function calcularFormula(O, R) {
 // 🔍 BUSCA CIDADE — BASE OU INTERNET
 // ==========================================================
 async function buscarCoordenadas(cidadeBruta) {
-    const chave = cidadeBruta.trim().toLowerCase().replace(/\s+/g,"").replace(/-/g,"").replace(/[áéíóúâêîôûãõç]/g, function(l){return l.normalize("NFD").replace(/[\u0300-\u036f]/g,"");});
+    const chave = cidadeBruta.trim().toLowerCase().replace(/\s+/g,"").replace(/-/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     if (BASE_NACIONAL[chave]) {
         return { ...BASE_NACIONAL[chave], origem:"Base gravada" };
     }
@@ -399,7 +396,6 @@ async function gerarRelatorio() {
     document.getElementById("infoAuto").innerHTML = "";
 
     try {
-        // PASSO 1 — Localizar cidade
         const coords = await buscarCoordenadas(cidade);
         if (!coords) throw new Error(`Cidade "${cidade}" não encontrada. Verifique o nome e tente novamente.`);
 
@@ -411,7 +407,6 @@ async function gerarRelatorio() {
         document.getElementById("regiaoInfo").innerHTML = 
             `📍 ${coords.nome} | Região: ${coords.regiao} | Estado: ${siglaEstado}<br>📅 Mês atual: ${nomeMes} (${mesAtual}º mês) | Fonte: ${coords.origem}`;
 
-        // PASSO 2 — Buscar clima em tempo real
         const dadosClima = await buscarClimaReal(coords.lat, coords.lon);
         if (!dadosClima) throw new Error("Não foi possível carregar os dados climáticos. Tente novamente em instantes.");
 
@@ -422,17 +417,14 @@ async function gerarRelatorio() {
         const umidadeAtual = dadosClima.current.relative_humidity_2m;
         const tempAtual = dadosClima.current.temperature_2m.toFixed(1);
 
-        // PASSO 3 — Avaliar plantio
         const diag = avaliarPlantio(grao, dadosClima, mesAtual, siglaEstado);
         if (diag.erro) throw new Error(diag.erro);
 
-        // PASSO 4 — Calcular Fórmula
         const regrasGrao = diag.regras;
         let O = diag.dentroJanela ? (diag.classe === "status-favoravel" ? 4 : 3) : 1;
         const R = (umidadeAtual >= 50 && umidadeAtual <= 85) ? 1 : 2;
         const formula = calcularFormula(O, R);
 
-        // PASSO 5 — Registrar consulta
         BANCO.atualizacoes.push({
             data: new Date().toLocaleString("pt-BR"),
             cidade: coords.nome,
@@ -442,7 +434,6 @@ async function gerarRelatorio() {
         document.getElementById("infoAuto").innerHTML = 
             `✅ Consulta registrada. Total: ${BANCO.atualizacoes.length} consultas | Coordenadas: Lat ${coords.lat.toFixed(4)}° / Lon ${coords.lon.toFixed(4)}°`;
 
-        // ========== EXIBIR DADOS CLIMÁTICOS ==========
         document.getElementById("blocoClima").innerHTML = `
             🌡️ <strong>Temperatura atual:</strong> ${tempAtual}°C<br>
             💧 <strong>Umidade relativa atual:</strong> ${umidadeAtual.toFixed(0)}%<br>
@@ -453,7 +444,6 @@ async function gerarRelatorio() {
             📍 <strong>Coordenadas da região:</strong> Latitude ${coords.lat.toFixed(4)}° | Longitude ${coords.lon.toFixed(4)}°
         `;
 
-        // ========== EXIBIR DIAGNÓSTICO ZARC ==========
         document.getElementById("blocoDiagnostico").innerHTML = `
             <div class="${diag.classe}" style="padding:12px; border-radius:6px; background:rgba(0,0,0,0.03); margin-bottom:12px;">
                 ${diag.status}
@@ -464,7 +454,6 @@ async function gerarRelatorio() {
             ${grao === "Soja" ? `<br><strong>🚫 Vazio Sanitário da Soja (${siglaEstado}):</strong> ${regrasEstado.vazioSoja}` : ""}
         `;
 
-        // ========== EXIBIR DADOS DA CULTURA ==========
         document.getElementById("blocoGraos").innerHTML = `
             <strong>🌱 Cultura:</strong> ${grao} — ${regrasGrao.tipo}<br>
             <strong>🌡️ Faixa de temperatura ideal:</strong> ${regrasGrao.temp_min}°C a ${regrasGrao.temp_max}°C<br>
@@ -475,7 +464,6 @@ async function gerarRelatorio() {
             <strong>⚠️ Sensibilidade:</strong> ${regrasGrao.sensibilidade}
         `;
 
-        // ========== EXIBIR RISCOS DETECTADOS ==========
         let riscos = [];
         if (diag.riscoTermico) riscos.push("⚠️ <strong>Risco térmico</strong> — haverá temperatura fora da faixa ideal nos próximos 7 dias.");
         if (parseFloat(chuvaTotal) < 10) riscos.push("⚠️ <strong>Pouca chuva prevista</strong> — providenciar irrigação complementar.");
@@ -488,7 +476,6 @@ async function gerarRelatorio() {
 
         document.getElementById("blocoRiscos").innerHTML = riscos.length ? riscos.join("<br><br>") : "✅ Sem risco imediato detectado nas condições atuais.";
 
-        // ========== EXIBIR FÓRMULA + 12 PONTOS ==========
         document.getElementById("blocoFormula").innerHTML = `
             <strong>Fórmula aplicada:</strong> I = 64 × O ÷ R<br>
             <strong>Valores:</strong> O = ${O} (Oportunidade) &nbsp;|&nbsp; R = ${R} (Risco)<br>
@@ -499,7 +486,6 @@ async function gerarRelatorio() {
             ${BANCO.dozePontos.map((p,i)=>`${i+1}. ${p}`).join(" | ")}
         `;
 
-        // ========== EXIBIR RECOMENDAÇÃO FINAL ==========
         let recFinal;
         if (diag.classe === "status-favoravel" && diag.dentroJanela) {
             recFinal = "✅ <strong>RECOMENDAÇÃO:</strong> Condições ideais! Temperatura, umidade e chuva estão favoráveis. Aproveite e plante dentro da janela oficial de plantio. Boa safra!";
@@ -512,4 +498,20 @@ async function gerarRelatorio() {
         }
 
         document.getElementById("blocoPrevisao").innerHTML = recFinal + `<br><br>
-            <em>📌 Declaração: Pesquisa matemática e histó
+            <em>📌 Declaração: Pesquisa matemática e histórica. Dados climáticos: Open-Meteo.</em>`;
+
+        document.getElementById("resultado").classList.add("mostrar");
+
+    } catch (erro) {
+        document.getElementById("blocoClima").innerHTML = `<div class="erro">❌ ${erro.message}</div>`;
+        document.getElementById("resultado").classList.add("mostrar");
+    }
+    document.getElementById("carregando").style.display = "none";
+}
+
+window.onload = function() {
+    verificarAcesso();
+};
+</script>
+</body>
+</html>
