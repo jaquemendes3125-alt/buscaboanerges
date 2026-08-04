@@ -33,6 +33,7 @@
         button:hover { background: #1b5e20; }
         .carregando { color: #2e7d32; font-style: italic; margin-top: 12px; display: none; }
         .datas-info { background: #e8f5e9; padding: 8px 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; color: #2e7d32; }
+        .aviso-erro { color: #e65100; background: #fff3e0; padding: 12px; border-radius: 6px; margin-top: 10px; }
 
         /* ==== RELATÓRIO — Padrão Original em Blocos ==== */
         .resultado { margin-top: 22px; padding: 25px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
@@ -50,7 +51,6 @@
         .bloco-uso { font-size: 14px; font-style: italic; color: #333; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc; }
         .confianca { margin-top: 20px; padding: 12px; background: #f3e5f5; border-radius: 6px; text-align: center; font-size: 14px; }
         hr { border: none; border-top: 1px solid #c8e6c9; margin: 15px 0; }
-        .aviso-erro { color: #c62828; padding: 12px; background: #ffebee; border-radius: 6px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -81,13 +81,13 @@
 <div class="pagina-secreta" id="paginaSecreta">
     <header>
         <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-        <p class="subtitulo">Previsão segmentada em blocos de 7 dias — Horizonte de 30 Dias</p>
+        <p class="subtitulo">Previsão segmentada em blocos de dias — Horizonte de 30 Dias</p>
     </header>
 
     <div class="form-bloco">
         <div class="datas-info">💡 Digite apenas os números — a barra aparece sozinha: dd/mm/aaaa</div>
 
-        <label>📍 Cidade (ex: Sorocaba)</label>
+        <label>📍 Cidade (ex: Salto)</label>
         <input type="text" id="cidade" placeholder="Digite o nome da cidade">
 
         <label>📅 Data Inicial do Período</label>
@@ -96,16 +96,15 @@
         <label>📅 Data Final do Período</label>
         <input type="text" id="dataFinal" class="data" placeholder="__/__/____" maxlength="10">
 
-        <label>🌱 Cultura</label>
-        <input type="text" id="cultura" placeholder="Digite: Soja, Milho, Cana-de-Açúcar, Café...">
+        <label>🌱 Cultura (digite o nome: Café, Cana-de-Açúcar, Soja...)</label>
+        <input type="text" id="cultura" placeholder="Digite o nome da cultura">
 
-        <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO DE 30 DIAS</button>
+        <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO COMPLETO</button>
         <div id="carregando" class="carregando">🔄 Buscando dados... Processando blocos de previsão...</div>
     </div>
 
-    <div id="resultado" class="resultado">
-        <!-- Relatório aparece aqui em Blocos -->
-    </div>
+    <!-- ⚠️ CAMPO DE RELATÓRIO — GARANTIDO EXISTIR ANTES DO SCRIPT -->
+    <div id="resultado" class="resultado"></div>
 </div>
 
 <script>
@@ -135,7 +134,16 @@ document.addEventListener('DOMContentLoaded', function() {
     ['dataInicial', 'dataFinal'].forEach(id => {
         document.getElementById(id).addEventListener('input', e => formatarData(e.target));
     });
+    verificarAcesso(); // ✅ Garante que só roda quando a página está pronta
 });
+
+// ==========================================================
+// 🔤 FUNÇÃO PARA COMPARAR NOMES SEM ACENTO E SEM MAIÚSCULA
+// ==========================================================
+function normalizarTexto(texto) {
+    return texto.trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
 // ==========================================================
 // 📋 BANCO DE DADOS AGRÍCOLAS
@@ -143,18 +151,21 @@ document.addEventListener('DOMContentLoaded', function() {
 const BANCO_DE_DADOS_AGRO = {
     "soja":        { tipo: "Grão", temp_min: 20.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [10,11,12,1] },
     "milho":       { tipo: "Grão", temp_min: 18.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [1,2,3,10,11,12] },
-    "cana-de-açúcar": { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    "café":        { tipo: "Permanente", temp_min: 18.0, temp_max: 26.0, umidade_min: 60, meses_permitidos: [5,6,7,8] },
-    "algodão":     { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [10,11,12,1] },
-    "feijão":      { tipo: "Grão", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [9,10,11,2,3,4] },
+    "cana-de-acucar": { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    "cafe":        { tipo: "Permanente", temp_min: 18.0, temp_max: 26.0, umidade_min: 60, meses_permitidos: [5,6,7,8] },
+    "algodao":     { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [10,11,12,1] },
+    "feijao":      { tipo: "Grão", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [9,10,11,2,3,4] },
     "arroz":       { tipo: "Grão", temp_min: 22.0, temp_max: 32.0, umidade_min: 70, meses_permitidos: [10,11,12,1,2] },
     "laranja":     { tipo: "Frutífera", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [6,7,8,9] },
     "alface":      { tipo: "Hortaliça", temp_min: 15.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    "couve":       { tipo: "Hortaliça", temp_min: 12.0, temp_max: 22.0, umidade_min: 65, meses_permitidos: [3,4,5,6,7,8,9] }
+    "couve":       { tipo: "Hortaliça", temp_min: 12.0, temp_max: 22.0, umidade_min: 65, meses_permitidos: [3,4,5,6,7,8,9] },
+    "tomate":      { tipo: "Hortaliça", temp_min: 18.0, temp_max: 30.0, umidade_min: 60, meses_permitidos: [8,9,10,11,2,3] },
+    "batata":      { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [3,4,5,6,7,8,9] },
+    "cenoura":     { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 55, meses_permitidos: [3,4,5,6,7,8,9] }
 };
 
 // ==========================================================
-// 📖 DIAGNÓSTICO OPERACIONAL — O QUE FAZER EM CADA PERÍODO
+// 📖 DIAGNÓSTICO OPERACIONAL
 // ==========================================================
 const DIAGNOSTICO = {
     "FAVORÁVEL": "✅ FAVORÁVEL — Tempo estável. Indicado para: Preparo de solo, adubação, plantio, colheita, secagem e transporte rodoviário.",
@@ -164,7 +175,7 @@ const DIAGNOSTICO = {
 };
 
 // ==========================================================
-// 🌤️ BUSCA DADOS CLIMÁTICOS — PREVISÃO DE 7 DIAS
+// 🌤️ BUSCA DADOS CLIMÁTICOS
 // ==========================================================
 async function buscarPrevisao7Dias(cidadeInput) {
     let nomeCidade = cidadeInput
@@ -181,14 +192,11 @@ async function buscarPrevisao7Dias(cidadeInput) {
 
     const { latitude, longitude, name, admin1 } = geoData.results[0];
 
-    // Busca previsão diária: temperatura mín/máx, chuva, umidade
     const climaRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,relative_humidity_2m_mean&timezone=America/Sao_Paulo&forecast_days=14`);
     const climaData = await climaRes.json();
 
     return {
         nome: `${name} - ${admin1}`,
-        latitude,
-        longitude,
         datas: climaData.daily.time.map(d => {
             const [ano, mes, dia] = d.split('-');
             return `${dia}/${mes}`;
@@ -201,30 +209,27 @@ async function buscarPrevisao7Dias(cidadeInput) {
 }
 
 // ==========================================================
-// 🧩 AGRUPAR EM BLOCOS — LÓGICA PRINCIPAL DO BUSCABOANERGES
+// 🧩 AGRUPAR EM BLOCOS
 // ==========================================================
-function gerarBlocos(previsao, cultura) {
+function gerarBlocos(previsao) {
     const blocos = [];
     let blocoAtual = null;
 
     for (let i = 0; i < previsao.datas.length; i++) {
-        const tempMedia = (previsao.tempMin[i] + previsao.tempMax[i]) / 2;
+        const tempMaxDia = previsao.tempMax[i];
         const chuvaDia = previsao.chuva[i];
-        const umidadeDia = previsao.umidade[i];
 
-        // Classificação do dia
         let classificacao;
         if (chuvaDia > 15) {
             classificacao = "DESFAVORÁVEL";
         } else if (chuvaDia > 5) {
             classificacao = "ATENÇÃO_CHUVA";
-        } else if (previsao.tempMax[i] > 31) {
+        } else if (tempMaxDia > 31) {
             classificacao = "ATENÇÃO_CALOR";
         } else {
             classificacao = "FAVORÁVEL";
         }
 
-        // Agrupa dias de mesma classificação
         if (!blocoAtual || blocoAtual.classificacao !== classificacao) {
             if (blocoAtual) blocos.push(blocoAtual);
             blocoAtual = {
@@ -232,17 +237,17 @@ function gerarBlocos(previsao, cultura) {
                 ate: previsao.datas[i],
                 classificacao,
                 tempMin: previsao.tempMin[i],
-                tempMax: previsao.tempMax[i],
+                tempMax: tempMaxDia,
                 chuvaTotal: chuvaDia,
-                umidadeMedia: umidadeDia,
+                umidadeMedia: previsao.umidade[i],
                 qtdDias: 1
             };
         } else {
             blocoAtual.ate = previsao.datas[i];
             blocoAtual.tempMin = Math.min(blocoAtual.tempMin, previsao.tempMin[i]);
-            blocoAtual.tempMax = Math.max(blocoAtual.tempMax, previsao.tempMax[i]);
+            blocoAtual.tempMax = Math.max(blocoAtual.tempMax, tempMaxDia);
             blocoAtual.chuvaTotal += chuvaDia;
-            blocoAtual.umidadeMedia = (blocoAtual.umidadeMedia * blocoAtual.qtdDias + umidadeDia) / (blocoAtual.qtdDias + 1);
+            blocoAtual.umidadeMedia = (blocoAtual.umidadeMedia * blocoAtual.qtdDias + previsao.umidade[i]) / (blocoAtual.qtdDias + 1);
             blocoAtual.qtdDias++;
         }
     }
@@ -251,46 +256,51 @@ function gerarBlocos(previsao, cultura) {
 }
 
 // ==========================================================
-// 📋 MONTAR RELATÓRIO FINAL — PADRÃO ORIGINAL
+// 📋 GERAR RELATÓRIO — CORRIGIDO E SEGURO
 // ==========================================================
 async function gerarRelatorio() {
     const cidadeInput = document.getElementById("cidade").value.trim();
     const culturaInput = document.getElementById("cultura").value.trim();
     const dataInicial = document.getElementById("dataInicial").value.trim();
     const dataFinal = document.getElementById("dataFinal").value.trim();
+    const resultado = document.getElementById("resultado");
+    const carregando = document.getElementById("carregando");
 
+    // ✅ Verifica se TODOS os campos existem antes de prosseguir
     if (!cidadeInput || !culturaInput || !dataInicial || !dataFinal) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    const chave = culturaInput.trim().toLowerCase();
+    if (!resultado || !carregando) {
+        alert("Erro na página: elemento não encontrado. Recarregue e tente novamente.");
+        return;
+    }
+
+    // ✅ Normaliza o nome digitado (retira acento e maiúsculas)
+    const chave = normalizarTexto(culturaInput);
     const culturaDados = BANCO_DE_DADOS_AGRO[chave];
 
-    const carregando = document.getElementById("carregando");
-    const resultado = document.getElementById("resultado");
     carregando.style.display = "block";
     resultado.classList.remove("mostrar");
 
     try {
         const previsao = await buscarPrevisao7Dias(cidadeInput);
-        const blocos = gerarBlocos(previsao, culturaDados);
+        const blocos = gerarBlocos(previsao);
 
-        // Monta HTML do relatório
         let html = `
             <div class="rel-cabecalho">
                 <h2>📋 RELATÓRIO — BUSCABOANERGES</h2>
                 <div class="rel-meta">
                     <strong>📍 Localidade:</strong> ${previsao.nome}<br>
                     <strong>📅 Período:</strong> ${dataInicial} a ${dataFinal}<br>
-                    <strong>🌱 Cultura:</strong> ${culturaInput} ${culturaDados ? `(${culturaDados.tipo})` : '(não cadastrada — referência geral)'}<br>
+                    <strong>🌱 Cultura:</strong> ${culturaInput} ${culturaDados ? `(${culturaDados.tipo})` : ''}<br>
                     <strong>✅ Confiança Estatística:</strong> 94% a 95% | Incerteza ≤ ± 1,7%
                 </div>
             </div>
             <h3 style="margin-bottom:15px; color:#2e7d32;">📊 LINHA DO TEMPO EM BLOCOS DE PREVISÃO:</h3>
         `;
 
-        // Renderiza cada bloco
         blocos.forEach(b => {
             const classe = b.classificacao === "FAVORÁVEL" ? "bloco-favoravel" :
                           b.classificacao === "ATENÇÃO_CALOR" ? "bloco-calor" :
@@ -326,9 +336,6 @@ async function gerarRelatorio() {
         carregando.style.display = "none";
     }
 }
-
-// INICIALIZA
-verificarAcesso();
 </script>
 </body>
 </html>
