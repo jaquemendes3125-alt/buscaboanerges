@@ -11,7 +11,6 @@
         h1 { color: #2e7d32; font-size: 28px; margin-bottom: 8px; }
         .subtitulo { color: #558b2f; font-size: 14px; font-style: italic; margin-bottom: 20px; }
 
-        /* ==== PÁGINA PÚBLICA ==== */
         .pagina-publica { display: block; }
         .pagina-publica.escondida { display: none; }
         .pagina-publica .caixa { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
@@ -22,7 +21,6 @@
         .pagina-publica .contatos p { font-size: 16px; margin: 8px 0; text-align: center; }
         .pagina-publica .contatos a { color: #2e7d32; font-weight: bold; text-decoration: none; }
 
-        /* ==== ÁREA DE TRABALHO ==== */
         .pagina-secreta { display: none; }
         .pagina-secreta.visivel { display: block; }
         .form-bloco { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px; }
@@ -34,8 +32,10 @@
         .carregando { color: #2e7d32; font-style: italic; margin-top: 12px; display: none; }
         .datas-info { background: #e8f5e9; padding: 8px 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; color: #2e7d32; }
         .aviso-erro { color: #e65100; background: #fff3e0; padding: 12px; border-radius: 6px; margin-top: 10px; }
+        .aviso-legal { color: #c62828; background: #ffebee; padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 4px solid #c62828; }
+        .aviso-geada { color: #2962ff; background: #e3f2fd; padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 4px solid #2962ff; }
+        .aviso-janela { color: #2e7d32; background: #e8f5e9; padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 4px solid #2e7d32; }
 
-        /* ==== RELATÓRIO — Padrão Original em Blocos ==== */
         .resultado { margin-top: 22px; padding: 25px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
         .resultado.mostrar { display: block; }
         .rel-cabecalho { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #2e7d32; }
@@ -55,17 +55,14 @@
 </head>
 <body>
 
-<!-- ======================================================
-     PÁGINA PÚBLICA — APRESENTAÇÃO
-     ====================================================== -->
 <div class="pagina-publica" id="paginaPublica">
     <header>
         <h1>🌾 BUSCABOANERGES</h1>
-        <p class="subtitulo">Previsão Agroclimática — Horizonte de 30 Dias</p>
+        <p class="subtitulo">Previsão Agroclimática — Horizonte de 30 Dias — Cobertura Nacional</p>
     </header>
     <div class="caixa">
         <h2>O que é o BuscaBoanerges?</h2>
-        <p>Sistema de previsão agroclimática que entrega o planejamento em blocos de dias, com dados práticos de temperatura, chuva e umidade. Indica com confiança de 94% a 95% os períodos seguros para plantio, preparo de solo, aplicação de defensivos, colheita e transporte.</p>
+        <p>Sistema de previsão agroclimática que entrega o planejamento em blocos de dias, com dados práticos de temperatura, chuva e umidade. Indica com confiança de 94% a 95% os períodos seguros para plantio, preparo de solo, aplicação de defensivos, colheita e transporte. Verifica automaticamente Vazio Sanitário, risco de geada e janela de plantio por cultura e estado.</p>
         <p>Reduz perdas e aumenta resultado econômico com decisões baseadas em dados climáticos segmentados.</p>
         <div class="contatos">
             <h3>📬 Entre em Contato</h3>
@@ -75,20 +72,17 @@
     </div>
 </div>
 
-<!-- ======================================================
-     ÁREA DE TRABALHO — GERADOR DE RELATÓRIO EM BLOCOS
-     ====================================================== -->
 <div class="pagina-secreta" id="paginaSecreta">
     <header>
         <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
-        <p class="subtitulo">Previsão segmentada em blocos de dias — Horizonte de 30 Dias</p>
+        <p class="subtitulo">Previsão segmentada em blocos de dias — Cobertura Nacional</p>
     </header>
 
     <div class="form-bloco">
-        <div class="datas-info">💡 Digite apenas os números — a barra aparece sozinha: dd/mm/aaaa</div>
+        <div class="datas-info">💡 Digite: Cidade - Estado (ex: Sorriso - MT)</div>
 
-        <label>📍 Cidade (ex: Salto)</label>
-        <input type="text" id="cidade" placeholder="Digite o nome da cidade">
+        <label>📍 Cidade e Estado</label>
+        <input type="text" id="cidade" placeholder="Ex: Sorriso - MT">
 
         <label>📅 Data Inicial do Período</label>
         <input type="text" id="dataInicial" class="data" placeholder="__/__/____" maxlength="10">
@@ -96,14 +90,13 @@
         <label>📅 Data Final do Período</label>
         <input type="text" id="dataFinal" class="data" placeholder="__/__/____" maxlength="10">
 
-        <label>🌱 Cultura (digite o nome: Café, Cana-de-Açúcar, Soja...)</label>
-        <input type="text" id="cultura" placeholder="Digite o nome da cultura">
+        <label>🌱 Cultura</label>
+        <input type="text" id="cultura" placeholder="Ex: Soja, Milho, Cana-de-Açúcar, Café...">
 
         <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO COMPLETO</button>
-        <div id="carregando" class="carregando">🔄 Buscando dados... Processando blocos de previsão...</div>
+        <div id="carregando" class="carregando">🔄 Buscando dados... Processando blocos... Verificando regras agrícolas...</div>
     </div>
 
-    <!-- ⚠️ CAMPO DE RELATÓRIO — GARANTIDO EXISTIR ANTES DO SCRIPT -->
     <div id="resultado" class="resultado"></div>
 </div>
 
@@ -134,11 +127,11 @@ document.addEventListener('DOMContentLoaded', function() {
     ['dataInicial', 'dataFinal'].forEach(id => {
         document.getElementById(id).addEventListener('input', e => formatarData(e.target));
     });
-    verificarAcesso(); // ✅ Garante que só roda quando a página está pronta
+    verificarAcesso();
 });
 
 // ==========================================================
-// 🔤 FUNÇÃO PARA COMPARAR NOMES SEM ACENTO E SEM MAIÚSCULA
+// 🔤 NORMALIZAR TEXTO
 // ==========================================================
 function normalizarTexto(texto) {
     return texto.trim().toLowerCase()
@@ -146,22 +139,63 @@ function normalizarTexto(texto) {
 }
 
 // ==========================================================
-// 📋 BANCO DE DADOS AGRÍCOLAS
+// 📅 EXTRAIR MÊS DE DATA (dd/mm/aaaa)
+// ==========================================================
+function extrairMes(dataTexto) {
+    const partes = dataTexto.split('/');
+    return partes.length >= 2 ? parseInt(partes[1], 10) : 0;
+}
+
+// ==========================================================
+// 🗄️ BANCO DE DADOS AGRÍCOLAS — CULTURAS
 // ==========================================================
 const BANCO_DE_DADOS_AGRO = {
-    "soja":        { tipo: "Grão", temp_min: 20.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [10,11,12,1] },
-    "milho":       { tipo: "Grão", temp_min: 18.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [1,2,3,10,11,12] },
-    "cana-de-acucar": { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    "cafe":        { tipo: "Permanente", temp_min: 18.0, temp_max: 26.0, umidade_min: 60, meses_permitidos: [5,6,7,8] },
-    "algodao":     { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [10,11,12,1] },
-    "feijao":      { tipo: "Grão", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [9,10,11,2,3,4] },
-    "arroz":       { tipo: "Grão", temp_min: 22.0, temp_max: 32.0, umidade_min: 70, meses_permitidos: [10,11,12,1,2] },
-    "laranja":     { tipo: "Frutífera", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [6,7,8,9] },
-    "alface":      { tipo: "Hortaliça", temp_min: 15.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    "couve":       { tipo: "Hortaliça", temp_min: 12.0, temp_max: 22.0, umidade_min: 65, meses_permitidos: [3,4,5,6,7,8,9] },
-    "tomate":      { tipo: "Hortaliça", temp_min: 18.0, temp_max: 30.0, umidade_min: 60, meses_permitidos: [8,9,10,11,2,3] },
-    "batata":      { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [3,4,5,6,7,8,9] },
-    "cenoura":     { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 55, meses_permitidos: [3,4,5,6,7,8,9] }
+    "soja":        { tipo: "Grão", temp_min: 20.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [10,11,12,1], nome: "Soja" },
+    "milho":       { tipo: "Grão", temp_min: 18.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [1,2,3,10,11,12], nome: "Milho" },
+    "cana-de-acucar": { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12], nome: "Cana-de-Açúcar" },
+    "cafe":        { tipo: "Permanente", temp_min: 18.0, temp_max: 26.0, umidade_min: 60, meses_permitidos: [5,6,7,8], nome: "Café" },
+    "algodao":     { tipo: "Industrial", temp_min: 20.0, temp_max: 32.0, umidade_min: 50, meses_permitidos: [10,11,12,1], nome: "Algodão" },
+    "feijao":      { tipo: "Grão", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [9,10,11,2,3,4], nome: "Feijão" },
+    "arroz":       { tipo: "Grão", temp_min: 22.0, temp_max: 32.0, umidade_min: 70, meses_permitidos: [10,11,12,1,2], nome: "Arroz" },
+    "laranja":     { tipo: "Frutífera", temp_min: 15.0, temp_max: 30.0, umidade_min: 55, meses_permitidos: [6,7,8,9], nome: "Laranja" },
+    "alface":      { tipo: "Hortaliça", temp_min: 15.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [1,2,3,4,5,6,7,8,9,10,11,12], nome: "Alface" },
+    "couve":       { tipo: "Hortaliça", temp_min: 12.0, temp_max: 22.0, umidade_min: 65, meses_permitidos: [3,4,5,6,7,8,9], nome: "Couve" },
+    "tomate":      { tipo: "Hortaliça", temp_min: 18.0, temp_max: 30.0, umidade_min: 60, meses_permitidos: [8,9,10,11,2,3], nome: "Tomate" },
+    "batata":      { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 60, meses_permitidos: [3,4,5,6,7,8,9], nome: "Batata" },
+    "cenoura":     { tipo: "Hortaliça", temp_min: 10.0, temp_max: 25.0, umidade_min: 55, meses_permitidos: [3,4,5,6,7,8,9], nome: "Cenoura" }
+};
+
+// ==========================================================
+// ⚖️ VAZIO SANITÁRIO DA SOJA — POR ESTADO (BRASIL INTEIRO)
+// ==========================================================
+const VAZIO_SANITARIO_SOJA = {
+    "MT": { inicio: {dia:15, mes:6}, fim: {dia:15, mes:9}, descricao: "15 de junho a 15 de setembro" },
+    "MS": { inicio: {dia:15, mes:6}, fim: {dia:15, mes:9}, descricao: "15 de junho a 15 de setembro" },
+    "GO": { inicio: {dia:15, mes:6}, fim: {dia:15, mes:9}, descricao: "15 de junho a 15 de setembro" },
+    "MG": { inicio: {dia:01, mes:7}, fim: {dia:30, mes:9}, descricao: "1º de julho a 30 de setembro" },
+    "SP": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "PR": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "RS": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "SC": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "BA": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "TO": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "MA": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "PI": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "CE": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "RN": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "PB": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "PE": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "AL": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "SE": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "ES": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "RJ": { inicio: {dia:01, mes:07}, fim: {dia:30, mes:09}, descricao: "1º de julho a 30 de setembro" },
+    "DF": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "RO": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "AC": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "AM": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "RR": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "AP": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" },
+    "PA": { inicio: {dia:15, mes:06}, fim: {dia:15, mes:09}, descricao: "15 de junho a 15 de setembro" }
 };
 
 // ==========================================================
@@ -175,12 +209,52 @@ const DIAGNOSTICO = {
 };
 
 // ==========================================================
+// 🔍 VERIFICAR VAZIO SANITÁRIO
+// ==========================================================
+function verificarVazioSanitario(culturaChave, uf, mes, dia) {
+    if (culturaChave !== "soja") return null;
+    const regra = VAZIO_SANITARIO_SOJA[uf?.toUpperCase()];
+    if (!regra) return null;
+
+    const {inicio, fim} = regra;
+    const diaMes = mes * 100 + dia;
+    const inicioDM = inicio.mes * 100 + inicio.dia;
+    const fimDM = fim.mes * 100 + fim.dia;
+
+    if (diaMes >= inicioDM && diaMes <= fimDM) {
+        return `🚫 SOJA PROIBIDA POR LEI — Vazio Sanitário vigente: ${regra.descricao}. Liberado a partir de ${fim.dia}/${fim.mes}.`;
+    }
+    return null;
+}
+
+// ==========================================================
+// ❄️ VERIFICAR PERIGO DE GEADA
+// ==========================================================
+function verificarGeada(tempMin) {
+    if (tempMin <= 2) return "⚠️ PERIGO IMINENTE DE GEADA — Temperatura crítica. Proteja as plantas.";
+    if (tempMin <= 4) return "⚠️ ATENÇÃO — TEMPERATURA PRÓXIMA DE GEADA. Risco de formação de geada em áreas baixas.";
+    return null;
+}
+
+// ==========================================================
+// 📅 VERIFICAR JANELA DE PLANTIO
+// ==========================================================
+function verificarJanelaPlantio(culturaDados, mes) {
+    if (!culturaDados || !culturaDados.meses_permitidos) return null;
+    if (culturaDados.meses_permitidos.includes(mes)) {
+        return `✅ PERÍODO RECOMENDADO de plantio para ${culturaDados.nome}.`;
+    }
+    return `⚠️ FORA DA JANELA RECOMENDADA de plantio. Meses ideais: ${culturaDados.meses_permitidos.map(m => m + 'º').join(', ')}.`;
+}
+
+// ==========================================================
 // 🌤️ BUSCA DADOS CLIMÁTICOS
 // ==========================================================
 async function buscarPrevisao7Dias(cidadeInput) {
+    let uf = null;
     let nomeCidade = cidadeInput
-        .replace(/[-–].*$/, '')
-        .replace(/\b(SP|MG|RJ|RS|PR|SC|BA|GO|MT|MS|PE|CE|PB|RN|AL|SE|MA|PI|ES|DF|TO|RO|AC|AM|RR|AP|PA)\b/i, '')
+        .replace(/\b(SP|MG|RJ|RS|PR|SC|BA|GO|MT|MS|PE|CE|PB|RN|AL|SE|MA|PI|ES|DF|TO|RO|AC|AM|RR|AP|PA)\b/i, (m) => { uf = m.toUpperCase(); return ''; })
+        .replace(/[-–]/g, ' ')
         .trim();
 
     const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(nomeCidade)}&language=pt&count=1`);
@@ -191,12 +265,17 @@ async function buscarPrevisao7Dias(cidadeInput) {
     }
 
     const { latitude, longitude, name, admin1 } = geoData.results[0];
+    if (!uf) {
+        const extraido = admin1.match(/\b[A-Z]{2}\b/);
+        uf = extraido ? extraido[0] : null;
+    }
 
     const climaRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,relative_humidity_2m_mean&timezone=America/Sao_Paulo&forecast_days=14`);
     const climaData = await climaRes.json();
 
     return {
-        nome: `${name} - ${admin1}`,
+        nome: `${name}${uf ? ' - ' + uf : ''}`,
+        uf: uf || '??',
         datas: climaData.daily.time.map(d => {
             const [ano, mes, dia] = d.split('-');
             return `${dia}/${mes}`;
@@ -211,13 +290,19 @@ async function buscarPrevisao7Dias(cidadeInput) {
 // ==========================================================
 // 🧩 AGRUPAR EM BLOCOS
 // ==========================================================
-function gerarBlocos(previsao) {
+function gerarBlocos(previsao, culturaChave, culturaDados, uf, dataInicialTexto) {
     const blocos = [];
     let blocoAtual = null;
+    const mesInicial = extrairMes(dataInicialTexto);
+    const diaInicial = parseInt(dataInicialTexto.split('/')[0], 10);
 
     for (let i = 0; i < previsao.datas.length; i++) {
         const tempMaxDia = previsao.tempMax[i];
+        const tempMinDia = previsao.tempMin[i];
         const chuvaDia = previsao.chuva[i];
+        const [diaStr, mesStr] = previsao.datas[i].split('/');
+        const dia = parseInt(diaStr, 10);
+        const mes = parseInt(mesStr, 10);
 
         let classificacao;
         if (chuvaDia > 15) {
@@ -230,21 +315,28 @@ function gerarBlocos(previsao) {
             classificacao = "FAVORÁVEL";
         }
 
-        if (!blocoAtual || blocoAtual.classificacao !== classificacao) {
+        const avisoSanitario = verificarVazioSanitario(culturaChave, uf, mes, dia);
+        const avisoGeada = verificarGeada(tempMinDia);
+
+        if (!blocoAtual || blocoAtual.classificacao !== classificacao || 
+            !!blocoAtual.avisoSanitario !== !!avisoSanitario ||
+            !!blocoAtual.avisoGeada !== !!avisoGeada) {
             if (blocoAtual) blocos.push(blocoAtual);
             blocoAtual = {
                 de: previsao.datas[i],
                 ate: previsao.datas[i],
                 classificacao,
-                tempMin: previsao.tempMin[i],
+                tempMin: tempMinDia,
                 tempMax: tempMaxDia,
                 chuvaTotal: chuvaDia,
                 umidadeMedia: previsao.umidade[i],
-                qtdDias: 1
+                qtdDias: 1,
+                avisoSanitario,
+                avisoGeada
             };
         } else {
             blocoAtual.ate = previsao.datas[i];
-            blocoAtual.tempMin = Math.min(blocoAtual.tempMin, previsao.tempMin[i]);
+            blocoAtual.tempMin = Math.min(blocoAtual.tempMin, tempMinDia);
             blocoAtual.tempMax = Math.max(blocoAtual.tempMax, tempMaxDia);
             blocoAtual.chuvaTotal += chuvaDia;
             blocoAtual.umidadeMedia = (blocoAtual.umidadeMedia * blocoAtual.qtdDias + previsao.umidade[i]) / (blocoAtual.qtdDias + 1);
@@ -252,11 +344,13 @@ function gerarBlocos(previsao) {
         }
     }
     if (blocoAtual) blocos.push(blocoAtual);
-    return blocos;
+
+    const avisoJanela = verificarJanelaPlantio(culturaDados, mesInicial);
+    return { blocos, avisoJanela };
 }
 
 // ==========================================================
-// 📋 GERAR RELATÓRIO — CORRIGIDO E SEGURO
+// 📋 GERAR RELATÓRIO — VERSÃO NACIONAL COMPLETA
 // ==========================================================
 async function gerarRelatorio() {
     const cidadeInput = document.getElementById("cidade").value.trim();
@@ -266,18 +360,15 @@ async function gerarRelatorio() {
     const resultado = document.getElementById("resultado");
     const carregando = document.getElementById("carregando");
 
-    // ✅ Verifica se TODOS os campos existem antes de prosseguir
     if (!cidadeInput || !culturaInput || !dataInicial || !dataFinal) {
         alert("Preencha todos os campos!");
         return;
     }
-
     if (!resultado || !carregando) {
-        alert("Erro na página: elemento não encontrado. Recarregue e tente novamente.");
+        alert("Erro na página. Recarregue e tente novamente.");
         return;
     }
 
-    // ✅ Normaliza o nome digitado (retira acento e maiúsculas)
     const chave = normalizarTexto(culturaInput);
     const culturaDados = BANCO_DE_DADOS_AGRO[chave];
 
@@ -286,7 +377,7 @@ async function gerarRelatorio() {
 
     try {
         const previsao = await buscarPrevisao7Dias(cidadeInput);
-        const blocos = gerarBlocos(previsao);
+        const {blocos, avisoJanela} = gerarBlocos(previsao, chave, culturaDados, previsao.uf, dataInicial);
 
         let html = `
             <div class="rel-cabecalho">
@@ -298,31 +389,42 @@ async function gerarRelatorio() {
                     <strong>✅ Confiança Estatística:</strong> 94% a 95% | Incerteza ≤ ± 1,7%
                 </div>
             </div>
-            <h3 style="margin-bottom:15px; color:#2e7d32;">📊 LINHA DO TEMPO EM BLOCOS DE PREVISÃO:</h3>
         `;
+
+        if (avisoJanela) {
+            html += `<div class="aviso-janela">📅 ${avisoJanela}</div>`;
+        }
+
+        html += `<h3 style="margin:20px 0 15px; color:#2e7d32;">📊 LINHA DO TEMPO EM BLOCOS DE PREVISÃO:</h3>`;
 
         blocos.forEach(b => {
             const classe = b.classificacao === "FAVORÁVEL" ? "bloco-favoravel" :
                           b.classificacao === "ATENÇÃO_CALOR" ? "bloco-calor" :
                           b.classificacao === "ATENÇÃO_CHUVA" ? "bloco-frio" : "bloco-desfavoravel";
 
-            html += `
-                <div class="bloco-periodo ${classe}">
-                    <div class="bloco-titulo">📆 ${b.de} a ${b.ate} — ${b.qtdDias} dia(s)</div>
-                    <div class="bloco-dados">
-                        🌡️ Temperatura: ${b.tempMin.toFixed(0)}°C a ${b.tempMax.toFixed(0)}°C<br>
-                        💧 Chuva prevista: ${b.chuvaTotal.toFixed(1)} mm<br>
-                        💨 Umidade média: ${b.umidadeMedia.toFixed(0)}%
-                    </div>
-                    <div class="bloco-uso">${DIAGNOSTICO[b.classificacao]}</div>
-                </div>
-            `;
+            html += `<div class="bloco-periodo ${classe}">
+                <div class="bloco-titulo">📆 ${b.de} a ${b.ate} — ${b.qtdDias} dia(s)</div>
+                <div class="bloco-dados">
+                    🌡️ Temperatura: ${b.tempMin.toFixed(0)}°C a ${b.tempMax.toFixed(0)}°C<br>
+                    💧 Chuva prevista: ${b.chuvaTotal.toFixed(1)} mm<br>
+                    💨 Umidade média: ${b.umidadeMedia.toFixed(0)}%
+                </div>`;
+
+            if (b.avisoGeada) {
+                html += `<div class="aviso-geada">${b.avisoGeada}</div>`;
+            }
+            if (b.avisoSanitario) {
+                html += `<div class="aviso-legal">${b.avisoSanitario}</div>`;
+            }
+
+            html += `<div class="bloco-uso">${DIAGNOSTICO[b.classificacao]}</div>
+            </div>`;
         });
 
         html += `
             <div class="confianca">
                 ✔️ Este relatório é prova de metodologia e capacidade de previsão.<br>
-                Dados atualizados em tempo real. Método e fórmulas protegidos.
+                Dados atualizados em tempo real. Vazio Sanitário conforme legislação estadual. Método e fórmulas protegidos.
             </div>
         `;
 
