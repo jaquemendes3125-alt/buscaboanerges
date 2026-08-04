@@ -167,20 +167,23 @@
 
 <script>
 // ==========================================================
-// 🔑 DETECÇÃO DE ACESSO — SÓ UNDERLINE AGORA!
+// 🔑 DETECÇÃO DE ACESSO — SÓ UNDERLINE!
 // ==========================================================
 function verificarAcesso() {
     const caminho = window.location.href.toLowerCase();
-    // AGORA SÓ COM UNDERLINE: acesso_buscaboanerges_secreto
-    const ehSecreto = caminho.indexOf("acesso_buscaboanerges_secreto") !== -1;
+    
+    // SÓ APARECE A PÁGINA CERTA CONFORME O LINK
+    const temAcessoSecreto = caminho.indexOf("acesso_buscaboanerges_secreto") !== -1;
 
-    if (ehSecreto) {
-        document.getElementById("paginaPublica").classList.add("escondida");
-        document.getElementById("paginaSecreta").classList.add("visivel");
-        console.log("✅ ÁREA SECRETA CARREGADA");
+    if (temAcessoSecreto) {
+        // LINK SECRETO → MOSTRA ÁREA DE TRABALHO, ESCONDE PÚBLICA
+        document.getElementById("paginaPublica").style.display = "none";
+        document.getElementById("paginaSecreta").style.display = "block";
+        console.log("✅ ÁREA DE TRABALHO CARREGADA — Gerador de Relatório");
     } else {
-        document.getElementById("paginaPublica").classList.remove("escondida");
-        document.getElementById("paginaSecreta").classList.remove("visivel");
+        // LINK NORMAL → MOSTRA APENAS PÁGINA PÚBLICA
+        document.getElementById("paginaPublica").style.display = "block";
+        document.getElementById("paginaSecreta").style.display = "none";
         console.log("✅ PÁGINA PÚBLICA CARREGADA");
     }
 }
@@ -513,7 +516,7 @@ async function gerarRelatorio() {
 }
 
 // ==========================================================
-// ✅ EXECUTA QUANDO CARREGA
+// ✅ EXECUTA QUANDO CARREGA — DETECÇÃO CORRIGIDA
 // ==========================================================
 window.onload = function() {
     verificarAcesso();
