@@ -11,8 +11,9 @@
         h1 { color: #2e7d32; font-size: 28px; margin-bottom: 8px; }
         .subtitulo { color: #558b2f; font-size: 14px; font-style: italic; margin-bottom: 20px; }
 
-        /* ==== PÁGINA PÚBLICA ==== */
-        .pagina-publica { display: block; }
+        /* ==== PÁGINA PÚBLICA — CLIENTE VÊ ISSO ==== */
+        .pagina-publica { display: none; }
+        .pagina-publica.ativa { display: block; }
         .pagina-publica .caixa { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
         .pagina-publica h2 { color: #2e7d32; font-size: 20px; margin-bottom: 20px; text-align: center; }
         .pagina-publica p { font-size: 16px; line-height: 1.8; margin-bottom: 15px; text-align: justify; }
@@ -21,8 +22,9 @@
         .pagina-publica .contatos p { font-size: 16px; margin: 8px 0; text-align: center; }
         .pagina-publica .contatos a { color: #2e7d32; font-weight: bold; text-decoration: none; }
 
-        /* ==== PÁGINA SECRETA (não aparece pro público) ==== */
+        /* ==== PÁGINA SECRETA — SÓ VOCÊ VÊ ==== */
         .pagina-secreta { display: none; }
+        .pagina-secreta.ativa { display: block; }
         .form-bloco { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px; }
         label { display: block; margin: 13px 0 5px 0; font-weight: bold; color: #2e7d32; font-size: 15px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 15px; background: #f9fef9; }
@@ -30,20 +32,20 @@
         button:hover { background: #1b5e20; }
         .resultado { margin-top: 22px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
         .resultado.mostrar { display: block; }
-        .secao { margin: 14px 0; padding: 14px; border-radius: 7px; line-height: 1.6; font-size: 14px; }
+        .secao { margin: 14px 0; padding: 14px; border-radius: 7px; line-height: 1.8; font-size: 15px; }
         .clima { background: #e3f2fd; border-left: 4px solid #1976d2; }
         .graos { background: #e8f5e9; border-left: 4px solid #2e7d32; }
         .diagnostico { background: #e8f5e9; border-left: 4px solid #2e7d32; }
         .perigo { background: #fce4ec; border-left: 4px solid #c62828; }
         .formula { background: #f3e5f5; border-left: 4px solid #7b1fa2; }
         .previsao { background: #ede7f6; border-left: 4px solid #512da8; }
-        h2.secao-titulo { font-size: 16px; margin-bottom: 10px; color: #2c3e50; }
-        .valor-destaque { font-size: 18px; font-weight: bold; color: #2e7d32; }
-        hr { border: none; border-top: 1px solid #c8e6c9; margin: 10px 0; }
-        .erro { color: #c62828; padding: 11px; background: #ffebee; border-radius: 6px; margin-top: 10px; }
+        h2.secao-titulo { font-size: 17px; margin-bottom: 12px; color: #2c3e50; }
+        .valor-destaque { font-size: 20px; font-weight: bold; color: #2e7d32; }
+        hr { border: none; border-top: 1px solid #c8e6c9; margin: 12px 0; }
+        .erro { color: #c62828; padding: 12px; background: #ffebee; border-radius: 6px; margin-top: 10px; }
         .carregando { color: #2e7d32; font-style: italic; margin-top: 12px; display: none; }
-        .info-auto { font-size: 12px; color: #558b2f; margin-top: 8px; font-style: italic; }
-        .regiao-brasil { color: #512da8; font-weight: bold; margin-bottom: 8px; }
+        .info-auto { font-size: 13px; color: #558b2f; margin-top: 10px; font-style: italic; }
+        .regiao-brasil { color: #512da8; font-weight: bold; margin-bottom: 10px; font-size: 15px; }
         .status-favoravel { color: #2e7d32; font-weight: bold; font-size: 16px; }
         .status-alerta { color: #f57f17; font-weight: bold; font-size: 16px; }
         .status-bloqueado { color: #c62828; font-weight: bold; font-size: 16px; }
@@ -52,7 +54,7 @@
 <body>
 
 <!-- ======================================================
-     PÁGINA PÚBLICA — O CLIENTE VÊ ISSO AQUI
+     PÁGINA PÚBLICA — CLIENTE VÊ ISSO (link normal)
      ====================================================== -->
 <div class="pagina-publica" id="paginaPublica">
     <header>
@@ -75,7 +77,7 @@
 </div>
 
 <!-- ======================================================
-     PÁGINA SECRETA — SÓ VOCÊ VÊ ISSO AQUI
+     PÁGINA SECRETA — SÓ VOCÊ VÊ (com /acesso-buscaboanerges-secreto)
      ====================================================== -->
 <div class="pagina-secreta" id="paginaSecreta">
     <header>
@@ -89,17 +91,38 @@
 
         <label>🌱 Cultura</label>
         <select id="grao">
-            <option value="Soja">Soja</option>
-            <option value="Milho">Milho</option>
-            <option value="Trigo">Trigo</option>
-            <option value="Arroz">Arroz</option>
-            <option value="Café">Café</option>
-            <option value="Algodão">Algodão</option>
-            <option value="Feijão">Feijão</option>
+            <optgroup label="🌾 Grãos e Cereais">
+                <option value="Soja">Soja</option>
+                <option value="Milho">Milho</option>
+                <option value="Trigo">Trigo</option>
+                <option value="Arroz">Arroz</option>
+                <option value="Feijão">Feijão</option>
+                <option value="Sorgo">Sorgo</option>
+                <option value="Aveia">Aveia</option>
+            </optgroup>
+            <optgroup label="🌿 Culturas Industriais">
+                <option value="Cana-de-Açúcar">Cana-de-Açúcar</option>
+                <option value="Algodão">Algodão</option>
+                <option value="Mandioca">Mandioca</option>
+                <option value="Girassol">Girassol</option>
+            </optgroup>
+            <optgroup label="🌳 Frutíferas e Permanentes">
+                <option value="Café">Café</option>
+                <option value="Laranja">Laranja</option>
+                <option value="Banana">Banana</option>
+                <option value="Coco">Coco</option>
+                <option value="Manga">Manga</option>
+            </optgroup>
+            <optgroup label="🥬 Hortaliças e Outras">
+                <option value="Tomate">Tomate</option>
+                <option value="Cebola">Cebola</option>
+                <option value="Batata">Batata</option>
+                <option value="Fumo">Fumo</option>
+            </optgroup>
         </select>
 
         <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO COMPLETO</button>
-        <div id="carregando" class="carregando">🔄 Buscando... Processando...</div>
+        <div id="carregando" class="carregando">🔄 Buscando cidade... Carregando dados climáticos... Processando cálculo...</div>
         <div id="infoAuto" class="info-auto"></div>
     </div>
 
@@ -109,17 +132,17 @@
         <div id="regiaoInfo" class="regiao-brasil"></div>
 
         <div class="secao clima">
-            <h2 class="secao-titulo">🌤️ DADOS CLIMÁTICOS</h2>
+            <h2 class="secao-titulo">🌤️ DADOS CLIMÁTICOS — TEMPO REAL</h2>
             <div id="blocoClima"></div>
         </div>
 
         <div class="secao diagnostico">
-            <h2 class="secao-titulo">🧪 DIAGNÓSTICO ZARC</h2>
+            <h2 class="secao-titulo">🧪 DIAGNÓSTICO DE PLANTIO — REGRAS ZARC</h2>
             <div id="blocoDiagnostico"></div>
         </div>
 
         <div class="secao graos">
-            <h2 class="secao-titulo">🌱 CULTURA</h2>
+            <h2 class="secao-titulo">🌱 CULTURA — JANELA, SOLO E REGRAS</h2>
             <div id="blocoGraos"></div>
         </div>
 
@@ -149,16 +172,16 @@ function verificarAcesso() {
     const ehSecreto = caminho.includes("acesso-buscaboanerges-secreto");
 
     if (ehSecreto) {
-        document.getElementById("paginaPublica").style.display = "none";
-        document.getElementById("paginaSecreta").style.display = "block";
+        document.getElementById("paginaPublica").classList.remove("ativa");
+        document.getElementById("paginaSecreta").classList.add("ativa");
     } else {
-        document.getElementById("paginaPublica").style.display = "block";
-        document.getElementById("paginaSecreta").style.display = "none";
+        document.getElementById("paginaPublica").classList.add("ativa");
+        document.getElementById("paginaSecreta").classList.remove("ativa");
     }
 }
 
 // ==========================================================
-// 📍 BASE DE CIDADES
+// 📍 BASE DE CIDADES FREQUENTES
 // ==========================================================
 const BASE_NACIONAL = {
     "capinzal-sc": { lat:-27.3448, lon:-51.6112, nome:"Capinzal / SC", regiao:"Sul", estado:"SC" },
@@ -170,11 +193,18 @@ const BASE_NACIONAL = {
     "itu-sp": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" },
     "itu": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" },
     "cuiaba-mt": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / MT", regiao:"Centro-Oeste", estado:"MT" },
-    "cuiaba": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / MT", regiao:"Centro-Oeste", estado:"MT" }
+    "cuiaba": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / MT", regiao:"Centro-Oeste", estado:"MT" },
+    "saoroque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" },
+    "são roque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" },
+    "sao roque-sp": { lat:-23.5264, lon:-47.9478, nome:"São Roque / SP", regiao:"Sudeste", estado:"SP" },
+    "salto-sp": { lat:-23.2008, lon:-47.2869, nome:"Salto / SP", regiao:"Sudeste", estado:"SP" },
+    "salto": { lat:-23.2008, lon:-47.2869, nome:"Salto / SP", regiao:"Sudeste", estado:"SP" },
+    "itu-sp": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" },
+    "itu": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" }
 };
 
 // ==========================================================
-// 📋 REGRAS ZARC
+// 📋 REGRAS ZARC POR ESTADO
 // ==========================================================
 const REGRAS_POR_ESTADO = {
     SP: { vazioSoja:"15/jun a 15/set", janelaPlantio:"Outubro a fevereiro" },
@@ -186,20 +216,51 @@ const REGRAS_POR_ESTADO = {
     GO: { vazioSoja:"15/jun a 15/set", janelaPlantio:"Outubro a fevereiro" },
     MG: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
     DF: { vazioSoja:"15/jun a 15/set", janelaPlantio:"Outubro a fevereiro" },
-    BA: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" }
+    BA: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    ES: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    RJ: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    MG: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    PE: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    CE: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    PB: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    RN: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    SE: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    AL: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    PI: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    MA: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    TO: { vazioSoja:"15/jun a 15/set", janelaPlantio:"Outubro a fevereiro" },
+    RO: { vazioSoja:"15/jun a 15/set", janelaPlantio:"Outubro a fevereiro" },
+    AC: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    AM: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    RR: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    AP: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" },
+    PA: { vazioSoja:"01/jul a 31/ago", janelaPlantio:"Outubro a fevereiro" }
 };
 
 // ==========================================================
-// 🌾 REGRAS AGRÍCOLAS
+// 🌾 REGRAS AGRÍCOLAS — TODAS AS PRINCIPAIS CULTURAS
 // ==========================================================
 const REGRAS_GRAOS = {
-    "Soja": { temp_min:20.0, temp_max:30.0, chuva_min_ciclo_mm:450, meses_permitidos:[10,11,12,1,2], solo:"Argiloso ou médio, bem drenado", ciclo:"~120 dias", sensibilidade:"Alta — não tolera geada nem encharcamento" },
-    "Milho": { temp_min:18.0, temp_max:32.0, chuva_min_ciclo_mm:500, meses_permitidos:[8,9,10,11,12,1,2,3], solo:"Profundo, fértil, bem drenado", ciclo:"~110 dias", sensibilidade:"Média — exige umidade na granação" },
-    "Trigo": { temp_min:10.0, temp_max:24.0, chuva_min_ciclo_mm:300, meses_permitidos:[4,5,6,7,8], solo:"Bem drenado, fértil", ciclo:"~130 dias", sensibilidade:"Média — precisa de frio inicial" },
-    "Arroz": { temp_min:22.0, temp_max:32.0, chuva_min_ciclo_mm:800, meses_permitidos:[9,10,11,12,1,2], solo:"Argiloso, retenção de água", ciclo:"~140 dias", sensibilidade:"Alta — depende de água abundante" },
-    "Café": { temp_min:18.0, temp_max:28.0, chuva_min_ciclo_mm:1500, meses_permitidos:[1,2,3,8,9,10,11,12], solo:"Profundo, levemente ácido", ciclo:"Perene", sensibilidade:"ALTÍSSIMA — GEADA MATA A LAVOURA" },
-    "Algodão": { temp_min:22.0, temp_max:35.0, chuva_min_ciclo_mm:500, meses_permitidos:[10,11,12,1,2], solo:"Profundo, sem encharcamento", ciclo:"~150 dias", sensibilidade:"Média — precisa de calor na maturação" },
-    "Feijão": { temp_min:15.0, temp_max:30.0, chuva_min_ciclo_mm:400, meses_permitidos:[8,9,10,11,12,1,2,3], solo:"Leve, rico em matéria orgânica", ciclo:"~90 dias", sensibilidade:"Alta — florescimento cai com calor ou seca" }
+    "Soja": { temp_min:20.0, temp_max:30.0, chuva_min_ciclo_mm:450, meses_permitidos:[10,11,12,1,2], solo:"Argiloso ou médio, bem drenado", ciclo:"~120 dias", sensibilidade:"Alta — não tolera geada nem encharcamento", tipo:"Anual" },
+    "Milho": { temp_min:18.0, temp_max:32.0, chuva_min_ciclo_mm:500, meses_permitidos:[8,9,10,11,12,1,2,3], solo:"Profundo, fértil, bem drenado", ciclo:"~110 dias", sensibilidade:"Média — exige umidade na granação", tipo:"Anual" },
+    "Trigo": { temp_min:10.0, temp_max:24.0, chuva_min_ciclo_mm:300, meses_permitidos:[4,5,6,7,8], solo:"Bem drenado, fértil", ciclo:"~130 dias", sensibilidade:"Média — precisa de frio inicial", tipo:"Anual" },
+    "Arroz": { temp_min:22.0, temp_max:32.0, chuva_min_ciclo_mm:800, meses_permitidos:[9,10,11,12,1,2], solo:"Argiloso, retenção de água", ciclo:"~140 dias", sensibilidade:"Alta — depende de água abundante", tipo:"Anual" },
+    "Feijão": { temp_min:15.0, temp_max:30.0, chuva_min_ciclo_mm:400, meses_permitidos:[8,9,10,11,12,1,2,3], solo:"Leve, rico em matéria orgânica", ciclo:"~90 dias", sensibilidade:"Alta — florescimento cai com calor ou seca", tipo:"Anual" },
+    "Sorgo": { temp_min:20.0, temp_max:35.0, chuva_min_ciclo_mm:400, meses_permitidos:[10,11,12,1,2,3], solo:"Bem drenado, tolerante à seca", ciclo:"~115 dias", sensibilidade:"Baixa — tolerante à seca e calor", tipo:"Anual" },
+    "Aveia": { temp_min:8.0, temp_max:22.0, chuva_min_ciclo_mm:350, meses_permitidos:[4,5,6,7,8,9], solo:"Bem drenado, fértil", ciclo:"~120 dias", sensibilidade:"Média — tolerante ao frio", tipo:"Anual" },
+    "Cana-de-Açúcar": { temp_min:20.0, temp_max:32.0, chuva_min_ciclo_mm:1500, meses_permitidos:[1,2,3,4,5,6,7,8,9,10,11,12], solo:"Profundo, bem drenado, fértil", ciclo:"~12 a 18 meses", sensibilidade:"ALTÍSSIMA — GEADA DANIFICA A LAVOURA", tipo:"Perene / Industrial" },
+    "Algodão": { temp_min:22.0, temp_max:35.0, chuva_min_ciclo_mm:500, meses_permitidos:[10,11,12,1,2], solo:"Profundo, sem encharcamento", ciclo:"~150 dias", sensibilidade:"Média — precisa de calor na maturação", tipo:"Anual / Industrial" },
+    "Mandioca": { temp_min:18.0, temp_max:35.0, chuva_min_ciclo_mm:600, meses_permitidos:[1,2,3,4,5,6,7,8,9,10,11,12], solo:"Solo leve, bem drenado", ciclo:"~12 a 18 meses", sensibilidade:"Baixa — tolerante à seca", tipo:"Perene / Raiz" },
+    "Girassol": { temp_min:18.0, temp_max:33.0, chuva_min_ciclo_mm:450, meses_permitidos:[8,9,10,11,12,1,2,3], solo:"Bem drenado, fértil", ciclo:"~110 dias", sensibilidade:"Média — sensível a geada e encharcamento", tipo:"Anual / Industrial" },
+    "Café": { temp_min:18.0, temp_max:28.0, chuva_min_ciclo_mm:1500, meses_permitidos:[1,2,3,8,9,10,11,12], solo:"Profundo, levemente ácido", ciclo:"Perene — 3 a 5 anos produção", sensibilidade:"ALTÍSSIMA — GEADA MATA A LAVOURA", tipo:"Perene" },
+    "Laranja": { temp_min:15.0, temp_max:30.0, chuva_min_ciclo_mm:1200, meses_permitidos:[1,2,3,4,5,6,7,8,9,10,11,12], solo:"Bem drenado, levemente ácido", ciclo:"Perene — 3 a 4 anos produção", sensibilidade:"ALTÍSSIMA — GEADA DANIFICA", tipo:"Perene / Frutífera" },
+    "Banana": { temp_min:22.0, temp_max:32.0, chuva_min_ciclo_mm:2000, meses_permitidos:[1,2,3,4,5,6,7,8,9,10,11,12], solo:"Profundo, rico em matéria orgânica", ciclo:"Perene — produção contínua", sensibilidade:"ALTÍSSIMA — GEADA MATA, VENTO DANIFICA", tipo:"Perene / Frutífera" },
+    "Coco": { temp_min:22.0, temp_max:35.0, chuva_min_ciclo_mm:1500, meses_permitidos:[1,2,3,4,5,6,7,8,9,10,11,12], solo:"Arenoso, bem drenado", ciclo:"Perene — 6 a 10 anos produção", sensibilidade:"ALTÍSSIMA — não tolera frio", tipo:"Perene / Frutífera" },
+    "Manga": { temp_min:20.0, temp_max:35.0, chuva_min_ciclo_mm:800, meses_permitidos:[1,2,3,4,5,6,7,8,9,10,11,12], solo:"Bem drenado, profundo", ciclo:"Perene — 3 a 5 anos produção", sensibilidade:"Baixa — tolerante à seca", tipo:"Perene / Frutífera" },
+    "Tomate": { temp_min:18.0, temp_max:30.0, chuva_min_ciclo_mm:500, meses_permitidos:[8,9,10,11,12,1,2,3], solo:"Fértil, bem drenado", ciclo:"~120 dias", sensibilidade:"Alta — suscetível a doenças com chuva", tipo:"Anual / Hortaliça" },
+    "Cebola": { temp_min:12.0, temp_max:28.0, chuva_min_ciclo_mm:400, meses_permitidos:[4,5,6,7,8,9,10], solo:"Leve, bem drenado", ciclo:"~120 dias", sensibilidade:"Média — apodrece com muita chuva", tipo:"Anual / Hortaliça" },
+    "Batata": { temp_min:10.0, temp_max:25.0, chuva_min_ciclo_mm:500, meses_permitidos:[4,5,6,7,8,9], solo:"Leve, bem drenado, fértil", ciclo:"~120 dias", sensibilidade:"Alta — apodrece com encharcamento", tipo:"Anual / Tubérculo" },
+    "Fumo": { temp_min:18.0, temp_max:30.0, chuva_min_ciclo_mm:600, meses_permitidos:[9,10,11,12,1,2,3], solo:"Leve, bem drenado, fértil", ciclo:"~120 dias", sensibilidade:"Alta — qualidade depende de clima estável", tipo:"Anual / Industrial" }
 };
 
 // ==========================================================
@@ -226,16 +287,17 @@ function calcularFormula(O, R) {
 }
 
 // ==========================================================
-// 🔍 BUSCA CIDADE
+// 🔍 BUSCA CIDADE — BASE OU INTERNET
 // ==========================================================
 async function buscarCoordenadas(cidadeBruta) {
-    const chave = cidadeBruta.trim().toLowerCase().replace(/\s+/g,"").replace(/-/g,"");
+    const chave = cidadeBruta.trim().toLowerCase().replace(/\s+/g,"").replace(/-/g,"").replace(/[áéíóúâêîôûãõç]/g, function(l){return l.normalize("NFD").replace(/[\u0300-\u036f]/g,"");});
     if (BASE_NACIONAL[chave]) {
         return { ...BASE_NACIONAL[chave], origem:"Base gravada" };
     }
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidadeBruta)}&country=BR&language=pt&count=1`;
     try {
         const res = await fetch(url);
+        if (!res.ok) return null;
         const dados = await res.json();
         if (dados.results && dados.results.length > 0) {
             const r = dados.results[0];
@@ -255,10 +317,10 @@ async function buscarCoordenadas(cidadeBruta) {
 }
 
 // ==========================================================
-// 🌡️ BUSCA CLIMA
+// 🌡️ BUSCA CLIMA — TEMPO REAL
 // ==========================================================
 async function buscarClimaReal(lat, lon) {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=America/Sao_Paulo`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=America/Sao_Paulo&forecast_days=7`;
     try {
         const res = await fetch(url);
         if (!res.ok) return null;
@@ -285,19 +347,22 @@ function avaliarPlantio(grao, dadosClima, mesAtual, siglaEstado) {
     const dentroJanela = regras.meses_permitidos.includes(mesAtual);
     if (!dentroJanela) {
         return {
-            status: "🚫 BLOQUEADO — FORA DE JANELA ZARC",
+            status: "🚫 BLOQUEADO — FORA DE JANELA RECOMENDADA",
             classe: "status-bloqueado",
-            justificativa: `Mês ${mesAtual}º fora da janela oficial: ${regras.meses_permitidos.map(m=>m+"º").join(", ")}`,
+            justificativa: `Mês ${mesAtual}º fora da janela de plantio recomendada: ${regras.meses_permitidos.map(m=>m+"º").join(", ")}`,
             tempAtual, dentroJanela: false, regras
         };
     }
 
     const climaFavoravel = tempAtual >= regras.temp_min && tempAtual <= regras.temp_max;
     let riscoTermico = false;
+    let tempMinimaSemana = 999;
+    let tempMaximaSemana = -999;
     for (let i = 0; i < minimas.length; i++) {
+        if (minimas[i] < tempMinimaSemana) tempMinimaSemana = minimas[i];
+        if (maximas[i] > tempMaximaSemana) tempMaximaSemana = maximas[i];
         if (minimas[i] < (regras.temp_min - 3) || maximas[i] > (regras.temp_max + 3)) {
             riscoTermico = true;
-            break;
         }
     }
     const chuvaAcumulada = chuvas.reduce((a,b) => a + (b||0), 0);
@@ -306,22 +371,22 @@ function avaliarPlantio(grao, dadosClima, mesAtual, siglaEstado) {
     if (climaFavoravel && !riscoTermico) {
         statusFinal = "✅ FAVORÁVEL — ASSERTIVIDADE ALTA";
         classe = "status-favoravel";
-        justificativa = `Temperatura ${tempAtual.toFixed(1)}°C ideal. Previsão estável 7 dias.`;
+        justificativa = `Temperatura atual ${tempAtual.toFixed(1)}°C está ideal. Faixa da cultura: ${regras.temp_min}°C a ${regras.temp_max}°C. Previsão estável para os próximos 7 dias.`;
     } else if (climaFavoravel && riscoTermico) {
         statusFinal = "⚠️ ALERTA — RISCO EM ATÉ 7 DIAS";
         classe = "status-alerta";
-        justificativa = "Clima bom hoje, mas risco térmico nos próximos dias.";
+        justificativa = `Temperatura atual ${tempAtual.toFixed(1)}°C está boa, mas haverá variação fora da faixa ideal nos próximos dias. Mínima: ${tempMinimaSemana.toFixed(1)}°C, Máxima: ${tempMaximaSemana.toFixed(1)}°C.`;
     } else {
-        statusFinal = "❌ DESFAVORÁVEL — FORA DA FAIXA";
+        statusFinal = "❌ DESFAVORÁVEL — FORA DA FAIXA TÉRMICA";
         classe = "status-bloqueado";
-        justificativa = `Temperatura ${tempAtual.toFixed(1)}°C fora de ${regras.temp_min}°C a ${regras.temp_max}°C`;
+        justificativa = `Temperatura atual ${tempAtual.toFixed(1)}°C está fora do recomendado (${regras.temp_min}°C a ${regras.temp_max}°C). Mínima prevista: ${tempMinimaSemana.toFixed(1)}°C, Máxima prevista: ${tempMaximaSemana.toFixed(1)}°C.`;
     }
 
-    return { status: statusFinal, classe, justificativa, tempAtual, chuvaAcumulada: chuvaAcumulada.toFixed(1), riscoTermico, dentroJanela: true, regras };
+    return { status: statusFinal, classe, justificativa, tempAtual, chuvaAcumulada: chuvaAcumulada.toFixed(1), riscoTermico, dentroJanela: true, regras, tempMinimaSemana, tempMaximaSemana };
 }
 
 // ==========================================================
-// 🚀 GERAR RELATÓRIO
+// 🚀 GERAR RELATÓRIO COMPLETO
 // ==========================================================
 async function gerarRelatorio() {
     const cidade = document.getElementById("cidade").value.trim();
@@ -334,103 +399,117 @@ async function gerarRelatorio() {
     document.getElementById("infoAuto").innerHTML = "";
 
     try {
+        // PASSO 1 — Localizar cidade
         const coords = await buscarCoordenadas(cidade);
-        if (!coords) throw new Error(`Cidade "${cidade}" não encontrada. Verifique o nome.`);
+        if (!coords) throw new Error(`Cidade "${cidade}" não encontrada. Verifique o nome e tente novamente.`);
 
         const siglaEstado = coords.estado || "XX";
-        const regrasEstado = REGRAS_POR_ESTADO[siglaEstado] || { vazioSoja:"Consultar legislação local" };
+        const regrasEstado = REGRAS_POR_ESTADO[siglaEstado] || { vazioSoja:"Consultar legislação estadual", janelaPlantio:"Consultar ZARC" };
         const mesAtual = new Date().getMonth() + 1;
+        const nomeMes = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"][mesAtual-1];
 
         document.getElementById("regiaoInfo").innerHTML = 
-            `📍 ${coords.nome} | Região: ${coords.regiao} | Estado: ${siglaEstado} | Fonte: ${coords.origem || "Busca externa"}`;
+            `📍 ${coords.nome} | Região: ${coords.regiao} | Estado: ${siglaEstado}<br>📅 Mês atual: ${nomeMes} (${mesAtual}º mês) | Fonte: ${coords.origem}`;
 
+        // PASSO 2 — Buscar clima em tempo real
         const dadosClima = await buscarClimaReal(coords.lat, coords.lon);
-        if (!dadosClima) throw new Error("Não foi possível carregar dados climáticos. Tente novamente.");
+        if (!dadosClima) throw new Error("Não foi possível carregar os dados climáticos. Tente novamente em instantes.");
 
         const previsao = dadosClima.daily;
-        const tempMinMedia = previsao.temperature_2m_min.reduce((a,b)=>a+b,0) / previsao.temperature_2m_min.length;
-        const tempMaxMedia = previsao.temperature_2m_max.reduce((a,b)=>a+b,0) / previsao.temperature_2m_max.length;
-        const chuvaTotal = previsao.precipitation_sum.reduce((a,b)=>(a||0)+(b||0),0);
+        const tempMinMedia = (previsao.temperature_2m_min.reduce((a,b)=>a+b,0) / previsao.temperature_2m_min.length).toFixed(1);
+        const tempMaxMedia = (previsao.temperature_2m_max.reduce((a,b)=>a+b,0) / previsao.temperature_2m_max.length).toFixed(1);
+        const chuvaTotal = previsao.precipitation_sum.reduce((a,b)=>(a||0)+(b||0),0).toFixed(1);
         const umidadeAtual = dadosClima.current.relative_humidity_2m;
+        const tempAtual = dadosClima.current.temperature_2m.toFixed(1);
 
+        // PASSO 3 — Avaliar plantio
         const diag = avaliarPlantio(grao, dadosClima, mesAtual, siglaEstado);
         if (diag.erro) throw new Error(diag.erro);
 
+        // PASSO 4 — Calcular Fórmula
         const regrasGrao = diag.regras;
         let O = diag.dentroJanela ? (diag.classe === "status-favoravel" ? 4 : 3) : 1;
         const R = (umidadeAtual >= 50 && umidadeAtual <= 85) ? 1 : 2;
         const formula = calcularFormula(O, R);
 
+        // PASSO 5 — Registrar consulta
         BANCO.atualizacoes.push({
             data: new Date().toLocaleString("pt-BR"),
             cidade: coords.nome,
             cultura: grao,
-            tempAtual: diag.tempAtual.toFixed(1)
+            tempAtual: tempAtual
         });
         document.getElementById("infoAuto").innerHTML = 
-            `✅ Consulta registrada. Total: ${BANCO.atualizacoes.length} | Lat: ${coords.lat.toFixed(4)} Lon: ${coords.lon.toFixed(4)}`;
+            `✅ Consulta registrada. Total: ${BANCO.atualizacoes.length} consultas | Coordenadas: Lat ${coords.lat.toFixed(4)}° / Lon ${coords.lon.toFixed(4)}°`;
 
+        // ========== EXIBIR DADOS CLIMÁTICOS ==========
         document.getElementById("blocoClima").innerHTML = `
-            🌡️ <strong>Temperatura atual:</strong> ${diag.tempAtual.toFixed(1)}°C<br>
-            💧 <strong>Umidade atual:</strong> ${umidadeAtual.toFixed(0)}%<br>
-            📊 <strong>Previsão 7 dias:</strong> ${tempMinMedia.toFixed(1)}°C a ${tempMaxMedia.toFixed(1)}°C<br>
-            🌧️ <strong>Chuva acumulada (7 dias):</strong> ${diag.chuvaAcumulada} mm<br>
-            📍 Coordenadas: ${coords.lat.toFixed(4)}° / ${coords.lon.toFixed(4)}°
+            🌡️ <strong>Temperatura atual:</strong> ${tempAtual}°C<br>
+            💧 <strong>Umidade relativa atual:</strong> ${umidadeAtual.toFixed(0)}%<br>
+            📊 <strong>Previsão média 7 dias:</strong> ${tempMinMedia}°C a ${tempMaxMedia}°C<br>
+            📉 <strong>Mínima prevista (semana):</strong> ${diag.tempMinimaSemana.toFixed(1)}°C<br>
+            📈 <strong>Máxima prevista (semana):</strong> ${diag.tempMaximaSemana.toFixed(1)}°C<br>
+            🌧️ <strong>Chuva acumulada prevista (7 dias):</strong> ${chuvaTotal} mm<br>
+            📍 <strong>Coordenadas da região:</strong> Latitude ${coords.lat.toFixed(4)}° | Longitude ${coords.lon.toFixed(4)}°
         `;
 
+        // ========== EXIBIR DIAGNÓSTICO ZARC ==========
         document.getElementById("blocoDiagnostico").innerHTML = `
-            <div class="${diag.classe}" style="padding:10px; border-radius:6px; background:rgba(0,0,0,0.03); margin-bottom:10px;">
+            <div class="${diag.classe}" style="padding:12px; border-radius:6px; background:rgba(0,0,0,0.03); margin-bottom:12px;">
                 ${diag.status}
             </div>
-            <strong>Motivo:</strong> ${diag.justificativa}<br>
-            <strong>Janela de plantio:</strong> ${diag.dentroJanela ? "✅ DENTRO do período recomendado" : "⚠️ FORA do período recomendado"}<br>
-            ${grao === "Soja" ? `<strong>Vazio Sanitário (${siglaEstado}):</strong> ${regrasEstado.vazioSoja}` : ""}
+            <strong>📋 Análise:</strong> ${diag.justificativa}<br><br>
+            <strong>📅 Janela de plantio recomendada (${siglaEstado}):</strong> ${regrasEstado.janelaPlantio}<br>
+            <strong>✅ Situação atual:</strong> ${diag.dentroJanela ? `DENTRO da janela de plantio (${mesAtual}º mês incluso)` : `FORA da janela de plantio — ${mesAtual}º mês não recomendado`}
+            ${grao === "Soja" ? `<br><strong>🚫 Vazio Sanitário da Soja (${siglaEstado}):</strong> ${regrasEstado.vazioSoja}` : ""}
         `;
 
+        // ========== EXIBIR DADOS DA CULTURA ==========
         document.getElementById("blocoGraos").innerHTML = `
-            <strong>Cultura:</strong> ${grao}<br>
-            <strong>Faixa ideal:</strong> ${regrasGrao.temp_min}°C a ${regrasGrao.temp_max}°C<br>
-            <strong>Janela recomendada:</strong> ${regrasGrao.meses_permitidos.map(m=>m+"º mês").join(", ")}<br>
-            <strong>Chuva mínima do ciclo:</strong> ${regrasGrao.chuva_min_ciclo_mm} mm<br>
-            <strong>Solo ideal:</strong> ${regrasGrao.solo}<br>
-            <strong>Ciclo:</strong> ${regrasGrao.ciclo} | Sensibilidade: ${regrasGrao.sensibilidade}
+            <strong>🌱 Cultura:</strong> ${grao} — ${regrasGrao.tipo}<br>
+            <strong>🌡️ Faixa de temperatura ideal:</strong> ${regrasGrao.temp_min}°C a ${regrasGrao.temp_max}°C<br>
+            <strong>💧 Chuva mínima do ciclo:</strong> ${regrasGrao.chuva_min_ciclo_mm} mm<br>
+            <strong>📅 Meses recomendados para plantio:</strong> ${regrasGrao.meses_permitidos.map(m=>m+"º mês").join(", ")}<br>
+            <strong>🌍 Solo ideal:</strong> ${regrasGrao.solo}<br>
+            <strong>⏱️ Duração do ciclo:</strong> ${regrasGrao.ciclo}<br>
+            <strong>⚠️ Sensibilidade:</strong> ${regrasGrao.sensibilidade}
         `;
 
+        // ========== EXIBIR RISCOS DETECTADOS ==========
         let riscos = [];
-        if (diag.riscoTermico) riscos.push("⚠️ <strong>Risco térmico</strong> nos próximos 7 dias.");
-        if (chuvaTotal < 10) riscos.push("⚠️ <strong>Pouca chuva</strong> — providenciar irrigação.");
-        if (chuvaTotal > 150) riscos.push("⚠️ <strong>Muita chuva</strong> — garantir drenagem.");
-        if (!diag.dentroJanela && grao === "Soja") riscos.push("🚫 <strong>VAZIO SANITÁRIO</strong> — proibido por lei.");
-        document.getElementById("blocoRiscos").innerHTML = riscos.length ? riscos.join("<br><br>") : "✅ Sem risco imediato detectado.";
+        if (diag.riscoTermico) riscos.push("⚠️ <strong>Risco térmico</strong> — haverá temperatura fora da faixa ideal nos próximos 7 dias.");
+        if (parseFloat(chuvaTotal) < 10) riscos.push("⚠️ <strong>Pouca chuva prevista</strong> — providenciar irrigação complementar.");
+        if (parseFloat(chuvaTotal) > 150) riscos.push("⚠️ <strong>Muita chuva prevista</strong> — garantir boa drenagem do solo.");
+        if (!diag.dentroJanela && grao === "Soja") riscos.push("🚫 <strong>VAZIO SANITÁRIO</strong> — proibido por lei plantar soja neste período.");
+        if (umidadeAtual < 40) riscos.push("⚠️ <strong>Umidade muito baixa</strong> — pode afetar germinação e desenvolvimento.");
+        if (umidadeAtual > 90) riscos.push("⚠️ <strong>Umidade muito alta</strong> — risco de doenças fúngicas e apodrecimento.");
+        if (diag.tempMinimaSemana <= 2) riscos.push("❄️ <strong>ALERTA DE GEADA</strong> — temperatura muito baixa prevista! Proteja a lavoura.");
+        if (diag.tempMaximaSemana >= 38) riscos.push("🔥 <strong>ALERTA DE CALOR INTENSO</strong> — temperatura extrema prevista, pode causar estresse hídrico.");
 
+        document.getElementById("blocoRiscos").innerHTML = riscos.length ? riscos.join("<br><br>") : "✅ Sem risco imediato detectado nas condições atuais.";
+
+        // ========== EXIBIR FÓRMULA + 12 PONTOS ==========
         document.getElementById("blocoFormula").innerHTML = `
-            <strong>Fórmula:</strong> I = 64 × O ÷ R &nbsp;|&nbsp; O=${O} &nbsp; R=${R}<br>
-            <span class="valor-destaque">I = ${formula.valor}</span><br>
-            ${formula.status}<hr>
-            <strong>Os 12 Pontos aplicados:</strong><br>
+            <strong>Fórmula aplicada:</strong> I = 64 × O ÷ R<br>
+            <strong>Valores:</strong> O = ${O} (Oportunidade) &nbsp;|&nbsp; R = ${R} (Risco)<br>
+            <span class="valor-destaque">Índice de Confiança I = ${formula.valor}</span><br>
+            ${formula.status}<br><br>
+            <hr>
+            <strong>📋 Os 12 Pontos de Leitura aplicados:</strong><br>
             ${BANCO.dozePontos.map((p,i)=>`${i+1}. ${p}`).join(" | ")}
         `;
 
-        let recFinal = diag.classe === "status-favoravel" 
-            ? "✅ <strong>Recomendação:</strong> Condições ideais. Aproveite e plante dentro da janela ZARC."
-            : diag.classe === "status-alerta"
-            ? "⚠️ <strong>Recomendação:</strong> Aguarde condições mais estáveis. Monitore diariamente."
-            : "🚫 <strong>Recomendação:</strong> Não plante agora. Aguarde a abertura da janela oficial.";
+        // ========== EXIBIR RECOMENDAÇÃO FINAL ==========
+        let recFinal;
+        if (diag.classe === "status-favoravel" && diag.dentroJanela) {
+            recFinal = "✅ <strong>RECOMENDAÇÃO:</strong> Condições ideais! Temperatura, umidade e chuva estão favoráveis. Aproveite e plante dentro da janela oficial de plantio. Boa safra!";
+        } else if (diag.classe === "status-alerta" && diag.dentroJanela) {
+            recFinal = "⚠️ <strong>RECOMENDAÇÃO:</strong> Condições razoáveis, mas com alertas. Monitore diariamente. Se possível, aguarde condições mais estáveis antes de plantar.";
+        } else if (!diag.dentroJanela) {
+            recFinal = "🚫 <strong>RECOMENDAÇÃO:</strong> NÃO plante agora! Está fora da janela recomendada e pode haver impedimento legal (Vazio Sanitário). Aguarde a abertura da janela oficial.";
+        } else {
+            recFinal = "❌ <strong>RECOMENDAÇÃO:</strong> Condições desfavoráveis. Temperatura ou umidade fora do recomendado. Aguarde melhora nas condições climáticas.";
+        }
+
         document.getElementById("blocoPrevisao").innerHTML = recFinal + `<br><br>
-            <em>Declaração: Pesquisa matemática e histórica. Dados climáticos: Open-Meteo.</em>`;
-
-        document.getElementById("resultado").classList.add("mostrar");
-
-    } catch (erro) {
-        document.getElementById("blocoClima").innerHTML = `<div class="erro">❌ ${erro.message}</div>`;
-        document.getElementById("resultado").classList.add("mostrar");
-    }
-    document.getElementById("carregando").style.display = "none";
-}
-
-window.onload = function() {
-    verificarAcesso();
-};
-</script>
-</body>
-</html>
+            <em>📌 Declaração: Pesquisa matemática e histó
