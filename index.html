@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaBoanerges — BRASIL INTEIRO</title>
+    <title>BuscaBoanerges</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { background: #f0f8e6; color: #2c3e50; max-width: 960px; margin: 0 auto; padding: 22px 16px; }
-        header { text-align: center; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 3px solid #2e7d32; }
-        h1 { color: #2e7d32; font-size: 27px; margin-bottom: 4px; }
-        .subtitulo { color: #558b2f; font-size: 13px; font-style: italic; }
-        .aviso { background: #fff3e0; border-left: 4px solid #ff8f00; padding: 11px 15px; margin-bottom: 18px; font-size: 13px; color: #e65100; line-height: 1.5; }
+        header { text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 3px solid #2e7d32; }
+        h1 { color: #2e7d32; font-size: 28px; margin-bottom: 8px; }
+        .subtitulo { color: #558b2f; font-size: 14px; font-style: italic; margin-bottom: 20px; }
+
+        /* ==== PÁGINA PÚBLICA ==== */
+        .pagina-publica { display: block; }
+        .pagina-publica .caixa { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+        .pagina-publica h2 { color: #2e7d32; font-size: 20px; margin-bottom: 20px; text-align: center; }
+        .pagina-publica p { font-size: 16px; line-height: 1.8; margin-bottom: 15px; text-align: justify; }
+        .pagina-publica .contatos { margin-top: 25px; padding: 20px; background: #e8f5e9; border-radius: 10px; border-left: 4px solid #2e7d32; }
+        .pagina-publica .contatos h3 { color: #2e7d32; margin-bottom: 15px; text-align: center; }
+        .pagina-publica .contatos p { font-size: 16px; margin: 8px 0; text-align: center; }
+        .pagina-publica .contatos a { color: #2e7d32; font-weight: bold; text-decoration: none; }
+
+        /* ==== PÁGINA SECRETA (não aparece pro público) ==== */
+        .pagina-secreta { display: none; }
         .form-bloco { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px; }
         label { display: block; margin: 13px 0 5px 0; font-weight: bold; color: #2e7d32; font-size: 15px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 15px; background: #f9fef9; }
@@ -25,7 +37,7 @@
         .perigo { background: #fce4ec; border-left: 4px solid #c62828; }
         .formula { background: #f3e5f5; border-left: 4px solid #7b1fa2; }
         .previsao { background: #ede7f6; border-left: 4px solid #512da8; }
-        h2 { font-size: 16px; margin-bottom: 10px; color: #2c3e50; }
+        h2.secao-titulo { font-size: 16px; margin-bottom: 10px; color: #2c3e50; }
         .valor-destaque { font-size: 18px; font-weight: bold; color: #2e7d32; }
         hr { border: none; border-top: 1px solid #c8e6c9; margin: 10px 0; }
         .erro { color: #c62828; padding: 11px; background: #ffebee; border-radius: 6px; margin-top: 10px; }
@@ -39,96 +51,130 @@
 </head>
 <body>
 
-<header>
-    <h1>🇧🇷 BUSCABOANERGES — BRASIL INTEIRO</h1>
-    <p class="subtitulo">QUALQUER CIDADE DO BRASIL • Dados em Tempo Real • Fórmula + 12 Pontos • ZARC</p>
-</header>
+<!-- ======================================================
+     PÁGINA PÚBLICA — O CLIENTE VÊ ISSO AQUI
+     ====================================================== -->
+<div class="pagina-publica" id="paginaPublica">
+    <header>
+        <h1>🌾 BUSCABOANERGES</h1>
+        <p class="subtitulo">Inteligência Agroclimática para o produtor rural</p>
+    </header>
 
-<div class="aviso">
-    ⚠️ Pesquisa matemática e histórica. Dados climáticos de fonte pública gratuita. Cálculo: <strong>I = 64 × O ÷ R</strong> + 12 Pontos. Funciona para TODO o Brasil.
+    <div class="caixa">
+        <h2>O que é o BuscaBoanerges?</h2>
+        <p>O BuscaBoanerges é uma ferramenta de pesquisa agroclimática que utiliza dados meteorológicos reais, regras oficiais de janela de plantio (ZARC) e uma fórmula matemática própria para avaliar as condições de cultivo em qualquer região do Brasil.</p>
+        <p>Indicamos ao produtor rural o momento mais favorável para o plantio, com base em temperatura, umidade, previsão de chuva e legislação vigente de Vazio Sanitário.</p>
+        <p>Nosso trabalho é fundamentado em pesquisa histórica e em fontes públicas oficiais, oferecendo confiança e segurança na tomada de decisão no campo.</p>
+
+        <div class="contatos">
+            <h3>📬 Entre em Contato</h3>
+            <p>📱 WhatsApp: <a href="https://wa.me/5515981565052" target="_blank">(015) 98156-5052</a></p>
+            <p>✉️ E-mail: <a href="mailto:buscaboanerges@gmail.com">buscaboanerges@gmail.com</a></p>
+        </div>
+    </div>
 </div>
 
-<div class="form-bloco">
-    <label>📍 Cidade / Estado (ex: Capinzal - SC, Salto - SP)</label>
-    <input type="text" id="cidade" placeholder="Digite QUALQUER cidade do Brasil">
+<!-- ======================================================
+     PÁGINA SECRETA — SÓ VOCÊ VÊ ISSO AQUI
+     ====================================================== -->
+<div class="pagina-secreta" id="paginaSecreta">
+    <header>
+        <h1>🔒 ÁREA DE TRABALHO — BUSCABOANERGES</h1>
+        <p class="subtitulo">Gerador de Relatórios — Fórmula + 12 Pontos + ZARC</p>
+    </header>
 
-    <label>🌱 Tipo de Grão / Cultura</label>
-    <select id="grao">
-        <option value="Soja">Soja</option>
-        <option value="Milho">Milho</option>
-        <option value="Trigo">Trigo</option>
-        <option value="Arroz">Arroz</option>
-        <option value="Café">Café</option>
-        <option value="Algodão">Algodão</option>
-        <option value="Feijão">Feijão</option>
-    </select>
+    <div class="form-bloco">
+        <label>📍 Cidade / Estado (ex: Capinzal - SC, Salto - SP)</label>
+        <input type="text" id="cidade" placeholder="Digite a cidade">
 
-    <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO COMPLETO</button>
-    <div id="carregando" class="carregando">🔄 Buscando cidade... Carregando dados climáticos... Processando...</div>
-    <div id="infoAuto" class="info-auto"></div>
-</div>
+        <label>🌱 Cultura</label>
+        <select id="grao">
+            <option value="Soja">Soja</option>
+            <option value="Milho">Milho</option>
+            <option value="Trigo">Trigo</option>
+            <option value="Arroz">Arroz</option>
+            <option value="Café">Café</option>
+            <option value="Algodão">Algodão</option>
+            <option value="Feijão">Feijão</option>
+        </select>
 
-<div id="resultado" class="resultado">
-    <h2>📋 RELATÓRIO BUSCABOANERGES</h2>
-    <hr>
-    <div id="regiaoInfo" class="regiao-brasil"></div>
-
-    <div class="secao clima">
-        <h2>🌤️ DADOS CLIMÁTICOS — TEMPO REAL</h2>
-        <div id="blocoClima"></div>
+        <button onclick="gerarRelatorio()">📋 GERAR RELATÓRIO COMPLETO</button>
+        <div id="carregando" class="carregando">🔄 Buscando... Processando...</div>
+        <div id="infoAuto" class="info-auto"></div>
     </div>
 
-    <div class="secao diagnostico">
-        <h2>🧪 DIAGNÓSTICO DE PLANTIO — REGRAS ZARC</h2>
-        <div id="blocoDiagnostico"></div>
-    </div>
+    <div id="resultado" class="resultado">
+        <h2>📋 RELATÓRIO BUSCABOANERGES</h2>
+        <hr>
+        <div id="regiaoInfo" class="regiao-brasil"></div>
 
-    <div class="secao graos">
-        <h2>🌱 CULTURA — JANELA, SOLO E REGRAS</h2>
-        <div id="blocoGraos"></div>
-    </div>
+        <div class="secao clima">
+            <h2 class="secao-titulo">🌤️ DADOS CLIMÁTICOS</h2>
+            <div id="blocoClima"></div>
+        </div>
 
-    <div class="secao perigo">
-        <h2>⚠️ RISCOS DETECTADOS</h2>
-        <div id="blocoRiscos"></div>
-    </div>
+        <div class="secao diagnostico">
+            <h2 class="secao-titulo">🧪 DIAGNÓSTICO ZARC</h2>
+            <div id="blocoDiagnostico"></div>
+        </div>
 
-    <div class="secao formula">
-        <h2>🧮 FÓRMULA + 12 PONTOS</h2>
-        <div id="blocoFormula"></div>
-    </div>
+        <div class="secao graos">
+            <h2 class="secao-titulo">🌱 CULTURA</h2>
+            <div id="blocoGraos"></div>
+        </div>
 
-    <div class="secao previsao">
-        <h2>🔮 RECOMENDAÇÃO FINAL</h2>
-        <div id="blocoPrevisao"></div>
+        <div class="secao perigo">
+            <h2 class="secao-titulo">⚠️ RISCOS DETECTADOS</h2>
+            <div id="blocoRiscos"></div>
+        </div>
+
+        <div class="secao formula">
+            <h2 class="secao-titulo">🧮 FÓRMULA + 12 PONTOS</h2>
+            <div id="blocoFormula"></div>
+        </div>
+
+        <div class="secao previsao">
+            <h2 class="secao-titulo">🔮 RECOMENDAÇÃO FINAL</h2>
+            <div id="blocoPrevisao"></div>
+        </div>
     </div>
 </div>
 
 <script>
 // ==========================================================
-// 📍 BASE DE APOIO — CIDADES FREQUENTES
+// 🔑 DETECÇÃO DE ACESSO — PÚBLICA OU SECRETA?
+// ==========================================================
+function verificarAcesso() {
+    const caminho = window.location.pathname.toLowerCase();
+    const ehSecreto = caminho.includes("acesso-buscaboanerges-secreto");
+
+    if (ehSecreto) {
+        document.getElementById("paginaPublica").style.display = "none";
+        document.getElementById("paginaSecreta").style.display = "block";
+    } else {
+        document.getElementById("paginaPublica").style.display = "block";
+        document.getElementById("paginaSecreta").style.display = "none";
+    }
+}
+
+// ==========================================================
+// 📍 BASE DE CIDADES
 // ==========================================================
 const BASE_NACIONAL = {
-    "capinzal-sc": { lat:-27.3448, lon:-51.6112, nome:"Capinzal / Santa Catarina", regiao:"Sul", estado:"SC" },
-    "capinzal": { lat:-27.3448, lon:-51.6112, nome:"Capinzal / Santa Catarina", regiao:"Sul", estado:"SC" },
-    "salto-sp": { lat:-23.2008, lon:-47.2869, nome:"Salto / São Paulo", regiao:"Sudeste", estado:"SP" },
-    "salto": { lat:-23.2008, lon:-47.2869, nome:"Salto / São Paulo", regiao:"Sudeste", estado:"SP" },
-    "sorocaba-sp": { lat:-23.5015, lon:-47.4526, nome:"Sorocaba / São Paulo", regiao:"Sudeste", estado:"SP" },
-    "sorocaba": { lat:-23.5015, lon:-47.4526, nome:"Sorocaba / São Paulo", regiao:"Sudeste", estado:"SP" },
-    "itu-sp": { lat:-23.2638, lon:-47.2987, nome:"Itu / São Paulo", regiao:"Sudeste", estado:"SP" },
-    "itu": { lat:-23.2638, lon:-47.2987, nome:"Itu / São Paulo", regiao:"Sudeste", estado:"SP" },
-    "cuiaba-mt": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / Mato Grosso", regiao:"Centro-Oeste", estado:"MT" },
-    "cuiaba": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / Mato Grosso", regiao:"Centro-Oeste", estado:"MT" },
-    "florianopolis-sc": { lat:-27.5969, lon:-48.5495, nome:"Florianópolis / Santa Catarina", regiao:"Sul", estado:"SC" },
-    "chapeco-sc": { lat:-27.1044, lon:-52.6181, nome:"Chapecó / Santa Catarina", regiao:"Sul", estado:"SC" },
-    "blumenau-sc": { lat:-26.9154, lon:-49.0674, nome:"Blumenau / Santa Catarina", regiao:"Sul", estado:"SC" },
-    "lages-sc": { lat:-27.8179, lon:-50.3224, nome:"Lages / Santa Catarina", regiao:"Sul", estado:"SC" },
-    "curitiba-pr": { lat:-25.4284, lon:-49.2733, nome:"Curitiba / Paraná", regiao:"Sul", estado:"PR" },
-    "porto alegre-rs": { lat:-30.0346, lon:-51.2177, nome:"Porto Alegre / Rio Grande do Sul", regiao:"Sul", estado:"RS" }
+    "capinzal-sc": { lat:-27.3448, lon:-51.6112, nome:"Capinzal / SC", regiao:"Sul", estado:"SC" },
+    "capinzal": { lat:-27.3448, lon:-51.6112, nome:"Capinzal / SC", regiao:"Sul", estado:"SC" },
+    "salto-sp": { lat:-23.2008, lon:-47.2869, nome:"Salto / SP", regiao:"Sudeste", estado:"SP" },
+    "salto": { lat:-23.2008, lon:-47.2869, nome:"Salto / SP", regiao:"Sudeste", estado:"SP" },
+    "sorocaba-sp": { lat:-23.5015, lon:-47.4526, nome:"Sorocaba / SP", regiao:"Sudeste", estado:"SP" },
+    "sorocaba": { lat:-23.5015, lon:-47.4526, nome:"Sorocaba / SP", regiao:"Sudeste", estado:"SP" },
+    "itu-sp": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" },
+    "itu": { lat:-23.2638, lon:-47.2987, nome:"Itu / SP", regiao:"Sudeste", estado:"SP" },
+    "cuiaba-mt": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / MT", regiao:"Centro-Oeste", estado:"MT" },
+    "cuiaba": { lat:-15.6014, lon:-56.0979, nome:"Cuiabá / MT", regiao:"Centro-Oeste", estado:"MT" }
 };
 
 // ==========================================================
-// 📋 REGRAS ZARC POR ESTADO
+// 📋 REGRAS ZARC
 // ==========================================================
 const REGRAS_POR_ESTADO = {
     SP: { vazioSoja:"15/jun a 15/set", janelaPlantio:"Outubro a fevereiro" },
@@ -157,7 +203,7 @@ const REGRAS_GRAOS = {
 };
 
 // ==========================================================
-// 📊 BANCO LOCAL + FÓRMULA
+// 📊 FÓRMULA + 12 PONTOS
 // ==========================================================
 let BANCO = {
     atualizacoes: [],
@@ -180,7 +226,7 @@ function calcularFormula(O, R) {
 }
 
 // ==========================================================
-// 🔍 BUSCA CIDADE — BASE OU INTERNET (TODO O BRASIL)
+// 🔍 BUSCA CIDADE
 // ==========================================================
 async function buscarCoordenadas(cidadeBruta) {
     const chave = cidadeBruta.trim().toLowerCase().replace(/\s+/g,"").replace(/-/g,"");
@@ -209,7 +255,7 @@ async function buscarCoordenadas(cidadeBruta) {
 }
 
 // ==========================================================
-// 🌡️ BUSCA CLIMA — TEMPO REAL
+// 🌡️ BUSCA CLIMA
 // ==========================================================
 async function buscarClimaReal(lat, lon) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=America/Sao_Paulo`;
@@ -275,7 +321,7 @@ function avaliarPlantio(grao, dadosClima, mesAtual, siglaEstado) {
 }
 
 // ==========================================================
-// 🚀 RELATÓRIO FINAL
+// 🚀 GERAR RELATÓRIO
 // ==========================================================
 async function gerarRelatorio() {
     const cidade = document.getElementById("cidade").value.trim();
@@ -383,7 +429,7 @@ async function gerarRelatorio() {
 }
 
 window.onload = function() {
-    document.getElementById("cidade").focus();
+    verificarAcesso();
 };
 </script>
 </body>
